@@ -1155,6 +1155,7 @@ export default function App() {
 
   const [roleIndex, setRoleIndex] = React.useState(0);
   const [selectedProject, setSelectedProject] = React.useState<ProjectItem | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -1181,16 +1182,25 @@ export default function App() {
       <main className="main">
         <nav className="nav">
           <div className="logo">OA.</div>
-          <div className="nav-links">
-            <a href="#work">Work</a>
-            <a href="#about">About</a>
-            <a href="#services">Services</a>
-            <a href="#tools">Tools</a>
-            <a href="#contact">Contact</a>
+          <div className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
+            <a href="#work" onClick={() => setIsMobileMenuOpen(false)}>Work</a>
+            <a href="#about" onClick={() => setIsMobileMenuOpen(false)}>About</a>
+            <a href="#services" onClick={() => setIsMobileMenuOpen(false)}>Services</a>
+            <a href="#tools" onClick={() => setIsMobileMenuOpen(false)}>Tools</a>
+            <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
           </div>
           <a className="nav-cta" href="#contact">
             Let&apos;s talk
           </a>
+          <button 
+            className="hamburger" 
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+          </button>
         </nav>
 
         <header className="hero" id="hero">
@@ -1267,7 +1277,7 @@ export default function App() {
         <motion.section className="section photo-section" id="portrait" {...sectionMotion}>
           <div className="photo-grid">
             <div className="work-image">
-              <img src="./img/headshot.png" alt="Portrait of Oluwatosin" />
+              <img src="./img/Headshot.png" alt="Portrait of Oluwatosin" />
             </div>
             <div className="photo-copy">
               <h2>Put a face to the work</h2>
@@ -1732,6 +1742,10 @@ function latLongToVector3(latitude: number, longitude: number, radius: number) {
 const pageStyles = `
 @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap');
 
+html {
+  scroll-behavior: smooth;
+}
+
 :root {
   color-scheme: dark;
 }
@@ -1808,6 +1822,38 @@ body {
   border-radius: 999px;
   font-weight: 600;
   background: rgba(19, 23, 32, 0.7);
+}
+
+/* Hamburger menu styles */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 1000;
+}
+
+.hamburger-line {
+  width: 25px;
+  height: 2px;
+  background-color: #f2f4f8;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.hamburger-line.open:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger-line.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-line.open:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
 }
 
 .hero {
@@ -2580,6 +2626,38 @@ body {
 
 @media (max-width: 900px) {
   .nav-links {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background: rgba(19, 23, 32, 0.98);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    transition: right 0.3s ease;
+    z-index: 999;
+  }
+
+  .nav-links.open {
+    display: flex;
+    right: 0;
+  }
+
+  .nav-links a {
+    font-size: 1.2rem;
+    color: #f2f4f8;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-cta {
     display: none;
   }
 
