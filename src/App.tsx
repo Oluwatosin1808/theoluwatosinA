@@ -1105,20 +1105,20 @@ const timeline: TimelineItem[] = [
     year: "2025 - Now",
     role: "Design Engineer",
     company: "Codeless Solutions",
-    summary: "Bridging design and engineering to build scalable, no-code products with modern frontend stacks."
+    summary: "Lead end-to-end development of DreamAI, an innovative no-code project integrating Azure OpenAI's GPT via API to enhance dream interpretation, wellness insights, and personalized recommendations."
   },
   {
     year: "2024",
     role: "Product Designer",
     company: "Jrun Global",
-    summary: "Owned onboarding, telehealth dashboards, and growth experiments across mobile and web."
+    summary: "Developed cohesive design systems and comprehensive style guides to ensure visual consistency across web application."
   }
 ];
 
 const stats = [
   { label: "Years of experience", value: "4+" },
   { label: "Products shipped", value: "6+" },
-  { label: "Avg. CSAT", value: "4.8/5" }
+  { label: "Average Customer Satisfaction Score", value: "4.8/5" }
 ];
 
 const duplicatedTools = [...tools, ...tools];
@@ -1157,6 +1157,7 @@ export default function App() {
   const [selectedProject, setSelectedProject] = React.useState<ProjectItem | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isDarkMode, setIsDarkMode] = React.useState(true);
 
   React.useEffect(() => {
     const interval = window.setInterval(() => {
@@ -1176,11 +1177,11 @@ export default function App() {
   };
 
   return (
-    <div className="portfolio-root">
+    <div className={`portfolio-root ${!isDarkMode ? 'light-theme' : ''}`}>
       <style>{pageStyles}</style>
       <div className="background-glow" aria-hidden="true" />
       <main className="main">
-        <nav className="nav">
+        <nav className={`nav ${isDarkMode ? 'dark' : 'light'}`}>
           <div className="logo">OA.</div>
           <div className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
             <a href="#work" onClick={() => setIsMobileMenuOpen(false)}>Work</a>
@@ -1189,9 +1190,18 @@ export default function App() {
             <a href="#tools" onClick={() => setIsMobileMenuOpen(false)}>Tools</a>
             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
           </div>
-          <a className="nav-cta" href="#contact">
-            Let&apos;s talk
-          </a>
+          <div className="nav-controls">
+            <button 
+              className="theme-toggle" 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? '☀️' : '🌙'}
+            </button>
+            <a className="nav-cta" href="#contact">
+              Let&apos;s talk
+            </a>
+          </div>
           <button 
             className="hamburger" 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -1257,7 +1267,6 @@ export default function App() {
               </div>
               <div className="hero-strip">
                 <span>Available for selective projects</span>
-                <span>mosestosyn07@gmail.com</span>
               </div>
               <div className="stat-grid">
                 {stats.map((stat) => (
@@ -1277,7 +1286,7 @@ export default function App() {
         <motion.section className="section photo-section" id="portrait" {...sectionMotion}>
           <div className="photo-grid">
             <div className="work-image">
-              <img src="./img/Headshot.png" alt="Portrait of Oluwatosin" />
+              <img src="./img/IMG_3412.PNG" alt="Portrait of Oluwatosin" />
             </div>
             <div className="photo-copy">
               <h2>Put a face to the work</h2>
@@ -1377,6 +1386,54 @@ export default function App() {
                 </button>
               </div>
             ))}
+          </div>
+        </motion.section>
+
+        <motion.section className="section gallery-section" {...sectionMotion}>
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Gallery</p>
+              <h2>Visual Showcase</h2>
+            </div>
+            <p className="section-lead">
+              A collection of design work, interfaces, and creative explorations.
+            </p>
+          </div>
+          <div className="gallery-carousel">
+            <div className="gallery-track">
+              <div className="gallery-item">
+                <img src="./img/IMG_3412.PNG" alt="Gallery item 1" />
+                <div className="gallery-caption">Product Design</div>
+              </div>
+              <div className="gallery-item">
+                <img src="./img/Notioneverything headers.png" alt="Gallery item 2" />
+                <div className="gallery-caption">UI/UX Design</div>
+              </div>
+              <div className="gallery-item">
+                <img src="./img/Notioneverything headers (1).png" alt="Gallery item 3" />
+                <div className="gallery-caption">Mobile Interface</div>
+              </div>
+              <div className="gallery-item">
+                <img src="./img/Mockup 26.png" alt="Gallery item 4" />
+                <div className="gallery-caption">Web Application</div>
+              </div>
+              <div className="gallery-item">
+                <img src="./img/Mockup Ribbon 11.png" alt="Gallery item 5" />
+                <div className="gallery-caption">No-Code Platform</div>
+              </div>
+            </div>
+            <button className="gallery-nav prev" onClick={() => {
+              const track = document.querySelector('.gallery-track');
+              if (track) track.scrollLeft -= 320;
+            }}>
+              ←
+            </button>
+            <button className="gallery-nav next" onClick={() => {
+              const track = document.querySelector('.gallery-track');
+              if (track) track.scrollLeft += 320;
+            }}>
+              →
+            </button>
           </div>
         </motion.section>
 
@@ -1523,7 +1580,6 @@ export default function App() {
           <div className="contact-grid">
             <div className="contact-card">
               <h3>Project intake</h3>
-              <p>mosestosyn07@gmail.com</p>
               <p>Based in Nigeria, working globally.</p>
             </div>
             <div className="contact-card accent">
@@ -1534,8 +1590,11 @@ export default function App() {
                   <span>Online</span>
                 </div>
               </div>
-              <p>Available for product design, no-code builds, and frontend delivery.</p>
-              <a className="cta primary" href="mailto:mosestosyn07@gmail.com">Send an email</a>
+              <p>Designed responsive user interfaces optimized for seamless experiences across desktop, tablet, and mobile devices.</p>
+              <p>Ensured full compliance with accessibility standards (Web Content Accessibility Guidelines), enhancing usability for all users, including those with disabilities.</p>
+              <p>Created intuitive, user-centered designs that catered to both returning users and first-time visitors.</p>
+              <p>Prepared pixel-perfect UI assets and detailed specifications for smooth and efficient developer handoff.</p>
+              <a className="cta primary" href="mailto:">Send an email</a>
             </div>
           </div>
         </motion.section>
@@ -1750,14 +1809,49 @@ html {
   color-scheme: dark;
 }
 
+.light-theme {
+  color-scheme: light;
+}
+
+.light-theme {
+  --ink: #fafaf8;
+  --ink-2: #3a3a3a;
+  --ink-3: #7a7a7a;
+  --surface: #0e0e0e;
+  --surface-2: #1a1a1a;
+  --accent: #f0f0f0;
+  --gold: #c8a96e;
+  --border: rgba(0,0,0,0.1);
+  --serif: 'DM Serif Display', serif;
+  --sans: 'DM Sans', sans-serif;
+}
+
+:root {
+  --ink: #f2f4f8;
+  --ink-2: #d0d6df;
+  --ink-3: #9aa3b2;
+  --surface: #0b0d11;
+  --surface-2: #141824;
+  --accent: #1a1a1a;
+  --gold: #c8a96e;
+  --border: rgba(255,255,255,0.1);
+  --serif: 'Bricolage Grotesque', sans-serif;
+  --sans: 'Manrope', sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: #0b0d11;
-  color: #f2f4f8;
+  background: var(--surface);
+  color: var(--ink);
+}
+
+.light-theme body {
+  background: var(--surface);
+  color: var(--ink);
 }
 
 .portfolio-root {
@@ -1793,6 +1887,52 @@ body {
   justify-content: space-between;
   padding: 2rem 0 0;
   gap: 1.5rem;
+  position: sticky;
+  top: 0;
+  background: rgba(15, 19, 26, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.nav.light {
+  background: rgba(250, 250, 248, 0.95);
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f2f4f8;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.nav.light .theme-toggle {
+  color: #0f131a;
+  border-color: rgba(15, 19, 26, 0.2);
+}
+
+.nav.light .theme-toggle:hover {
+  background: rgba(15, 19, 26, 0.1);
+  border-color: rgba(15, 19, 26, 0.4);
 }
 
 .logo {
@@ -2506,6 +2646,86 @@ body {
   gap: 1.5rem;
 }
 
+/* Gallery Carousel Styles */
+.gallery-section {
+  background: #0f131a;
+}
+
+.gallery-carousel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.gallery-track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+}
+
+.gallery-item {
+  flex: 0 0 auto;
+  width: 300px;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  scroll-snap-align: start;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  color: white;
+  padding: 1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(19, 23, 32, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.gallery-nav:hover {
+  background: rgba(19, 23, 32, 0.95);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.gallery-nav.prev {
+  left: 1rem;
+}
+
+.gallery-nav.next {
+  right: 1rem;
+}
+
 .contact-card {
   padding: 1.6rem;
   border-radius: 20px;
@@ -2699,6 +2919,25 @@ body {
 
   .section-lead {
     max-width: 100%;
+  }
+
+  .gallery-item {
+    width: 250px;
+    height: 180px;
+  }
+
+  .gallery-nav {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+
+  .gallery-nav.prev {
+    left: 0.5rem;
+  }
+
+  .gallery-nav.next {
+    right: 0.5rem;
   }
 }
 `;
