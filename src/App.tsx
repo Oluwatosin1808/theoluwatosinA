@@ -1157,7 +1157,6 @@ export default function App() {
   const [selectedProject, setSelectedProject] = React.useState<ProjectItem | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isDarkMode, setIsDarkMode] = React.useState(true);
 
   React.useEffect(() => {
     const interval = window.setInterval(() => {
@@ -1177,11 +1176,11 @@ export default function App() {
   };
 
   return (
-    <div className={`portfolio-root ${!isDarkMode ? 'light-theme' : ''}`}>
+    <div className="portfolio-root">
       <style>{pageStyles}</style>
       <div className="background-glow" aria-hidden="true" />
       <main className="main">
-        <nav className={`nav ${isDarkMode ? 'dark' : 'light'}`}>
+        <nav className="nav">
           <div className="logo">OA.</div>
           <div className={`nav-links ${isMobileMenuOpen ? 'open' : ''}`}>
             <a href="#work" onClick={() => setIsMobileMenuOpen(false)}>Work</a>
@@ -1190,18 +1189,9 @@ export default function App() {
             <a href="#tools" onClick={() => setIsMobileMenuOpen(false)}>Tools</a>
             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
           </div>
-          <div className="nav-controls">
-            <button 
-              className="theme-toggle" 
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              aria-label="Toggle theme"
-            >
-              {isDarkMode ? '☀️' : '🌙'}
-            </button>
-            <a className="nav-cta" href="#contact">
-              Let&apos;s talk
-            </a>
-          </div>
+          <a className="nav-cta" href="#contact">
+            Let&apos;s talk
+          </a>
           <button 
             className="hamburger" 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -2286,10 +2276,16 @@ body {
 
 .work-image {
   width: 100%;
-  height: 300px;
+  height: 400px;
   border-radius: 16px;
   overflow: hidden;
-  background: rgba(15, 20, 28, 0.9);
+  position: relative;
+}
+
+@media (min-width: 721px) {
+  .work-image {
+    height: 500px;
+  }
 }
 
 .work-image img {
