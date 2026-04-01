@@ -1276,7 +1276,7 @@ export default function App() {
         <motion.section className="section photo-section" id="portrait" {...sectionMotion}>
           <div className="photo-grid">
             <div className="work-image">
-              <img src="./img/IMG_3412.PNG" alt="Portrait of Oluwatosin" />
+              <img src="./img/IMG_w3412_compressed.png" alt="Portrait of Oluwatosin" />
             </div>
             <div className="photo-copy">
               <h2>Put a face to the work</h2>
@@ -1827,50 +1827,8 @@ body {
   gap: 1.5rem;
   position: sticky;
   top: 0;
-  background: rgba(15, 19, 26, 0.95);
-  backdrop-filter: blur(10px);
   z-index: 1000;
   transition: all 0.3s ease;
-}
-
-.nav.light {
-  background: rgba(250, 250, 248, 0.95);
-}
-
-.nav-controls {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.theme-toggle {
-  background: none;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #f2f4f8;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 1.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.theme-toggle:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.nav.light .theme-toggle {
-  color: #0f131a;
-  border-color: rgba(15, 19, 26, 0.2);
-}
-
-.nav.light .theme-toggle:hover {
-  background: rgba(15, 19, 26, 0.1);
-  border-color: rgba(15, 19, 26, 0.4);
 }
 
 .logo {
