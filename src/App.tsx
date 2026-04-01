@@ -1389,55 +1389,6 @@ export default function App() {
           </div>
         </motion.section>
 
-        <motion.section className="section gallery-section" {...sectionMotion}>
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">Gallery</p>
-              <h2>Visual Showcase</h2>
-            </div>
-            <p className="section-lead">
-              A collection of design work, interfaces, and creative explorations.
-            </p>
-          </div>
-          <div className="gallery-carousel">
-            <div className="gallery-track">
-              <div className="gallery-item">
-                <img src="./img/IMG_3412.PNG" alt="Gallery item 1" />
-                <div className="gallery-caption">Product Design</div>
-              </div>
-              <div className="gallery-item">
-                <img src="./img/Notioneverything headers.png" alt="Gallery item 2" />
-                <div className="gallery-caption">UI/UX Design</div>
-              </div>
-              <div className="gallery-item">
-                <img src="./img/Notioneverything headers (1).png" alt="Gallery item 3" />
-                <div className="gallery-caption">Mobile Interface</div>
-              </div>
-              <div className="gallery-item">
-                <img src="./img/Mockup 26.png" alt="Gallery item 4" />
-                <div className="gallery-caption">Web Application</div>
-              </div>
-              <div className="gallery-item">
-                <img src="./img/Mockup Ribbon 11.png" alt="Gallery item 5" />
-                <div className="gallery-caption">No-Code Platform</div>
-              </div>
-            </div>
-            <button className="gallery-nav prev" onClick={() => {
-              const track = document.querySelector('.gallery-track');
-              if (track) track.scrollLeft -= 320;
-            }}>
-              ←
-            </button>
-            <button className="gallery-nav next" onClick={() => {
-              const track = document.querySelector('.gallery-track');
-              if (track) track.scrollLeft += 320;
-            }}>
-              →
-            </button>
-          </div>
-        </motion.section>
-
-        
         <motion.section className="section" id="services" {...sectionMotion}>
           <div className="section-heading">
             <div>
@@ -1590,10 +1541,7 @@ export default function App() {
                   <span>Online</span>
                 </div>
               </div>
-              <p>Designed responsive user interfaces optimized for seamless experiences across desktop, tablet, and mobile devices.</p>
-              <p>Ensured full compliance with accessibility standards (Web Content Accessibility Guidelines), enhancing usability for all users, including those with disabilities.</p>
-              <p>Created intuitive, user-centered designs that catered to both returning users and first-time visitors.</p>
-              <p>Prepared pixel-perfect UI assets and detailed specifications for smooth and efficient developer handoff.</p>
+              <p>Available for product design, no-code builds, and frontend delivery.</p>
               <a className="cta primary" href="mailto:">Send an email</a>
             </div>
           </div>
@@ -2646,86 +2594,6 @@ body {
   gap: 1.5rem;
 }
 
-/* Gallery Carousel Styles */
-.gallery-section {
-  background: #0f131a;
-}
-
-.gallery-carousel {
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-}
-
-.gallery-track {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scroll-behavior: smooth;
-  padding: 1rem 0;
-}
-
-.gallery-item {
-  flex: 0 0 auto;
-  width: 300px;
-  height: 200px;
-  border-radius: 12px;
-  overflow: hidden;
-  position: relative;
-  scroll-snap-align: start;
-}
-
-.gallery-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.gallery-caption {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.8));
-  color: white;
-  padding: 1rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.gallery-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(19, 23, 32, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-  z-index: 10;
-}
-
-.gallery-nav:hover {
-  background: rgba(19, 23, 32, 0.95);
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.gallery-nav.prev {
-  left: 1rem;
-}
-
-.gallery-nav.next {
-  right: 1rem;
-}
-
 .contact-card {
   padding: 1.6rem;
   border-radius: 20px;
@@ -2919,25 +2787,6 @@ body {
 
   .section-lead {
     max-width: 100%;
-  }
-
-  .gallery-item {
-    width: 250px;
-    height: 180px;
-  }
-
-  .gallery-nav {
-    width: 35px;
-    height: 35px;
-    font-size: 1rem;
-  }
-
-  .gallery-nav.prev {
-    left: 0.5rem;
-  }
-
-  .gallery-nav.next {
-    right: 0.5rem;
   }
 }
 `;
