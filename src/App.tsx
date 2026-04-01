@@ -1295,11 +1295,6 @@ export default function App() {
             </div>
           </div>
           <div className="about-grid">
-            <div className="about-portrait">
-              <div className="portrait-image">
-                <img src="./img/1000872627.jpg" alt="Portrait of Oluwatosin" />
-              </div>
-            </div>
             <div className="about-content">
               <div className="about-copy">
                 <p>
@@ -2327,37 +2322,9 @@ body {
 }
 
 .about-grid {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 3rem;
-  align-items: start;
-}
-
-@media (max-width: 768px) {
-  .about-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-}
-
-.about-portrait {
   display: flex;
-  justify-content: center;
-}
-
-.portrait-image {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.portrait-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .about-content {
