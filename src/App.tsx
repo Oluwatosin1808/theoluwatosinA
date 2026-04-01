@@ -1275,9 +1275,6 @@ export default function App() {
 
         <motion.section className="section photo-section" id="portrait" {...sectionMotion}>
           <div className="photo-grid">
-            <div className="work-image">
-              <img src="./img/IMG_3412_compressed.png" alt="Portrait of Oluwatosin" />
-            </div>
             <div className="photo-copy">
               <h2>Put a face to the work</h2>
               <p className="section-lead">
