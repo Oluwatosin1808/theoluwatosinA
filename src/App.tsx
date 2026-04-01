@@ -1295,40 +1295,47 @@ export default function App() {
             </div>
           </div>
           <div className="about-grid">
-            <div className="about-copy">
-              <p>
-                I’m Oluwatosin, a Product Designer who refuses to stop at pretty screens. Somewhere along the way, I got curious about how things behave under the hood… and now I live comfortably in both worlds, designing interfaces and building them into real, usable products.
-              </p>
-              <p>
-                I’ve worked across EdTech, service platforms, and internal tools, helping ideas move from “this could be cool” to “this is live and people are using it.” I care a lot about clarity, structure, and making sure users don’t have to think harder than they should.
-              </p>
-              <p>
-                My workflow usually looks like this:<br />
-                idea → messy notes → structured flows → clean UI → working product → small obsessive tweaks nobody asked for but everyone benefits from.
-              </p>
-              <p>
-                I’m big on:
-              </p>
-              <ul>
-                <li>simple, usable design over flashy noise</li>
-                <li>systems that scale, not hacks that break later</li>
-                <li>building things, not just talking about them</li>
-              </ul>
-              <p>
-                When I’m not designing or building, I’m probably exploring new tools, refining how I work, or quietly judging bad UX in the wild (it’s a disease at this point).
-              </p>
-              <p>
-                If you’re building something and want it to be both well-designed and actually functional, we’ll get along just fine.
-              </p>
+            <div className="about-portrait">
+              <div className="portrait-image">
+                <img src="./img/1000872627.jpg" alt="Portrait of Oluwatosin" />
+              </div>
             </div>
-            <div className="about-card">
-              <h3>Core Focus</h3>
-              <div className="tag-grid">
-                <span>UX Strategy</span>
-                <span>Design Systems</span>
-                <span>Rapid Prototyping</span>
-                <span>Conversion UX</span>
-                <span>Frontend Delivery</span>
+            <div className="about-content">
+              <div className="about-copy">
+                <p>
+                  I'm Oluwatosin, a Product Designer who refuses to stop at pretty screens. Somewhere along the way, I got curious about how things behave under the hood… and now I live comfortably in both worlds, designing interfaces and building them into real, usable products.
+                </p>
+                <p>
+                  I've worked across EdTech, service platforms, and internal tools, helping ideas move from "this could be cool" to "this is live and people are using it." I care a lot about clarity, structure, and making sure users don't have to think harder than they should.
+                </p>
+                <p>
+                  My workflow usually looks like this:<br />
+                  idea → messy notes → structured flows → clean UI → working product → small obsessive tweaks nobody asked for but everyone benefits from.
+                </p>
+                <p>
+                  I'm big on:
+                </p>
+                <ul>
+                  <li>simple, usable design over flashy noise</li>
+                  <li>systems that scale, not hacks that break later</li>
+                  <li>building things, not just talking about them</li>
+                </ul>
+                <p>
+                  When I'm not designing or building, I'm probably exploring new tools, refining how I work, or quietly judging bad UX in the wild (it's a disease at this point).
+                </p>
+                <p>
+                  If you're building something and want it to be both well-designed and actually functional, we'll get along just fine.
+                </p>
+              </div>
+              <div className="about-card">
+                <h3>Core Focus</h3>
+                <div className="tag-grid">
+                  <span>UX Strategy</span>
+                  <span>Design Systems</span>
+                  <span>Rapid Prototyping</span>
+                  <span>Conversion UX</span>
+                  <span>Frontend Delivery</span>
+                </div>
               </div>
             </div>
           </div>
@@ -2321,7 +2328,41 @@ body {
 
 .about-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: 200px 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.about-portrait {
+  display: flex;
+  justify-content: center;
+}
+
+.portrait-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.portrait-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-content {
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
 }
 
