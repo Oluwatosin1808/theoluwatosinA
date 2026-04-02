@@ -1132,6 +1132,14 @@ const sectionMotion = {
 };
 
 export default function App() {
+  const [theme, setTheme] = React.useState<'light' | 'dark'>(() => {
+    const savedTheme = window.localStorage.getItem('theme');
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      return savedTheme;
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
   // Scroll animations
   useEffect(() => {
     const observerOptions = {
@@ -1160,6 +1168,11 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   React.useEffect(() => {
+    window.localStorage.setItem('theme', theme);
+    document.documentElement.style.colorScheme = theme;
+  }, [theme]);
+
+  React.useEffect(() => {
     const interval = window.setInterval(() => {
       setRoleIndex((prev) => (prev + 1) % roles.length);
     }, 2600);
@@ -1177,7 +1190,7 @@ export default function App() {
   };
 
   return (
-    <div className="portfolio-root">
+    <div className={`portfolio-root ${theme}-theme`}>
       <style>{pageStyles}</style>
       <div className="background-glow" aria-hidden="true" />
       <main className="main">
@@ -1190,18 +1203,50 @@ export default function App() {
             <a href="#tools" onClick={() => setIsMobileMenuOpen(false)}>Tools</a>
             <a href="#contact" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
           </div>
-          <a className="nav-cta" href="#contact">
-            Let&apos;s talk
-          </a>
-          <button
-            className="hamburger"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-            <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
-          </button>
+          <div className="nav-actions">
+            <button
+              className="theme-toggle"
+              onClick={() => setTheme((prevTheme) => (prevTheme === 'dark' ? 'light' : 'dark'))}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? (
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    d="M12 4.5V2m0 20v-2.5m7.5-7.5H22m-20 0h2.5m14.596 5.096 1.768 1.768M3.136 3.136l1.768 1.768m12.192-1.768-1.768 1.768M4.904 19.096l-1.768 1.768M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path
+                    d="M21 12.8A9 9 0 1 1 11.2 3a7.2 7.2 0 1 0 9.8 9.8z"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </button>
+            <a className="nav-cta" href="#contact">
+              Let&apos;s talk
+            </a>
+            <button
+              className="hamburger"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+              <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+              <span className={`hamburger-line ${isMobileMenuOpen ? 'open' : ''}`}></span>
+            </button>
+          </div>
         </nav>
 
         <header className="hero" id="hero">
@@ -1747,27 +1792,6 @@ html {
 }
 
 :root {
-  color-scheme: dark;
-}
-
-.light-theme {
-  color-scheme: light;
-}
-
-.light-theme {
-  --ink: #fafaf8;
-  --ink-2: #3a3a3a;
-  --ink-3: #7a7a7a;
-  --surface: #0e0e0e;
-  --surface-2: #1a1a1a;
-  --accent: #f0f0f0;
-  --gold: #c8a96e;
-  --border: rgba(0,0,0,0.1);
-  --serif: 'DM Serif Display', serif;
-  --sans: 'DM Sans', sans-serif;
-}
-
-:root {
   --ink: #f2f4f8;
   --ink-2: #d0d6df;
   --ink-3: #9aa3b2;
@@ -1776,8 +1800,23 @@ html {
   --accent: #1a1a1a;
   --gold: #c8a96e;
   --border: rgba(255,255,255,0.1);
+  --nav-bg: rgba(19, 23, 32, 0.7);
+  --page-gradient: radial-gradient(circle at 12% 12%, #1b2230 0%, #10141d 45%, #0b0d11 100%);
+  --glow-gradient: radial-gradient(circle, rgba(245, 185, 74, 0.18), rgba(245, 185, 74, 0));
   --serif: 'Bricolage Grotesque', sans-serif;
   --sans: 'Manrope', sans-serif;
+}
+
+.portfolio-root.light-theme {
+  --ink: #10151f;
+  --ink-2: #3a4759;
+  --ink-3: #64748b;
+  --surface: #f4f7fb;
+  --surface-2: #e7edf5;
+  --border: rgba(16, 21, 31, 0.12);
+  --nav-bg: rgba(255, 255, 255, 0.82);
+  --page-gradient: radial-gradient(circle at 10% 5%, #ffffff 0%, #eef3fb 52%, #e4ebf5 100%);
+  --glow-gradient: radial-gradient(circle, rgba(200, 169, 110, 0.2), rgba(200, 169, 110, 0));
 }
 
 * {
@@ -1790,19 +1829,18 @@ body {
   color: var(--ink);
 }
 
-.light-theme body {
-  background: var(--surface);
-  color: var(--ink);
-}
-
 .portfolio-root {
   font-family: 'Manrope', system-ui, sans-serif;
-  background: radial-gradient(circle at 12% 12%, #1b2230 0%, #10141d 45%, #0b0d11 100%);
-  color: #f2f4f8;
+  background: var(--page-gradient);
+  color: var(--ink);
   min-height: 100vh;
   padding: 0 1.5rem 5rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+}
+
+body {
+  overflow-x: hidden;
 }
 
 .background-glow {
@@ -1810,7 +1848,7 @@ body {
   inset: -30% -10% auto auto;
   width: 520px;
   height: 520px;
-  background: radial-gradient(circle, rgba(245, 185, 74, 0.18), rgba(245, 185, 74, 0));
+  background: var(--glow-gradient);
   filter: blur(0px);
   pointer-events: none;
 }
@@ -1826,12 +1864,17 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2rem 0 0;
+  padding: 0.85rem 1rem;
+  margin-top: 1rem;
   gap: 1.5rem;
   position: sticky;
-  top: 0;
+  top: 0.75rem;
   z-index: 1000;
   transition: all 0.3s ease;
+  background: var(--nav-bg);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  backdrop-filter: blur(12px);
 }
 
 .logo {
@@ -1848,19 +1891,43 @@ body {
 
 .nav-links a {
   text-decoration: none;
-  color: #d0d6df;
+  color: var(--ink-2);
   font-weight: 600;
   font-size: 0.95rem;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.theme-toggle {
+  border: 1px solid var(--border);
+  color: var(--ink);
+  background: transparent;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.theme-toggle svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
 .nav-cta {
   text-decoration: none;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  color: #f2f4f8;
+  border: 1px solid var(--border);
+  color: var(--ink);
   padding: 0.75rem 1.4rem;
   border-radius: 999px;
   font-weight: 600;
-  background: rgba(19, 23, 32, 0.7);
+  background: var(--nav-bg);
 }
 
 /* Hamburger menu styles */
@@ -1877,7 +1944,7 @@ body {
 .hamburger-line {
   width: 25px;
   height: 2px;
-  background-color: #f2f4f8;
+  background-color: var(--ink);
   margin: 3px 0;
   transition: all 0.3s ease;
   transform-origin: center;
@@ -2644,6 +2711,76 @@ body {
   line-height: 1.6;
 }
 
+.portfolio-root.light-theme .intro,
+.portfolio-root.light-theme .role-ats,
+.portfolio-root.light-theme .section-lead,
+.portfolio-root.light-theme .about-copy p,
+.portfolio-root.light-theme .about-copy ul,
+.portfolio-root.light-theme .tool-group,
+.portfolio-root.light-theme .work-card p,
+.portfolio-root.light-theme .service-card p,
+.portfolio-root.light-theme .testimonial-card p,
+.portfolio-root.light-theme .timeline-year,
+.portfolio-root.light-theme .timeline-company,
+.portfolio-root.light-theme .footer p,
+.portfolio-root.light-theme .seo-block,
+.portfolio-root.light-theme .work-label,
+.portfolio-root.light-theme .process-step,
+.portfolio-root.light-theme .spotify-label,
+.portfolio-root.light-theme .stat-card p,
+.portfolio-root.light-theme .about-note {
+  color: var(--ink-2);
+}
+
+.portfolio-root.light-theme .role,
+.portfolio-root.light-theme .nav-links a,
+.portfolio-root.light-theme .footer a,
+.portfolio-root.light-theme .logo,
+.portfolio-root.light-theme .name {
+  color: var(--ink);
+}
+
+.portfolio-root.light-theme .work-card,
+.portfolio-root.light-theme .service-card,
+.portfolio-root.light-theme .testimonial-card,
+.portfolio-root.light-theme .timeline-item,
+.portfolio-root.light-theme .contact-card,
+.portfolio-root.light-theme .about-card,
+.portfolio-root.light-theme .tool-card,
+.portfolio-root.light-theme .spotify-card,
+.portfolio-root.light-theme .stat-card,
+.portfolio-root.light-theme .work-stats,
+.portfolio-root.light-theme .process-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(16, 21, 31, 0.12);
+  box-shadow: 0 10px 26px rgba(60, 76, 97, 0.12);
+}
+
+.portfolio-root.light-theme .cta.secondary {
+  border-color: rgba(16, 21, 31, 0.2);
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.portfolio-root.light-theme .globe-shell {
+  background: radial-gradient(circle at 30% 30%, rgba(232, 239, 250, 0.95), rgba(210, 221, 238, 0.9));
+  box-shadow: 0 24px 56px rgba(73, 87, 105, 0.2);
+}
+
+.portfolio-root.light-theme .globe-fallback {
+  background: radial-gradient(circle at 35% 35%, #d5dff0, #b7c8e2 68%, #9eb2d1 100%);
+}
+
+.portfolio-root.light-theme .globe-caption {
+  color: #1c2635;
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.portfolio-root.light-theme .cta-section {
+  background: #1f2733;
+  color: #f5f7fb;
+}
+
 @keyframes scroll {
   from {
     transform: translateX(0);
@@ -2684,7 +2821,7 @@ body {
     width: 80%;
     max-width: 300px;
     height: 100vh;
-    background: rgba(19, 23, 32, 0.98);
+    background: var(--nav-bg);
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -2694,6 +2831,10 @@ body {
     z-index: 999;
   }
 
+  .portfolio-root.light-theme .nav-links {
+    background: rgba(255, 255, 255, 0.98);
+  }
+
   .nav-links.open {
     display: flex;
     right: 0;
@@ -2701,11 +2842,16 @@ body {
 
   .nav-links a {
     font-size: 1.2rem;
-    color: #f2f4f8;
+    color: var(--ink);
   }
 
   .hamburger {
     display: flex;
+  }
+
+  .theme-toggle {
+    width: 2.35rem;
+    height: 2.35rem;
   }
 
   .nav-cta {
