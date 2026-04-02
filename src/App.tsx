@@ -1117,7 +1117,7 @@ const timeline: TimelineItem[] = [
 
 const stats = [
   { label: "Years of experience", value: "4+" },
-  { label: "Products shipped", value: "6+" },
+  { label: "Products shipped", value: "10+" },
   { label: "Average Customer Satisfaction Score", value: "4.8/5" }
 ];
 
