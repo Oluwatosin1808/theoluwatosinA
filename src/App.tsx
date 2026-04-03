@@ -7,6 +7,8 @@ const atlasMockupImage = new URL('../img/Mockup 26.png', import.meta.url).href;
 const dreamAiMockupImage = new URL('../img/Mockup Ribbon 11.png', import.meta.url).href;
 const gloUpMockupImage = new URL('../img/Notioneverything headers.png', import.meta.url).href;
 const nesoMockupImage = new URL('../img/Notioneverything headers (1).png', import.meta.url).href;
+const aaronCaseStudyImageOne = new URL('../img/case-0.png', import.meta.url).href;
+const aaronCaseStudyImageTwo = new URL('../img/case-0-2.png', import.meta.url).href;
 const portraitImage = new URL('../img/me.png', import.meta.url).href;
 
 const codelessAgencyCaseStudyHtml = `<!DOCTYPE html>
@@ -607,6 +609,248 @@ const codelessAgencyCaseStudyHtml = `<!DOCTYPE html>
 </body>
 </html>`;
 
+const aaronIsraelCaseStudyHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aaron Israel — Case Study</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --bg: #09111f;
+      --surface: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.94);
+      --muted: rgba(255,255,255,0.78);
+      --accent: #f5b94a;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color: var(--text);
+      line-height: 1.75;
+      background:
+        radial-gradient(900px 520px at 15% 10%, rgba(56,189,248,0.16), transparent 60%),
+        radial-gradient(900px 520px at 85% 5%, rgba(245,185,74,0.12), transparent 60%),
+        var(--bg);
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 42px 24px 56px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(30px, 4.2vw, 48px);
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      margin: 30px 0 10px;
+      font-size: clamp(20px, 2.8vw, 26px);
+      letter-spacing: -0.01em;
+    }
+
+    h3 {
+      margin: 18px 0 8px;
+      font-size: 16px;
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: var(--muted);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+
+    li {
+      margin: 0 0 8px;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 18px 0 24px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.03);
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.86);
+    }
+
+    .hero-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 18px 0 28px;
+    }
+
+    .hero-images img {
+      width: 100%;
+      height: 100%;
+      max-height: 280px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-size: 14px;
+    }
+
+    th {
+      color: rgba(255,255,255,0.92);
+      background: rgba(255,255,255,0.04);
+      font-weight: 600;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    a { color: #8fd8ff; }
+
+    @media (max-width: 720px) {
+      .hero-images {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Case Study: Aaron Israel — No-Code Web Developer &amp; Digital Builder</h1>
+    <div class="meta">
+      <span class="pill">Location: Nigeria</span>
+      <span class="pill">Available for projects</span>
+      <span class="pill">Portfolio: <a href="https://aaron.pxxl.click" target="_blank" rel="noreferrer">aaron.pxxl.click</a></span>
+    </div>
+    <hr />
+
+    <div class="hero-images">
+      <img src="${aaronCaseStudyImageOne}" alt="Aaron Israel case study visual 1" />
+      <img src="${aaronCaseStudyImageTwo}" alt="Aaron Israel case study visual 2" />
+    </div>
+
+    <h2>Overview</h2>
+    <p>Aaron Israel is a no-code web developer and digital product builder based in Nigeria, specialising in shipping powerful, production-ready websites and web applications fast. Where traditional development agencies quote months, Aaron delivers in days. His work sits at the intersection of speed, performance, and strategic design, helping startups, founders, and businesses launch without the overhead of conventional dev teams.</p>
+
+    <h2>The Problem He Solves</h2>
+    <p>Most businesses face a painful tradeoff: either invest significant time and money into a traditional development agency with slow onboarding, long timelines, and high costs, or settle for cookie-cutter templates that look generic and fail to scale.</p>
+    <p>Aaron challenges that false choice. His philosophy is that no-code is not a compromise; it is the smarter path. He builds real architecture with real performance, not glorified templates, and ships them at a fraction of the time and cost of traditional development.</p>
+
+    <h2>Services</h2>
+    <div class="card">
+      <h3>01 — No-Code Website Development</h3>
+      <p>Aaron builds full-stack websites on platforms like Webflow, Framer, and Wix Studio. The result is faster launches, lower cost, and sites clients can manage without needing a developer on retainer.</p>
+      <h3>02 — MVP &amp; Rapid Prototyping</h3>
+      <p>For startups that cannot afford slow dev cycles, Aaron turns rough ideas into working products in days using tools like Bubble, Glide, and Softr.</p>
+      <h3>03 — Automation &amp; Workflows</h3>
+      <p>Using Zapier, Make, and Airtable, Aaron connects tools and automates business processes end-to-end for fewer errors and scalable operations.</p>
+      <h3>04 — Landing Pages That Convert</h3>
+      <p>Built on Framer, Webflow, and Unbounce, these pages are engineered for higher conversion rates, better ad ROI, and more leads.</p>
+    </div>
+
+    <h2>The Production Pipeline</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Phase</th>
+          <th>What Happens</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01 — Strategy</td>
+          <td>Define goals, identify users, and map what success looks like before a single pixel is placed.</td>
+        </tr>
+        <tr>
+          <td>02 — Structure</td>
+          <td>Plan UX, information flow, and architecture so users always know what to do next.</td>
+        </tr>
+        <tr>
+          <td>03 — Build</td>
+          <td>Develop with the right no-code tools for the job, fast builds without sacrificing quality or scale.</td>
+        </tr>
+        <tr>
+          <td>04 — Optimize</td>
+          <td>Refine performance, run conversion checks, and set up automations so the site grows with the business.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Why Clients Build With Him</h2>
+    <ul>
+      <li><strong>Speed without sacrifice.</strong> What takes dev agencies three months, Aaron ships in two to three weeks.</li>
+      <li><strong>No-code, but production-ready.</strong> His builds are architected to scale, perform, and support real business growth.</li>
+      <li><strong>Scalable systems.</strong> Aaron builds systems that evolve as the client business grows.</li>
+      <li><strong>Performance-focused.</strong> Every build is optimised for speed, conversion, and reliability from day one.</li>
+    </ul>
+
+    <h2>Impact by the Numbers</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Result</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Projects Shipped</td><td>40+</td></tr>
+        <tr><td>Average Time to Launch</td><td>12 days</td></tr>
+        <tr><td>Faster than Traditional Dev</td><td>3x</td></tr>
+        <tr><td>Client Satisfaction Rate</td><td>98%</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Conclusion</h2>
+    <p>Aaron Israel represents a new generation of digital builder who leverages the best of no-code tooling to deliver outcomes that rival traditional development at a fraction of the cost and timeline. With 40+ projects shipped, a 98% client satisfaction rate, and an average launch time of 12 days, his track record speaks for itself.</p>
+    <p>For startups, founders, and businesses in Nigeria and beyond who need to move fast without cutting corners, Aaron Israel is a rare find.</p>
+    <p><strong>Available for new projects · Nigeria · Book a call</strong></p>
+  </div>
+</body>
+</html>`;
+
 const nesoCaseStudyHtml = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1009,6 +1253,16 @@ const tools: ToolItem[] = [
 
 const projects: ProjectItem[] = [
   {
+    title: "Aaron Israel",
+    category: "No-Code Development",
+    summary: "No-code web developer and digital builder shipping production-ready websites in days.",
+    metrics: "40+ projects shipped",
+    outcome: "3x faster delivery than traditional dev cycles with a 98% client satisfaction rate.",
+    image: aaronCaseStudyImageOne,
+    caseStudyHtml: aaronIsraelCaseStudyHtml,
+    liveUrl: "https://aaron.pxxl.click"
+  },
+  {
     title: "Codeless Solutions",
     category: "Product Design + Development",
     summary: "A home for a no-code agency that needed to look anything but ordinary",
@@ -1362,7 +1616,7 @@ export default function App() {
                   <li>building things, not just talking about them</li>
                 </ul>
                 <p>
-                  When I'm not designing or building, I'm probably exploring new tools, refining how I work, or quietly judging bad UX in the wild (it's a disease at this point).
+                  When I'm not designing or building, I'm probably exploring new tools, refining how I work, or listening to music on Spotify.
                 </p>
                 <p>
                   If you're building something and want it to be both well-designed and actually functional, we'll get along just fine.
@@ -2878,7 +3132,12 @@ body {
 
   .cta-row {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .cta-row .cta {
+    width: 100%;
   }
 
   .globe-shell {
