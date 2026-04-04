@@ -2119,10 +2119,10 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0.85rem 1rem;
-  margin-top: 1rem;
+  margin-top: 0;
   gap: 1.5rem;
   position: sticky;
-  top: 0.75rem;
+  top: 1rem;
   z-index: 1000;
   transition: all 0.3s ease;
   background: var(--nav-bg);
@@ -2217,7 +2217,7 @@ body {
 }
 
 .hero {
-  padding: 4rem 0 2rem;
+  padding: 5rem 0 2rem;
 }
 
 .hero-grid {
