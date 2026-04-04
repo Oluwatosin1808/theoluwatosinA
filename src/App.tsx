@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
-import CaseStudyModal from './components/CaseStudyModal';
+import CaseStudyModal, { CaseStudyData } from './components/CaseStudyModal';
 
 const atlasMockupImage = new URL('../img/Mockup 26.png', import.meta.url).href;
 const dreamAiMockupImage = new URL('../img/Mockup Ribbon 11.png', import.meta.url).href;
@@ -11,1203 +11,566 @@ const aaronCaseStudyImageOne = new URL('../img/case-0.png', import.meta.url).hre
 const aaronCaseStudyImageTwo = new URL('../img/case-0-2.png', import.meta.url).href;
 const portraitImage = new URL('../img/me.png', import.meta.url).href;
 
-const codelessAgencyCaseStudyHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Case Study — Codeless Agency Website</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --ink: #0e0e0e;
-    --ink-2: #3a3a3a;
-    --ink-3: #7a7a7a;
-    --surface: #fafaf8;
-    --surface-2: #f0ede6;
-    --accent: #1a1a1a;
-    --gold: #c8a96e;
-    --border: rgba(0,0,0,0.1);
-    --serif: 'DM Serif Display', serif;
-    --sans: 'DM Sans', sans-serif;
-  }
-
-  html { font-size: 16px; }
-
-  body {
-    font-family: var(--sans);
-    background: var(--surface);
-    color: var(--ink);
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* ── COVER ─────────────────────────────────────── */
-  .cover {
-    background: #0e0e0e;
-    color: #fafaf8;
-    padding: 80px 60px 72px;
-    position: relative;
-    overflow: hidden;
-  }
-  .cover::before {
-    content: '';
-    position: absolute;
-    top: -120px; right: -120px;
-    width: 480px; height: 480px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(200,169,110,0.18) 0%, transparent 70%);
-    pointer-events: none;
-  }
-  .cover-label {
-    font-family: var(--sans);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 32px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  .cover-label::after {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 1px;
-    background: var(--gold);
-    opacity: 0.5;
-  }
-  .cover h1 {
-    font-family: var(--serif);
-    font-size: clamp(38px, 6vw, 68px);
-    font-weight: 400;
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-    max-width: 780px;
-    margin-bottom: 28px;
-  }
-  .cover h1 em {
-    font-style: italic;
-    color: var(--gold);
-  }
-  .cover-sub {
-    font-size: 16px;
-    color: rgba(250,250,248,0.6);
-    max-width: 520px;
-    line-height: 1.65;
-    margin-bottom: 56px;
-  }
-  .cover-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 40px;
-    padding-top: 40px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-  }
-  .cover-meta-item { }
-  .cover-meta-item .label {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: rgba(250,250,248,0.4);
-    margin-bottom: 6px;
-  }
-  .cover-meta-item .value {
-    font-size: 14px;
-    font-weight: 500;
-    color: rgba(250,250,248,0.85);
-  }
-
-  /* ── LAYOUT ─────────────────────────────────────── */
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 48px;
-  }
-
-  /* ── SECTION ─────────────────────────────────────── */
-  section {
-    padding: 72px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  section:last-child { border-bottom: none; }
-
-  .section-eyebrow {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
-  }
-
-  h2 {
-    font-family: var(--serif);
-    font-size: clamp(28px, 4vw, 40px);
-    font-weight: 400;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    color: var(--ink);
-    margin-bottom: 24px;
-  }
-  h2 em { font-style: italic; color: #555; }
-
-  h3 {
-    font-family: var(--sans);
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-    margin-bottom: 10px;
-  }
-
-  p {
-    font-size: 16px;
-    color: var(--ink-2);
-    line-height: 1.8;
-    margin-bottom: 20px;
-    max-width: 680px;
-  }
-  p:last-child { margin-bottom: 0; }
-
-  /* ── STAT ROW ─────────────────────────────────────── */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin: 48px 0;
-  }
-  .stat {
-    background: var(--surface);
-    padding: 28px 24px;
-    text-align: center;
-  }
-  .stat .num {
-    font-family: var(--serif);
-    font-size: 42px;
-    line-height: 1;
-    color: var(--ink);
-    margin-bottom: 8px;
-  }
-  .stat .desc {
-    font-size: 12px;
-    color: var(--ink-3);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  /* ── CHALLENGE CARDS ─────────────────────────────── */
-  .challenge-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-top: 36px;
-  }
-  .challenge-card {
-    background: var(--surface-2);
-    border-radius: 10px;
-    padding: 24px 22px;
-    border-left: 3px solid var(--gold);
-  }
-  .challenge-card h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
-  .challenge-card p { font-size: 14px; margin: 0; color: var(--ink-2); max-width: 100%; line-height: 1.7; }
-
-  /* ── PROCESS ─────────────────────────────────────── */
-  .process-steps {
-    margin-top: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .process-step {
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    gap: 24px;
-    padding: 28px 0;
-    border-bottom: 1px solid var(--border);
-    align-items: start;
-  }
-  .process-step:last-child { border-bottom: none; }
-  .step-num {
-    font-family: var(--serif);
-    font-size: 32px;
-    color: rgba(0,0,0,0.12);
-    line-height: 1;
-    padding-top: 4px;
-  }
-  .step-body h3 { margin-bottom: 8px; }
-  .step-body p { font-size: 15px; margin: 0; max-width: 100%; }
-
-  /* ── FEATURES ────────────────────────────────────── */
-  .features-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    margin-top: 36px;
-  }
-  .feature {
-    padding: 0;
-  }
-  .feature-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--gold);
-    margin-bottom: 14px;
-  }
-  .feature h3 { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
-  .feature p { font-size: 14px; margin: 0; color: var(--ink-2); max-width: 100%; line-height: 1.7; }
-
-  /* ── TECH STACK ───────────────────────────────────── */
-  .tech-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 28px;
-  }
-  .tech-pill {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    padding: 7px 16px;
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    color: var(--ink-2);
-    background: #fff;
-  }
-
-  /* ── PULL QUOTE ──────────────────────────────────── */
-  .pull-quote {
-    background: #0e0e0e;
-    color: #fafaf8;
-    border-radius: 14px;
-    padding: 48px 52px;
-    margin: 56px 0;
-    position: relative;
-    overflow: hidden;
-  }
-  .pull-quote::before {
-    content: '\\201C';
-    font-family: var(--serif);
-    font-size: 180px;
-    line-height: 0.8;
-    color: rgba(200,169,110,0.15);
-    position: absolute;
-    top: 20px; left: 32px;
-    pointer-events: none;
-  }
-  .pull-quote blockquote {
-    font-family: var(--serif);
-    font-size: clamp(20px, 3vw, 27px);
-    font-style: italic;
-    line-height: 1.45;
-    color: rgba(250,250,248,0.92);
-    max-width: 640px;
-    position: relative;
-    z-index: 1;
-    margin-bottom: 24px;
-  }
-  .pull-quote cite {
-    font-family: var(--sans);
-    font-size: 13px;
-    color: var(--gold);
-    font-style: normal;
-    letter-spacing: 0.04em;
-  }
-
-  /* ── RESULTS ─────────────────────────────────────── */
-  .results-list {
-    margin-top: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-  .result-item {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-  }
-  .result-icon {
-    width: 22px; height: 22px;
-    flex-shrink: 0;
-    margin-top: 2px;
-    background: rgba(200,169,110,0.15);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .result-icon svg { width: 11px; height: 11px; }
-  .result-item p { font-size: 15px; margin: 0; max-width: 100%; }
-
-  /* ── FOOTER ──────────────────────────────────────── */
-  .doc-footer {
-    background: #0e0e0e;
-    color: rgba(250,250,248,0.4);
-    text-align: center;
-    padding: 40px 48px;
-    font-size: 12px;
-    letter-spacing: 0.04em;
-  }
-  .doc-footer a { color: var(--gold); text-decoration: none; }
-
-  @media (max-width: 640px) {
-    .cover { padding: 52px 28px 48px; }
-    .container { padding: 0 24px; }
-    .challenge-grid, .features-grid { grid-template-columns: 1fr; }
-    .stats { grid-template-columns: 1fr; }
-    .pull-quote { padding: 36px 28px; }
-    .cover-meta { gap: 24px; }
-  }
-</style>
-</head>
-<body>
-
-<!-- COVER -->
-<div class="cover">
-  <div class="container" style="max-width:860px;">
-    <div class="cover-label">Case Study</div>
-    <h1>Designing the <em>face</em> of a no-code agency that ships.</h1>
-    <p class="cover-sub">How a complete website redesign and rebuild turned Codeless into a credibility engine for a product design and no-code development studio.</p>
-    <div class="cover-meta">
-      <div class="cover-meta-item">
-        <div class="label">Client</div>
-        <div class="value">Codeless (codelessify.org)</div>
-      </div>
-      <div class="cover-meta-item">
-        <div class="label">Deliverable</div>
-        <div class="value">Agency Website</div>
-      </div>
-      <div class="cover-meta-item">
-        <div class="label">Scope</div>
-        <div class="value">Design + Development</div>
-      </div>
-      <div class="cover-meta-item">
-        <div class="label">Stack</div>
-        <div class="value">Next.js · Tailwind CSS</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- OVERVIEW -->
-<div class="container">
-  <section>
-    <div class="section-eyebrow">Overview</div>
-    <h2>A studio that needed a website as sharp as its work.</h2>
-    <p>Codeless is a product design and no-code development agency that helps startups and growing teams build, launch, and scale digital products — without writing a single line of traditional code. With 50+ launches under their belt and a 4.9 client rating, the team already had the track record. What they needed was a website that could communicate that credibility at a glance.</p>
-    <p>The brief was clear: design and build a marketing site that positions Codeless as a senior, focused studio — not another freelancer marketplace. Every pixel had to earn its place.</p>
-
-    <div class="stats">
-      <div class="stat">
-        <div class="num">50+</div>
-        <div class="desc">Projects delivered</div>
-      </div>
-      <div class="stat">
-        <div class="num">4.9★</div>
-        <div class="desc">Average client rating</div>
-      </div>
-      <div class="stat">
-        <div class="num">4</div>
-        <div class="desc">Core service verticals</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CHALLENGE -->
-  <section>
-    <div class="section-eyebrow">The Challenge</div>
-    <h2>Competing with trust, not just <em>traffic.</em></h2>
-    <p>No-code agencies occupy a peculiar position in the market. Potential clients are often skeptical — they wonder whether "no-code" means cutting corners. The old site didn't address this fear head-on. It underplayed the quality of the work, the seniority of the team, and the depth of the process.</p>
-    <p>The challenges were structural as well as visual:</p>
-
-    <div class="challenge-grid">
-      <div class="challenge-card">
-        <h3>Weak first impression</h3>
-        <p>The previous site lacked the visual confidence needed to convert high-value project inquiries from funded startups and established teams.</p>
-      </div>
-      <div class="challenge-card">
-        <h3>Service clarity</h3>
-        <p>Four distinct service areas — design, development, brand identity, and strategy — were described inconsistently and in isolation from each other.</p>
-      </div>
-      <div class="challenge-card">
-        <h3>No social proof architecture</h3>
-        <p>Strong testimonials from clients like Podium X, TeamBooster, and SpaceTime existed but weren't surfaced in a way that built momentum.</p>
-      </div>
-      <div class="challenge-card">
-        <h3>Low conversion pathway</h3>
-        <p>Visitors had no clear next step. The call-to-action strategy was ad hoc rather than deliberate, leaving intent without a clear outlet.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- PROCESS -->
-  <section>
-    <div class="section-eyebrow">Design Process</div>
-    <h2>From brief to <em>build</em> — four deliberate phases.</h2>
-    <p>The project followed a structured process that prioritised strategy before aesthetics, and content architecture before visual styling.</p>
-
-    <div class="process-steps">
-      <div class="process-step">
-        <div class="step-num">01</div>
-        <div class="step-body">
-          <h3>Discovery &amp; Positioning</h3>
-          <p>Audited the competitive landscape of no-code and boutique design agencies to understand how Codeless should position itself. Defined the core audience — early-stage startup founders and product leads — and mapped their decision-making triggers. The key insight: buyers of agency services are buying confidence. The site had to radiate it.</p>
-        </div>
-      </div>
-      <div class="process-step">
-        <div class="step-num">02</div>
-        <div class="step-body">
-          <h3>Content Architecture</h3>
-          <p>Structured the single-page layout around a deliberate narrative arc: attention → credibility → proof → action. Each section of the homepage was assigned a specific persuasive job. Services were reframed from a list to a suite — "a complete set of services from a single senior team" — to eliminate the mental overhead of vendor coordination for the client.</p>
-        </div>
-      </div>
-      <div class="process-step">
-        <div class="step-num">03</div>
-        <div class="step-body">
-          <h3>Visual Design</h3>
-          <p>Developed a bold, minimal visual system in dark and light tones that communicates sophistication without sacrificing warmth. Typography was treated as the primary design element — a large editorial headline treatment anchors the hero section with the agency's value proposition front and centre. Custom service artwork was commissioned to give each vertical a distinct visual identity.</p>
-        </div>
-      </div>
-      <div class="process-step">
-        <div class="step-num">04</div>
-        <div class="step-body">
-          <h3>Development &amp; Delivery</h3>
-          <p>Built the site in Next.js for performance, SEO, and a scalable content foundation. Implemented a blog and learning hub as separate routes to support future content marketing. The project page structure was architected to accommodate ongoing case study additions without design rework.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PULL QUOTE -->
-  <div class="pull-quote">
-    <blockquote>"The goal was never to build a pretty website. It was to build a site that works as hard as the team does — turning cold visitors into warm conversations."</blockquote>
-    <cite>Aaron Israel · CEO &amp; Founder, Codeless</cite>
-  </div>
-
-  <!-- KEY FEATURES -->
-  <section>
-    <div class="section-eyebrow">What Was Built</div>
-    <h2>Six sections, one <em>coherent story.</em></h2>
-    <p>Every section of the site was designed as a distinct conversion layer, not a decorative afterthought.</p>
-
-    <div class="features-grid">
-      <div class="feature">
-        <div class="feature-dot"></div>
-        <h3>Hero with singular focus</h3>
-        <p>A clean, full-width hero anchored by a single value proposition: "Build Smart. Launch Fast. Grow Without Code." Two CTAs — Start a Project and See Our Work — funnel different intent types without competing.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-dot"></div>
-        <h3>Services as a suite</h3>
-        <p>Four service verticals (design, development, brand, and strategy) presented with custom artwork and concise copy, emphasising that a single team handles all of them. This reduces perceived coordination risk for clients.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-dot"></div>
-        <h3>Project showcase</h3>
-        <p>Selected work featuring Dream AI, Dryrunz, SongPact, and TeamBooster — each with a clear category label. The format signals range and specificity without requiring visitors to click through to understand the agency's capability.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-dot"></div>
-        <h3>Team section with faces</h3>
-        <p>A "people behind the pixels" section humanises the studio and counters the anonymity problem common to small agencies. Showing faces and titles builds implicit accountability.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-dot"></div>
-        <h3>Scrolling testimonials</h3>
-        <p>Client testimonials from verified CEOs and founders are displayed in an auto-scrolling ticker that keeps social proof in constant view without consuming vertical real estate. Quotes from Podium X, TeamBooster, and SpaceTime provide category-specific credibility.</p>
-      </div>
-      <div class="feature">
-        <div class="feature-dot"></div>
-        <h3>Blog &amp; Learning Hub</h3>
-        <p>Standalone content routes built into the Next.js architecture, enabling the team to publish product insights, no-code tutorials, and launch playbooks — supporting SEO and long-term audience building beyond the homepage.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- TECH STACK -->
-  <section>
-    <div class="section-eyebrow">Technical Decisions</div>
-    <h2>Built to be fast, scalable, <em>and maintainable.</em></h2>
-    <p>The technology choices were made to serve the business — not to demonstrate complexity. The priority was a site that loads instantly, ranks well, and can be extended without a developer on standby.</p>
-    <p>Next.js provided server-side rendering for fast initial loads and strong SEO defaults. The image pipeline (next/image) handles optimisation automatically, serving appropriately sized assets for every viewport. Routing is cleanly separated between marketing pages, blog, and the learning hub — allowing independent content updates without touching the core design.</p>
-    <div class="tech-pills">
-      <span class="tech-pill">Next.js</span>
-      <span class="tech-pill">React</span>
-      <span class="tech-pill">Tailwind CSS</span>
-      <span class="tech-pill">Vercel deployment</span>
-      <span class="tech-pill">next/image optimisation</span>
-      <span class="tech-pill">File-based routing</span>
-      <span class="tech-pill">Custom blog route</span>
-      <span class="tech-pill">Learning hub route</span>
-    </div>
-  </section>
-
-  <!-- RESULTS -->
-  <section>
-    <div class="section-eyebrow">Outcomes</div>
-    <h2>A website that converts <em>credibility into conversations.</em></h2>
-    <p>The completed site positions Codeless as a premium, trustworthy studio for startups and growth-stage teams. The strategic combination of strong social proof, clear service architecture, and direct conversion pathways means every visitor — regardless of entry point — is guided toward a meaningful next step.</p>
-
-    <div class="results-list">
-      <div class="result-item">
-        <div class="result-icon">
-          <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 6.5L5 9.5L10 3" stroke="#c8a96e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <p><strong>Positioning clarity</strong> — Services are now understood as an integrated suite, removing the confusion that arose from listing them in isolation. Clients immediately understand what Codeless offers and who it's for.</p>
-      </div>
-      <div class="result-item">
-        <div class="result-icon">
-          <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 6.5L5 9.5L10 3" stroke="#c8a96e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <p><strong>Persistent social proof</strong> — Testimonials from five named founders and CEOs are visible throughout the site without disrupting the primary conversion flow. This builds trust passively as visitors scroll.</p>
-      </div>
-      <div class="result-item">
-        <div class="result-icon">
-          <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 6.5L5 9.5L10 3" stroke="#c8a96e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <p><strong>Scalable content infrastructure</strong> — The blog and learning hub are live and independently updatable, giving the team a platform to demonstrate expertise and attract organic search traffic over time.</p>
-      </div>
-      <div class="result-item">
-        <div class="result-icon">
-          <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 6.5L5 9.5L10 3" stroke="#c8a96e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <p><strong>Optimised performance</strong> — Next.js server-side rendering and next/image processing deliver fast page loads and strong Core Web Vitals scores, supporting both user experience and search engine visibility.</p>
-      </div>
-      <div class="result-item">
-        <div class="result-icon">
-          <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 6.5L5 9.5L10 3" stroke="#c8a96e" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
-        <p><strong>A dual-CTA conversion system</strong> — "Book a call" and "Join the newsletter" serve high-intent and low-intent visitors respectively, capturing both immediate project leads and long-term audience members in a single session.</p>
-      </div>
-    </div>
-  </section>
-</div>
-
-<!-- FOOTER -->
-<div class="doc-footer">
-  <p>Case study prepared for <a href="https://agency.codelessify.org/" target="_blank">agency.codelessify.org</a> &nbsp;·&nbsp; Codeless — Build Smart. Launch Fast.</p>
-</div>
-
-</body>
-</html>`;
-
-const aaronIsraelCaseStudyHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Aaron Israel — Case Study</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-
-    :root {
-      --bg: #09111f;
-      --surface: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.14);
-      --text: rgba(255,255,255,0.94);
-      --muted: rgba(255,255,255,0.78);
-      --accent: #f5b94a;
-    }
-
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      color: var(--text);
-      line-height: 1.75;
-      background:
-        radial-gradient(900px 520px at 15% 10%, rgba(56,189,248,0.16), transparent 60%),
-        radial-gradient(900px 520px at 85% 5%, rgba(245,185,74,0.12), transparent 60%),
-        var(--bg);
-    }
-
-    .wrap {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 42px 24px 56px;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      font-size: clamp(30px, 4.2vw, 48px);
-      letter-spacing: -0.02em;
-    }
-
-    h2 {
-      margin: 30px 0 10px;
-      font-size: clamp(20px, 2.8vw, 26px);
-      letter-spacing: -0.01em;
-    }
-
-    h3 {
-      margin: 18px 0 8px;
-      font-size: 16px;
-    }
-
-    p {
-      margin: 0 0 14px;
-      color: var(--muted);
-    }
-
-    ul {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--muted);
-    }
-
-    li {
-      margin: 0 0 8px;
-    }
-
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 18px 0 24px;
-    }
-
-    .meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .pill {
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.03);
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.86);
-    }
-
-    .hero-images {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin: 18px 0 28px;
-    }
-
-    .hero-images img {
-      width: 100%;
-      height: 100%;
-      max-height: 280px;
-      object-fit: cover;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(255,255,255,0.02);
-    }
-
-    .card {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      border-radius: 14px;
-      padding: 14px;
-      margin-top: 12px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-      font-size: 14px;
-    }
-
-    th {
-      color: rgba(255,255,255,0.92);
-      background: rgba(255,255,255,0.04);
-      font-weight: 600;
-    }
-
-    tr:last-child td { border-bottom: none; }
-
-    a { color: #8fd8ff; }
-
-    @media (max-width: 720px) {
-      .hero-images {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Case Study: Aaron Israel — No-Code Web Developer &amp; Digital Builder</h1>
-    <div class="meta">
-      <span class="pill">Location: Nigeria</span>
-      <span class="pill">Available for projects</span>
-      <span class="pill">Portfolio: <a href="https://aaron.pxxl.click" target="_blank" rel="noreferrer">aaron.pxxl.click</a></span>
-    </div>
-    <hr />
-
-    <div class="hero-images">
-      <img src="${aaronCaseStudyImageOne}" alt="Aaron Israel case study visual 1" />
-      <img src="${aaronCaseStudyImageTwo}" alt="Aaron Israel case study visual 2" />
-    </div>
-
-    <h2>Overview</h2>
-    <p>Aaron Israel is a no-code web developer and digital product builder based in Nigeria, specialising in shipping powerful, production-ready websites and web applications fast. Where traditional development agencies quote months, Aaron delivers in days. His work sits at the intersection of speed, performance, and strategic design, helping startups, founders, and businesses launch without the overhead of conventional dev teams.</p>
-
-    <h2>The Problem He Solves</h2>
-    <p>Most businesses face a painful tradeoff: either invest significant time and money into a traditional development agency with slow onboarding, long timelines, and high costs, or settle for cookie-cutter templates that look generic and fail to scale.</p>
-    <p>Aaron challenges that false choice. His philosophy is that no-code is not a compromise; it is the smarter path. He builds real architecture with real performance, not glorified templates, and ships them at a fraction of the time and cost of traditional development.</p>
-
-    <h2>Services</h2>
-    <div class="card">
-      <h3>01 — No-Code Website Development</h3>
-      <p>Aaron builds full-stack websites on platforms like Webflow, Framer, and Wix Studio. The result is faster launches, lower cost, and sites clients can manage without needing a developer on retainer.</p>
-      <h3>02 — MVP &amp; Rapid Prototyping</h3>
-      <p>For startups that cannot afford slow dev cycles, Aaron turns rough ideas into working products in days using tools like Bubble, Glide, and Softr.</p>
-      <h3>03 — Automation &amp; Workflows</h3>
-      <p>Using Zapier, Make, and Airtable, Aaron connects tools and automates business processes end-to-end for fewer errors and scalable operations.</p>
-      <h3>04 — Landing Pages That Convert</h3>
-      <p>Built on Framer, Webflow, and Unbounce, these pages are engineered for higher conversion rates, better ad ROI, and more leads.</p>
-    </div>
-
-    <h2>The Production Pipeline</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Phase</th>
-          <th>What Happens</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>01 — Strategy</td>
-          <td>Define goals, identify users, and map what success looks like before a single pixel is placed.</td>
-        </tr>
-        <tr>
-          <td>02 — Structure</td>
-          <td>Plan UX, information flow, and architecture so users always know what to do next.</td>
-        </tr>
-        <tr>
-          <td>03 — Build</td>
-          <td>Develop with the right no-code tools for the job, fast builds without sacrificing quality or scale.</td>
-        </tr>
-        <tr>
-          <td>04 — Optimize</td>
-          <td>Refine performance, run conversion checks, and set up automations so the site grows with the business.</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h2>Why Clients Build With Him</h2>
-    <ul>
-      <li><strong>Speed without sacrifice.</strong> What takes dev agencies three months, Aaron ships in two to three weeks.</li>
-      <li><strong>No-code, but production-ready.</strong> His builds are architected to scale, perform, and support real business growth.</li>
-      <li><strong>Scalable systems.</strong> Aaron builds systems that evolve as the client business grows.</li>
-      <li><strong>Performance-focused.</strong> Every build is optimised for speed, conversion, and reliability from day one.</li>
-    </ul>
-
-    <h2>Impact by the Numbers</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Metric</th>
-          <th>Result</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>Projects Shipped</td><td>40+</td></tr>
-        <tr><td>Average Time to Launch</td><td>12 days</td></tr>
-        <tr><td>Faster than Traditional Dev</td><td>3x</td></tr>
-        <tr><td>Client Satisfaction Rate</td><td>98%</td></tr>
-      </tbody>
-    </table>
-
-    <h2>Conclusion</h2>
-    <p>Aaron Israel represents a new generation of digital builder who leverages the best of no-code tooling to deliver outcomes that rival traditional development at a fraction of the cost and timeline. With 40+ projects shipped, a 98% client satisfaction rate, and an average launch time of 12 days, his track record speaks for itself.</p>
-    <p>For startups, founders, and businesses in Nigeria and beyond who need to move fast without cutting corners, Aaron Israel is a rare find.</p>
-    <p><strong>Available for new projects · Nigeria · Book a call</strong></p>
-  </div>
-</body>
-</html>`;
-
-const nesoCaseStudyHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neso — Case Study</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-
-    :root {
-      --bg: #0b0d16;
-      --surface: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.12);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.74);
-    }
-
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background:
-        radial-gradient(1000px 600px at 20% 10%, rgba(34,197,94,0.14), transparent 55%),
-        radial-gradient(900px 600px at 80% 15%, rgba(59,130,246,0.10), transparent 55%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.75;
-    }
-
-    .wrap {
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 44px 26px 56px;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 4.2vw, 46px);
-      letter-spacing: -0.02em;
-    }
-
-    h2 {
-      margin: 30px 0 10px;
-      font-size: 20px;
-      letter-spacing: -0.01em;
-    }
-
-    p {
-      margin: 0 0 14px;
-      color: var(--muted);
-    }
-
-    ul { margin: 0 0 14px 18px; color: var(--muted); }
-    li { margin: 0 0 8px; }
-
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 18px 0 22px;
-    }
-
-    .card {
-      margin-top: 12px;
-      padding: 16px 16px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--surface);
-    }
-
-    strong { color: var(--text); }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Neso — Case Study</h1>
-    <hr />
-
-    <h2>Project Overview</h2>
-    <p><strong>NESO</strong> is a workout/fitness tracker that allows users to set up workouts, track their progress, and monitor their nutrition and diet during the period of their specific program. It includes more than 50 foods and over 100 exercises that will help you stay active no matter where you are. And with automatic food tracking and nutrition facts for each one of your meals, and easy-to-use tools like eating plans and meal plans, you can lose weight safely and effectively with this app while also earning money in realtime too.</p>
-
-    <h2>Objectives/Goals</h2>
-    <div class="card">
-      <ul>
-        <li>To create an experience that encourages users to perform activities in order to improve their health and fitness.</li>
-        <li>Discovering through research the problems people face while using workout/fitness applications.</li>
-        <li>Creating a clean and modern user interface.</li>
-        <li>Creating an easy to use application for optimum user experience.</li>
-      </ul>
-    </div>
-
-    <h2>Problems</h2>
-    <p>User Interviews was conducted to gain insights about how users feel about using workout/fitness apps.</p>
-    <p>The traditional way of working out is acceptable, but with the growing concerns regarding the health and well-being of the body because of its high stress levels and lack of motivation. In short, with all the distractions (work pressure, family pressure etc.), it becomes hard to focus on what should be done in order to get fit. With gym memberships being expensive and gyms not really available in local areas, people tend to find a new way to workout.</p>
-
-    <h2>Who are the users?</h2>
-    <p>Users are people between the ages of 17-35 all around the world, or anyone who is looking for a way to workout comfortably without visiting the gym.</p>
-
-    <h2>Solution</h2>
-    <p>After conducting considerable study, we decided to create a fitness application that would provide users with a diverse range of workouts and routines, such as bodybuilding, self-defense, and crossfit. We also integrated a nutrition component so that users could track, manage, and regulate their food consumption while working out.</p>
-  </div>
-</body>
-</html>`;
-
-const gloUpCaseStudyHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The Glo Up — Case Study</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-
-    :root {
-      --bg: #0b0d16;
-      --surface: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.12);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.74);
-    }
-
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background:
-        radial-gradient(1000px 600px at 20% 10%, rgba(236,72,153,0.18), transparent 55%),
-        radial-gradient(900px 600px at 80% 15%, rgba(59,130,246,0.12), transparent 55%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.75;
-    }
-
-    .wrap {
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 44px 26px 56px;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(30px, 4.2vw, 46px);
-      letter-spacing: -0.02em;
-    }
-
-    h2 {
-      margin: 30px 0 10px;
-      font-size: 20px;
-      letter-spacing: -0.01em;
-    }
-
-    p {
-      margin: 0 0 14px;
-      color: var(--muted);
-    }
-
-    ul { margin: 0 0 14px 18px; color: var(--muted); }
-
-    li { margin: 0 0 8px; }
-
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 18px 0 22px;
-    }
-
-    .card {
-      margin-top: 12px;
-      padding: 16px 16px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--surface);
-    }
-
-    strong { color: var(--text); }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>The Glo Up — Case Study</h1>
-    <hr />
-
-    <h2>Project Overview</h2>
-    <p>A dating app, <strong>[The Glo Up]</strong>, is a mobile application that helps users find potential dates. The goal is to help people find and connect based on their sexuality and interests. The app is currently in development and will be available for both iOS and Android devices.</p>
-
-    <h2>Objectives/Goals</h2>
-    <div class="card">
-      <ul>
-        <li>Create options for users that want company without romantic intentions.</li>
-        <li>Gaining insight on the problems people face while using dating applications.</li>
-        <li>Solve the problem of sexuality mismatch among users of dating applications.</li>
-        <li>Creating an easy to use application for optimum user experience.</li>
-      </ul>
-    </div>
-
-    <h2>Problems Statement</h2>
-    <p>Mainstream dating apps mostly caters to individuals finding heterosexual relationships and neglect other forms of sexuality i.e. , the <strong>LGBT.</strong> As a result, these dating applications do not cater to users seeking relationships outside of heterosexuality. They also do not cater to users that would prefer relationships that are not romantic e.g. coffee break pals, hiking partners etc.</p>
-    <p>User surveys was conducted to gain insights about how users feel about using dating applications that not only served the heterosexuals, but also catered to the needs of people from the <strong>LGBT</strong> Community and allowed for options other than romantic relationships.</p>
-
-    <h2>Who are the users?</h2>
-    <p>The mobile application is aimed at young and full grown adults looking to search for other users/people looking to find the same thing as themselves (i.e., love, casuals, someone to hang out with or just friendships).</p>
-
-    <h2>Solution</h2>
-    <p>After conducting considerable study, we decided to create an easy-to-use dating application that would include users from the <strong>LGBT</strong> community and would help other users alike find potential partners based on their preferred sexuality, interests and personalities so that they can have a great time with someone they like or that shares similar interests.</p>
-  </div>
-</body>
-</html>`;
-
-const dreamAiCaseStudyHtml = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DreamAI — Case Study</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; }
-
-    :root {
-      --bg: #0b0d16;
-      --surface: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.12);
-      --text: rgba(255,255,255,0.92);
-      --muted: rgba(255,255,255,0.74);
-      --accent: #8b5cf6;
-    }
-
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background:
-        radial-gradient(1200px 700px at 20% 10%, rgba(139,92,246,0.22), transparent 60%),
-        radial-gradient(900px 600px at 80% 15%, rgba(59,130,246,0.14), transparent 55%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.75;
-    }
-
-    .wrap {
-      max-width: 920px;
-      margin: 0 auto;
-      padding: 44px 26px 56px;
-    }
-
-    h1 {
-      margin: 0 0 6px;
-      font-size: clamp(30px, 4.2vw, 46px);
-      letter-spacing: -0.02em;
-    }
-
-    h2 {
-      margin: 34px 0 10px;
-      font-size: 20px;
-      letter-spacing: -0.01em;
-    }
-
-    h3 {
-      margin: 24px 0 8px;
-      font-size: 16px;
-    }
-
-    p {
-      margin: 0 0 14px;
-      color: var(--muted);
-    }
-
-    strong { color: var(--text); }
-
-    em { color: rgba(255,255,255,0.86); }
-
-    hr {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 18px 0 22px;
-    }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      color: rgba(255,255,255,0.82);
-      font-size: 13px;
-      margin-bottom: 14px;
-    }
-
-    .card {
-      margin-top: 12px;
-      padding: 16px 16px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      background: var(--surface);
-    }
-
-    .footer {
-      margin-top: 30px;
-      font-size: 13px;
-      color: rgba(255,255,255,0.66);
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>DreamAI — Case Study</h1>
-    <h2 style="margin: 6px 0 0; font-size: 16px; font-weight: 600; color: rgba(255,255,255,0.86);">AI-Powered Dream Journaling &amp; Interpretation</h2>
-    <p style="margin: 10px 0 0; color: rgba(255,255,255,0.75);"><em>Designed &amp; built on Bubble</em></p>
-    <hr />
-
-    <h2>Overview</h2>
-    <p>DreamAI is a no-code web application that helps everyday users capture, understand, and find meaning in their dreams. By combining a frictionless journaling experience with AI-driven interpretation, it transforms the fleeting, hard-to-articulate nature of dreams into something reflective and personal — delivered in seconds.</p>
-    <p>The product was designed for general consumers and wellness-minded individuals who are curious about their inner world but don't have access to a therapist, analyst, or the patience for dense dream dictionaries. The core promise: write down what you remember, and DreamAI does the rest.</p>
-
-    <h2>The Problem</h2>
-    <p>Dreams are notoriously difficult to capture. You wake up with a vivid impression that fades within minutes, and even when you try to write it down, the meaning feels just out of reach. Existing solutions — physical journals, generic apps, or symbolic dream dictionaries — all share the same flaw: they're passive. They store your entry, but they don't engage with it.</p>
-    <p>For wellness-oriented users, this is a missed opportunity. Dreams are increasingly recognised as a window into emotional processing, stress patterns, and subconscious thinking. The challenge was to create an experience that felt both effortless to use in a groggy morning state and substantive enough to provide genuine psychological value.</p>
-
-    <h2>Design Goals</h2>
-    <div class="card">
-      <p><strong>1. Zero friction at the moment of capture.</strong> The journaling interface had to be the first thing a user encountered — no onboarding walls, no feature tours. If a user had to think for more than a second about where to start, the dream would be gone.</p>
-    </div>
-    <div class="card">
-      <p><strong>2. Warmth over clinical sterility.</strong> Many wellness apps err toward cold, medical aesthetics. DreamAI needed to feel intimate and slightly otherworldly — reflective of the dream state itself. The visual language had to signal safety and curiosity, not productivity.</p>
-    </div>
-    <div class="card">
-      <p><strong>3. Interpretation as conversation, not classification.</strong> AI output shouldn't feel like a printout. The goal was for responses to read like something a thoughtful, empathetic friend might say — inviting reflection rather than delivering verdicts.</p>
-    </div>
-
-    <h2>UX &amp; Design Decisions</h2>
-
-    <h3>Journaling First, Account Later</h3>
-    <p>The entry point of DreamAI is a large, open text area — not a sign-up screen. Users can begin writing immediately. This decision was deliberate: asking someone to create an account before they've experienced any value is a significant source of early drop-off, especially for a wellness product where trust hasn't yet been established. Authentication was pushed to a natural save/persist moment, reducing the cognitive cost of getting started.</p>
-
-    <h3>Visual Language: Dark, Soft, and Spatial</h3>
-    <p>The colour palette draws from deep indigos, muted purples, and near-blacks — evoking the liminal quality of sleep without feeling oppressive. Soft glows and subtle gradients reinforce the sense that the interface exists somewhere between the conscious and unconscious. Typography was chosen for readability under low-light conditions, recognising that many users would be writing shortly after waking, often in a dim room.</p>
-    <p>This aesthetic choice also serves a functional purpose: it signals to users that DreamAI is a different kind of app — one that takes the inner life seriously, and isn't competing for attention in the same visual register as productivity tools or social media.</p>
-
-    <h3>The Interpretation Experience</h3>
-    <p>After a dream entry is submitted, the AI interpretation is revealed progressively rather than dumped all at once. This pacing was a conscious UX choice: it mimics the feeling of someone reading carefully and responding thoughtfully, rather than an instant machine-generated response. It slows the user down and encourages them to read — not skim.</p>
-    <p>The interpretation itself avoids diagnostic language. Rather than labelling symbols or issuing psychological verdicts, responses frame insights as possibilities and questions, nudging users toward self-reflection. This approach is both more honest (AI interpretation is probabilistic, not prescient) and more useful for a wellness context where autonomy over one's own narrative matters.</p>
-
-    <h3>Returning User Experience</h3>
-    <p>For users who return regularly, the journal history view was designed to surface patterns over time rather than simply listing past entries. Thematic echoes between dreams — recurring figures, locations, or emotional tones — are gently highlighted, turning the archive into something that rewards ongoing use. This was central to the retention strategy: a user who notices meaningful patterns across their dreams has a reason to keep coming back.</p>
-
-    <h3>Mobile-First Thinking</h3>
-    <p>Given that the most natural moment to log a dream is immediately after waking — often while still in bed, phone in hand — the entire layout was designed mobile-first. Touch targets are generous, the text input expands naturally, and no critical action requires a precise tap. Even though the app is browser-based, it was tested extensively at mobile viewport sizes to ensure it felt native, not adapted.</p>
-
-    <h2>Building on Bubble</h2>
-    <p>Bubble was chosen as the platform to allow for rapid iteration without sacrificing a polished front-end. The visual design was implemented using Bubble's responsive engine with custom CSS applied where the native components fell short of the intended aesthetic. AI interpretation is handled via API connector, with prompt engineering done to ensure tonal consistency across diverse dream inputs.</p>
-    <p>The no-code approach meant that design decisions could be tested and revised in real time — a significant advantage when the product is this feeling-dependent. Small changes to spacing, animation timing, or copy could be deployed and assessed immediately, keeping the design process tight and intuitive.</p>
-
-    <h2>Reflections</h2>
-    <p>DreamAI is a product that lives or dies on trust. Users are sharing something deeply personal — the unfiltered content of their sleeping mind — and the design has to honour that. Every decision, from the colour of the background to the cadence of the AI response, was made in service of one question: <em>does this feel safe, and does this feel worth it?</em></p>
-    <p>The answer, in early use, appears to be yes. The design succeeds most where it gets out of the way — where the experience feels less like using a tool and more like opening a private notebook that happens to write back.</p>
-
-    <p class="footer"><em>Built with Bubble · Designed for curious minds and restless sleepers</em></p>
-  </div>
-</body>
-</html>`;
+const codelessAgencyCaseStudy: CaseStudyData = {
+  title: 'Codeless Solutions',
+  category: 'Product Design + Development',
+  coverMeta: [
+    { label: 'Client', value: 'Codeless (codelessify.org)' },
+    { label: 'Deliverable', value: 'Agency Website' },
+    { label: 'Scope', value: 'Design + Development' },
+    { label: 'Stack', value: 'Next.js · Tailwind CSS' },
+  ],
+  sections: [
+    {
+      eyebrow: 'Overview',
+      title: 'A studio that needed a website as sharp as its work.',
+      paragraphs: [
+        'Codeless is a product design and no-code development agency that helps startups and growing teams build, launch, and scale digital products — without writing a single line of traditional code. With 50+ launches under their belt and a 4.9 client rating, the team already had the track record. What they needed was a website that could communicate that credibility at a glance.',
+        'The brief was clear: design and build a marketing site that positions Codeless as a senior, focused studio — not another freelancer marketplace. Every pixel had to earn its place.',
+      ],
+      stats: [
+        { num: '50+', desc: 'Projects delivered' },
+        { num: '4.9★', desc: 'Average client rating' },
+        { num: '4', desc: 'Core service verticals' },
+      ],
+    },
+    {
+      eyebrow: 'The Challenge',
+      title: 'Competing with trust, not just traffic.',
+      paragraphs: [
+        'No-code agencies occupy a peculiar position in the market. Potential clients are often skeptical — they wonder whether "no-code" means cutting corners. The old site didn\'t address this fear head-on. It underplayed the quality of the work, the seniority of the team, and the depth of the process.',
+        'The challenges were structural as well as visual:',
+      ],
+      cards: [
+        { title: 'Weak first impression', body: 'The previous site lacked the visual confidence needed to convert high-value project inquiries from funded startups and established teams.' },
+        { title: 'Service clarity', body: 'Four distinct service areas — design, development, brand identity, and strategy — were described inconsistently and in isolation from each other.' },
+        { title: 'No social proof architecture', body: 'Strong testimonials from clients like Podium X, TeamBooster, and SpaceTime existed but weren\'t surfaced in a way that built momentum.' },
+        { title: 'Low conversion pathway', body: 'Visitors had no clear next step. The call-to-action strategy was ad hoc rather than deliberate, leaving intent without a clear outlet.' },
+      ],
+    },
+    {
+      eyebrow: 'Design Process',
+      title: 'From brief to build — four deliberate phases.',
+      paragraphs: ['The project followed a structured process that prioritised strategy before aesthetics, and content architecture before visual styling.'],
+      steps: [
+        { step: '01', title: 'Discovery & Positioning', body: 'Audited the competitive landscape of no-code and boutique design agencies to understand how Codeless should position itself. Defined the core audience — early-stage startup founders and product leads — and mapped their decision-making triggers. The key insight: buyers of agency services are buying confidence. The site had to radiate it.' },
+        { step: '02', title: 'Content Architecture', body: 'Structured the single-page layout around a deliberate narrative arc: attention → credibility → proof → action. Services were reframed from a list to a suite — "a complete set of services from a single senior team" — to eliminate the mental overhead of vendor coordination for the client.' },
+        { step: '03', title: 'Visual Design', body: 'Developed a bold, minimal visual system in dark and light tones that communicates sophistication without sacrificing warmth. Typography was treated as the primary design element — a large editorial headline treatment anchors the hero section with the agency\'s value proposition front and centre.' },
+        { step: '04', title: 'Development & Delivery', body: 'Built the site in Next.js for performance, SEO, and a scalable content foundation. Implemented a blog and learning hub as separate routes to support future content marketing. The project page structure was architected to accommodate ongoing case study additions without design rework.' },
+      ],
+    },
+    {
+      quote: {
+        text: 'The goal was never to build a pretty website. It was to build a site that works as hard as the team does — turning cold visitors into warm conversations.',
+        cite: 'Aaron Israel · CEO & Founder, Codeless',
+      },
+    },
+    {
+      eyebrow: 'What Was Built',
+      title: 'Six sections, one coherent story.',
+      paragraphs: ['Every section of the site was designed as a distinct conversion layer, not a decorative afterthought.'],
+      cards: [
+        { title: 'Hero with singular focus', body: 'A clean, full-width hero anchored by a single value proposition. Two CTAs funnel different intent types without competing.' },
+        { title: 'Services as a suite', body: 'Four service verticals presented with custom artwork and concise copy, emphasising that a single team handles all of them. This reduces perceived coordination risk.' },
+        { title: 'Project showcase', body: 'Selected work featuring Dream AI, Dryrunz, SongPact, and TeamBooster — each with a clear category label signalling range and specificity.' },
+        { title: 'Team section with faces', body: 'A "people behind the pixels" section humanises the studio and counters the anonymity problem common to small agencies.' },
+        { title: 'Scrolling testimonials', body: 'Client testimonials in an auto-scrolling ticker that keeps social proof in constant view without consuming vertical real estate.' },
+        { title: 'Blog & Learning Hub', body: 'Standalone content routes built into the Next.js architecture for ongoing product insights, no-code tutorials, and launch playbooks.' },
+      ],
+    },
+    {
+      eyebrow: 'Technical Decisions',
+      title: 'Built to be fast, scalable, and maintainable.',
+      paragraphs: [
+        'The technology choices were made to serve the business — not to demonstrate complexity. The priority was a site that loads instantly, ranks well, and can be extended without a developer on standby.',
+        'Next.js provided server-side rendering for fast initial loads and strong SEO defaults. Routing is cleanly separated between marketing pages, blog, and the learning hub — allowing independent content updates without touching the core design.',
+      ],
+      tech: ['Next.js', 'React', 'Tailwind CSS', 'Vercel', 'next/image', 'File-based routing', 'Blog route', 'Learning hub route'],
+    },
+    {
+      eyebrow: 'Outcomes',
+      title: 'A website that converts credibility into conversations.',
+      paragraphs: ['The completed site positions Codeless as a premium, trustworthy studio for startups and growth-stage teams.'],
+      results: [
+        { title: 'Positioning clarity', body: 'Services are now understood as an integrated suite, removing the confusion that arose from listing them in isolation.' },
+        { title: 'Persistent social proof', body: 'Testimonials from five named founders and CEOs are visible throughout the site without disrupting the primary conversion flow.' },
+        { title: 'Scalable content infrastructure', body: 'The blog and learning hub are live and independently updatable, giving the team a platform to demonstrate expertise over time.' },
+        { title: 'Optimised performance', body: 'Next.js server-side rendering and next/image processing deliver fast page loads and strong Core Web Vitals scores.' },
+        { title: 'Dual-CTA conversion system', body: '"Book a call" and "Join the newsletter" capture both immediate project leads and long-term audience members in a single session.' },
+      ],
+    },
+  ],
+};
+
+const aaronIsraelCaseStudy: CaseStudyData = {
+  title: 'Aaron Israel',
+
+  category: 'No-Code Development',
+
+  coverMeta: [
+
+    { label: 'Location', value: 'Nigeria' },
+
+    { label: 'Status', value: 'Available for projects' },
+
+    { label: 'Portfolio', value: 'aaron.pxxl.click' },
+
+  ],
+
+  sections: [
+
+    { images: [aaronCaseStudyImageOne, aaronCaseStudyImageTwo] },
+
+    {
+
+      eyebrow: 'Overview',
+
+      title: 'No-code web developer shipping production-ready websites in days.',
+
+      paragraphs: [
+
+        'Aaron Israel is a no-code web developer and digital product builder based in Nigeria, specialising in shipping powerful, production-ready websites and web applications fast. Where traditional development agencies quote months, Aaron delivers in days.',
+
+        'His philosophy is that no-code is not a compromise; it is the smarter path. He builds real architecture with real performance — not glorified templates — and ships them at a fraction of the time and cost of traditional development.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Services',
+
+      title: 'What he builds.',
+
+      cards: [
+
+        { title: 'No-Code Website Development', body: 'Full-stack websites on Webflow, Framer, and Wix Studio. Faster launches, lower cost, and sites clients can manage without a developer on retainer.' },
+
+        { title: 'MVP & Rapid Prototyping', body: 'For startups that cannot afford slow dev cycles, Aaron turns rough ideas into working products in days using Bubble, Glide, and Softr.' },
+
+        { title: 'Automation & Workflows', body: 'Using Zapier, Make, and Airtable, Aaron connects tools and automates business processes end-to-end for fewer errors and scalable operations.' },
+
+        { title: 'Landing Pages That Convert', body: 'Built on Framer, Webflow, and Unbounce — engineered for higher conversion rates, better ad ROI, and more leads.' },
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Production Pipeline',
+
+      title: 'How he ships.',
+
+      table: {
+
+        headers: ['Phase', 'What Happens'] as [string, string],
+
+        rows: [
+
+          { col1: '01 — Strategy', col2: 'Define goals, identify users, and map what success looks like before a single pixel is placed.' },
+
+          { col1: '02 — Structure', col2: 'Plan UX, information flow, and architecture so users always know what to do next.' },
+
+          { col1: '03 — Build', col2: 'Develop with the right no-code tools — fast builds without sacrificing quality or scale.' },
+
+          { col1: '04 — Optimize', col2: 'Refine performance, run conversion checks, and set up automations so the site grows with the business.' },
+
+        ],
+
+      },
+
+    },
+
+    {
+
+      eyebrow: 'Why Clients Choose Him',
+
+      bullets: [
+
+        'Speed without sacrifice. What takes dev agencies three months, Aaron ships in two to three weeks.',
+
+        'No-code, but production-ready. His builds are architected to scale, perform, and support real business growth.',
+
+        'Scalable systems that evolve as the client business grows.',
+
+        'Performance-focused. Every build is optimised for speed, conversion, and reliability from day one.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Impact',
+
+      title: 'By the numbers.',
+
+      table: {
+
+        headers: ['Metric', 'Result'] as [string, string],
+
+        rows: [
+
+          { col1: 'Projects Shipped', col2: '40+' },
+
+          { col1: 'Average Time to Launch', col2: '12 days' },
+
+          { col1: 'Faster than Traditional Dev', col2: '3x' },
+
+          { col1: 'Client Satisfaction Rate', col2: '98%' },
+
+        ],
+
+      },
+
+    },
+
+    {
+
+      eyebrow: 'Conclusion',
+
+      paragraphs: [
+
+        'Aaron Israel represents a new generation of digital builder who leverages the best of no-code tooling to deliver outcomes that rival traditional development at a fraction of the cost and timeline.',
+
+        'With 40+ projects shipped, a 98% client satisfaction rate, and an average launch time of 12 days, his track record speaks for itself.',
+
+      ],
+
+    },
+
+  ],
+
+};
+
+
+
+const nesoCaseStudy: CaseStudyData = {
+
+  title: 'Neso',
+
+  category: 'Product Design',
+
+  coverMeta: [
+
+    { label: 'Type', value: 'Mobile App Design' },
+
+    { label: 'Platform', value: 'iOS & Android' },
+
+    { label: 'Focus', value: 'Fitness & Nutrition' },
+
+  ],
+
+  sections: [
+
+    {
+
+      eyebrow: 'Overview',
+
+      title: 'A fitness tracker that meets you where you are.',
+
+      paragraphs: [
+
+        'NESO is a workout/fitness tracker that allows users to set up workouts, track their progress, and monitor their nutrition and diet during the period of their specific program. It includes more than 50 foods and over 100 exercises to help you stay active no matter where you are.',
+
+        'With automatic food tracking and nutrition facts for each meal, and easy-to-use tools like eating plans and meal plans, users can lose weight safely and effectively while also earning rewards in real time.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Objectives',
+
+      title: 'What we set out to achieve.',
+
+      bullets: [
+
+        'Create an experience that encourages users to perform activities in order to improve their health and fitness.',
+
+        'Discover through research the problems people face while using workout and fitness applications.',
+
+        'Create a clean and modern user interface.',
+
+        'Create an easy to use application for optimum user experience.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'The Problem',
+
+      title: 'Working out without support is hard.',
+
+      paragraphs: [
+
+        'User interviews were conducted to gain insights about how users feel about using workout and fitness apps.',
+
+        'The traditional way of working out is acceptable, but with growing concerns regarding health and well-being because of high stress levels and lack of motivation, it becomes hard to focus on what should be done to get fit. With gym memberships being expensive and gyms not available in local areas, people tend to find a new way to workout.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'The User',
+
+      paragraphs: [
+
+        'Users are people between the ages of 17-35 all around the world, or anyone who is looking for a way to workout comfortably without visiting the gym.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Solution',
+
+      title: 'One app. Workouts, routines, and nutrition.',
+
+      paragraphs: [
+
+        'After conducting considerable study, we decided to create a fitness application that would provide users with a diverse range of workouts and routines, such as bodybuilding, self-defense, and crossfit. We also integrated a nutrition component so that users could track, manage, and regulate their food consumption while working out.',
+
+      ],
+
+    },
+
+  ],
+
+};
+
+
+
+const gloUpCaseStudy: CaseStudyData = {
+
+  title: 'The Glo Up App',
+
+  category: 'Product Design',
+
+  coverMeta: [
+
+    { label: 'Type', value: 'Mobile App Design' },
+
+    { label: 'Platform', value: 'iOS & Android' },
+
+    { label: 'Status', value: 'In Development' },
+
+  ],
+
+  sections: [
+
+    {
+
+      eyebrow: 'Overview',
+
+      title: 'A dating app built for everyone.',
+
+      paragraphs: [
+
+        'The Glo Up is a mobile application that helps users find potential dates. The goal is to help people find and connect based on their sexuality and interests. The app is currently in development and will be available for both iOS and Android devices.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Objectives',
+
+      title: 'What we set out to solve.',
+
+      bullets: [
+
+        'Create options for users that want company without romantic intentions.',
+
+        'Gain insight on the problems people face while using dating applications.',
+
+        'Solve the problem of sexuality mismatch among users of dating applications.',
+
+        'Create an easy to use application for optimum user experience.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'The Problem',
+
+      title: 'Most dating apps are built for one kind of relationship.',
+
+      paragraphs: [
+
+        'Mainstream dating apps mostly cater to individuals finding heterosexual relationships and neglect other forms of sexuality. As a result, these dating applications do not cater to users seeking relationships outside of heterosexuality. They also do not cater to users that would prefer relationships that are not romantic.',
+
+        'User surveys were conducted to gain insights about how users feel about using dating applications that not only served heterosexuals, but also catered to the needs of people from the LGBT community.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'The User',
+
+      paragraphs: [
+
+        'The mobile application is aimed at young and full grown adults looking to search for other users/people looking to find the same thing as themselves — love, casuals, someone to hang out with, or just friendships.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Solution',
+
+      title: 'Connect based on who you are, not just who fits the default.',
+
+      paragraphs: [
+
+        'After conducting considerable study, we decided to create an easy-to-use dating application that would include users from the LGBT community and would help other users find potential partners based on their preferred sexuality, interests, and personalities.',
+
+      ],
+
+    },
+
+  ],
+
+};
+
+
+
+const dreamAiCaseStudy: CaseStudyData = {
+
+  title: 'DreamAI',
+
+  subtitle: 'AI-Powered Dream Journaling & Interpretation',
+
+  category: 'No-Code Build & Design',
+
+  coverMeta: [
+
+    { label: 'Platform', value: 'Bubble' },
+
+    { label: 'Type', value: 'Web Application' },
+
+    { label: 'Focus', value: 'Wellness & AI' },
+
+  ],
+
+  sections: [
+
+    {
+
+      eyebrow: 'Overview',
+
+      title: 'Turning fleeting dreams into meaningful reflection.',
+
+      paragraphs: [
+
+        'DreamAI is a no-code web application that helps everyday users capture, understand, and find meaning in their dreams. By combining a frictionless journaling experience with AI-driven interpretation, it transforms the fleeting, hard-to-articulate nature of dreams into something reflective and personal — delivered in seconds.',
+
+        "The product was designed for general consumers and wellness-minded individuals who are curious about their inner world but don't have access to a therapist or the patience for dense dream dictionaries. The core promise: write down what you remember, and DreamAI does the rest.",
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'The Problem',
+
+      title: "Existing tools store your dreams. They don't engage with them.",
+
+      paragraphs: [
+
+        "Dreams are notoriously difficult to capture. You wake up with a vivid impression that fades within minutes, and even when you try to write it down, the meaning feels just out of reach. Existing solutions — physical journals, generic apps, or symbolic dream dictionaries — all share the same flaw: they're passive.",
+
+        'For wellness-oriented users, this is a missed opportunity. Dreams are increasingly recognised as a window into emotional processing, stress patterns, and subconscious thinking. The challenge was to create an experience that felt both effortless to use in a groggy morning state and substantive enough to provide genuine psychological value.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Design Goals',
+
+      cards: [
+
+        { title: 'Zero friction at capture', body: 'The journaling interface had to be the first thing a user encountered — no onboarding walls, no feature tours. If a user had to think for more than a second about where to start, the dream would be gone.' },
+
+        { title: 'Warmth over clinical sterility', body: 'Many wellness apps err toward cold, medical aesthetics. DreamAI needed to feel intimate and slightly otherworldly — reflective of the dream state itself. The visual language had to signal safety and curiosity, not productivity.' },
+
+        { title: 'Interpretation as conversation', body: "AI output shouldn't feel like a printout. The goal was for responses to read like something a thoughtful, empathetic friend might say — inviting reflection rather than delivering verdicts." },
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'UX Decisions',
+
+      title: 'Every micro-decision in service of trust.',
+
+      steps: [
+
+        { step: '01', title: 'Journaling First, Account Later', body: 'The entry point is a large, open text area — not a sign-up screen. Users can begin writing immediately. Authentication was pushed to a natural save/persist moment, reducing the cognitive cost of getting started.' },
+
+        { step: '02', title: 'Visual Language: Dark, Soft, Spatial', body: 'The palette draws from deep indigos, muted purples, and near-blacks — evoking the liminal quality of sleep without feeling oppressive. Typography was chosen for readability under low-light conditions, recognising that many users write shortly after waking.' },
+
+        { step: '03', title: 'Progressive Interpretation', body: 'After a dream is submitted, the AI interpretation is revealed progressively rather than dumped all at once. This pacing mimics someone reading carefully and responding thoughtfully — slowing the user down and encouraging them to read, not skim.' },
+
+        { step: '04', title: 'Pattern-Surfacing History', body: 'The journal history view surfaces patterns over time rather than simply listing past entries. Thematic echoes between dreams are gently highlighted, turning the archive into something that rewards ongoing use.' },
+
+        { step: '05', title: 'Mobile-First Thinking', body: 'Given that the most natural moment to log a dream is immediately after waking — often while still in bed, phone in hand — the entire layout was designed mobile-first. Touch targets are generous and the text input expands naturally.' },
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Building on Bubble',
+
+      paragraphs: [
+
+        "Bubble was chosen to allow for rapid iteration without sacrificing a polished front-end. The visual design was implemented using Bubble's responsive engine with custom CSS applied where the native components fell short. AI interpretation is handled via API connector, with prompt engineering done to ensure tonal consistency across diverse dream inputs.",
+
+        'The no-code approach meant that design decisions could be tested and revised in real time — a significant advantage when the product is this feeling-dependent.',
+
+      ],
+
+    },
+
+    {
+
+      eyebrow: 'Reflections',
+
+      paragraphs: [
+
+        'DreamAI is a product that lives or dies on trust. Users are sharing something deeply personal — the unfiltered content of their sleeping mind — and the design has to honour that.',
+
+        'The design succeeds most where it gets out of the way — where the experience feels less like using a tool and more like opening a private notebook that happens to write back.',
+
+      ],
+
+    },
+
+  ],
+
+};
+
 
 type ToolItem = {
   name: string;
@@ -1222,7 +585,7 @@ type ProjectItem = {
   metrics: string;
   outcome: string;
   image?: string;
-  caseStudyHtml?: string;
+  caseStudy?: CaseStudyData;
   liveUrl?: string;
 };
 
@@ -1259,7 +622,7 @@ const projects: ProjectItem[] = [
     metrics: "40+ projects shipped",
     outcome: "3x faster delivery than traditional dev cycles with a 98% client satisfaction rate.",
     image: aaronCaseStudyImageOne,
-    caseStudyHtml: aaronIsraelCaseStudyHtml,
+    caseStudy: aaronIsraelCaseStudy,
     liveUrl: "https://aaron.pxxl.click"
   },
   {
@@ -1269,7 +632,7 @@ const projects: ProjectItem[] = [
     metrics: "38% increase in activation",
     outcome: "Reduced drop-offs with data-driven flows and personalized nudges.",
     image: atlasMockupImage,
-    caseStudyHtml: codelessAgencyCaseStudyHtml
+    caseStudy: codelessAgencyCaseStudy
   },
   {
     title: "DreamAI",
@@ -1278,7 +641,7 @@ const projects: ProjectItem[] = [
     metrics: "Built on Bubble",
     outcome: "AI-powered interpretation delivered in seconds with a journaling-first UX.",
     image: dreamAiMockupImage,
-    caseStudyHtml: dreamAiCaseStudyHtml,
+    caseStudy: dreamAiCaseStudy,
     liveUrl: "https://dreamai-52691.bubbleapps.io/version-test"
   },
   {
@@ -1288,7 +651,7 @@ const projects: ProjectItem[] = [
     metrics: "Mobile app in development",
     outcome: "Connect based on sexuality and interests with options beyond romance.",
     image: gloUpMockupImage,
-    caseStudyHtml: gloUpCaseStudyHtml,
+    caseStudy: gloUpCaseStudy,
     liveUrl: "https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FOdXozCiTmU0EFVpB6esD3Y%2FThe-Glo-Up-Dating-App%3Fnode-id%3D0%253A1%26t%3DGpxOALxhnck2XF3y-1"
   },
   {
@@ -1298,7 +661,7 @@ const projects: ProjectItem[] = [
     metrics: "Fitness + nutrition tracking",
     outcome: "Workout setup, progress tracking, and nutrition monitoring in one program-led experience.",
     image: nesoMockupImage,
-    caseStudyHtml: nesoCaseStudyHtml,
+    caseStudy: nesoCaseStudy,
     liveUrl: "https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FRp5R4gmO5aSdevyzHz57Qb%2FTrain-and-Earn-Fitness-App-(Copy)%3Fnode-id%3D0%253A1"
   }
 ];
