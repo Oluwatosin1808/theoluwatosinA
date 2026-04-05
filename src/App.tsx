@@ -640,7 +640,8 @@ const projects: ProjectItem[] = [
     metrics: "38% increase in activation",
     outcome: "Reduced drop-offs with data-driven flows and personalized nudges.",
     image: atlasMockupImage,
-    caseStudy: codelessAgencyCaseStudy
+    caseStudy: codelessAgencyCaseStudy,
+    liveUrl: "https://agency.codelessify.org"
   },
   {
     title: "DreamAI",
@@ -1471,7 +1472,12 @@ body {
   min-height: 100vh;
   padding: 0 1.5rem 5rem;
   position: relative;
-  overflow: visible;
+  overflow-x: hidden;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 body {
