@@ -751,7 +751,7 @@ const stats = [
 const sectionMotion = {
   initial: { opacity: 0, y: 28 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, amount: 0.2 },
+  viewport: { once: true, amount: 0.1 },
   transition: { duration: 0.8, ease: [0.21, 0.61, 0.35, 1] as const }
 };
 
@@ -1036,6 +1036,8 @@ export default function App() {
                       `https://picsum.photos/seed/${project.title.toLowerCase().replace(/\s+/g, '-')}/400/300.jpg`
                     }
                     alt={`${project.title} preview`}
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="work-meta">
@@ -1118,7 +1120,7 @@ export default function App() {
             onPointerCancel={() => { dragState.current.active = false; }}
           >
             <div className="carousel-track">
-              {tools.map((tool, index) => (
+              {[...tools, ...tools].map((tool, index) => (
                 <div className="tool-card" key={`${tool.name}-${index}`}>
                   <div className="tool-icon" aria-hidden="true">
                     <ToolIcon d={tool.icon} />
@@ -1472,16 +1474,16 @@ body {
   min-height: 100vh;
   padding: 0 1.5rem 5rem;
   position: relative;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 html, body {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 .background-glow {
@@ -1949,6 +1951,14 @@ body {
   border-radius: 16px;
   overflow: hidden;
   position: relative;
+  background: linear-gradient(110deg, rgba(30,35,45,1) 30%, rgba(50,55,65,1) 50%, rgba(30,35,45,1) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 @media (min-width: 721px) {
@@ -2140,10 +2150,24 @@ body {
   cursor: grabbing;
 }
 
+@keyframes carousel-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 .carousel-track {
   display: flex;
   gap: 1.2rem;
   width: max-content;
+  animation: carousel-scroll 30s linear infinite;
+}
+
+.carousel:hover .carousel-track {
+  animation-play-state: paused;
+}
+
+.carousel:active .carousel-track {
+  animation-play-state: paused;
 }
 
 .tool-card {
