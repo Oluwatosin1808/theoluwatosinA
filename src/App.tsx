@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
 import CaseStudyModal, { CaseStudyData } from './components/CaseStudyModal';
@@ -756,6 +756,42 @@ const sectionMotion = {
   transition: { duration: 0.8, ease: [0.21, 0.61, 0.35, 1] as const }
 };
 
+function LazyVideo({ src, sectionMotion }: { src: string; sectionMotion: Record<string, unknown> }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setInView(true); observer.disconnect(); } },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <motion.section className="section" {...sectionMotion} ref={ref}>
+      <div style={{ width: '100%', borderRadius: '1rem', overflow: 'hidden' }}>
+        {inView ? (
+          <video
+            src={src}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            style={{ width: '100%', display: 'block', borderRadius: '1rem' }}
+          />
+        ) : (
+          <div style={{ width: '100%', height: '70vh', borderRadius: '1rem', background: 'var(--card)' }} />
+        )}
+      </div>
+    </motion.section>
+  );
+}
+
 export default function App() {
   const [theme, setTheme] = React.useState<'light' | 'dark'>(() => {
     const savedTheme = window.localStorage.getItem('theme');
@@ -1057,18 +1093,7 @@ export default function App() {
           </div>
         </motion.section>
 
-        <motion.section className="section" {...sectionMotion}>
-          <div style={{ width: '100%', borderRadius: '1rem', overflow: 'hidden' }}>
-            <video
-              src={showreelVideo}
-              autoPlay
-              muted
-              loop
-              playsInline
-              style={{ width: '100%', display: 'block', borderRadius: '1rem' }}
-            />
-          </div>
-        </motion.section>
+        <LazyVideo src={showreelVideo} sectionMotion={sectionMotion} />
 
         <motion.section className="section" id="services" {...sectionMotion}>
           <div className="section-heading">
