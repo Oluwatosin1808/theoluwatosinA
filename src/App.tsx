@@ -10,6 +10,7 @@ const nesoMockupImage = new URL('../img/Notioneverything headers (1).png', impor
 const aaronCaseStudyImageOne = new URL('../img/case-0.png', import.meta.url).href;
 const aaronCaseStudyImageTwo = new URL('../img/case-0-2.png', import.meta.url).href;
 const portraitImage = new URL('../img/me.png', import.meta.url).href;
+const showreelVideo = new URL('../img/0409.mp4', import.meta.url).href;
 
 const codelessAgencyCaseStudy: CaseStudyData = {
   title: 'Codeless Solutions',
@@ -1053,6 +1054,19 @@ export default function App() {
                 </button>
               </div>
             ))}
+          </div>
+        </motion.section>
+
+        <motion.section className="section" {...sectionMotion}>
+          <div style={{ width: '100%', borderRadius: '1rem', overflow: 'hidden' }}>
+            <video
+              src={showreelVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{ width: '100%', display: 'block', borderRadius: '1rem' }}
+            />
           </div>
         </motion.section>
 
