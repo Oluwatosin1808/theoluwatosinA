@@ -759,6 +759,7 @@ const sectionMotion = {
 function LazyVideo({ src, sectionMotion }: { src: string; sectionMotion: Record<string, unknown> }) {
   const ref = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -773,19 +774,45 @@ function LazyVideo({ src, sectionMotion }: { src: string; sectionMotion: Record<
 
   return (
     <motion.section className="section" {...sectionMotion} ref={ref}>
-      <div style={{ width: '100%', borderRadius: '1rem', overflow: 'hidden' }}>
-        {inView ? (
+      <div style={{ width: '100%', borderRadius: '1rem', overflow: 'hidden', position: 'relative' }}>
+        {/* Placeholder stays visible until video can play */}
+        {!ready && (
+          <div style={{
+            width: '100%',
+            height: '75vh',
+            borderRadius: '1rem',
+            background: '#1a1a1a',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <div style={{
+              width: 40,
+              height: 40,
+              border: '3px solid rgba(255,255,255,0.15)',
+              borderTopColor: 'rgba(255,255,255,0.6)',
+              borderRadius: '50%',
+              animation: 'spin 0.8s linear infinite',
+            }} />
+          </div>
+        )}
+        {inView && (
           <video
             src={src}
             autoPlay
             muted
             loop
             playsInline
-            preload="metadata"
-            style={{ width: '100%', display: 'block', borderRadius: '1rem' }}
+            preload="auto"
+            onCanPlay={() => setReady(true)}
+            style={{
+              width: '100%',
+              maxHeight: '75vh',
+              objectFit: 'cover',
+              display: ready ? 'block' : 'none',
+              borderRadius: '1rem',
+            }}
           />
-        ) : (
-          <div style={{ width: '100%', height: '70vh', borderRadius: '1rem', background: 'var(--card)' }} />
         )}
       </div>
     </motion.section>
@@ -1998,6 +2025,10 @@ body {
 @keyframes shimmer {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 @media (min-width: 721px) {
