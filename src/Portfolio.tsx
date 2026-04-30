@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CaseStudyModal, { CaseStudyData } from './components/CaseStudyModal';
 import {
   dreamAiCaseStudy,
@@ -133,13 +133,23 @@ const projects: ProjectShape[] = [
   },
 ];
 
+type Theme = 'dark' | 'light';
+
 export default function Portfolio() {
   const [activeProject, setActiveProject] = useState<ProjectShape | null>(null);
+  const [theme, setTheme] = useState<Theme>(() => {
+    if (typeof window === 'undefined') return 'dark';
+    const stored = localStorage.getItem('portfolio-theme') as Theme | null;
+    if (stored === 'light' || stored === 'dark') return stored;
+    return 'dark';
+  });
 
-  const openCase = (p: ProjectShape) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    setActiveProject(p);
-  };
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    localStorage.setItem('portfolio-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => (t === 'dark' ? 'light' : 'dark'));
 
   return (
     <>
@@ -157,7 +167,26 @@ export default function Portfolio() {
             <a href="#experience">Experience</a>
             <a href="#testimonials">Testimonials</a>
           </nav>
-          <a href="#contact" className="top-cta">Work With Me →</a>
+          <div className="topbar-end">
+            <button
+              className="theme-toggle"
+              type="button"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                </svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              )}
+            </button>
+            <a href="#contact" className="top-cta">Work With Me →</a>
+          </div>
         </div>
       </header>
 
@@ -267,17 +296,16 @@ export default function Portfolio() {
             </div>
 
             <div className="about-grid">
-              <div className="paper-card">
-                <span className="pin"></span>
+              <div className="bio-card">
                 <h3>Hi — I'm Oluwatosin.</h3>
                 <p>I'm a Product Designer who refuses to stop at pretty screens. Somewhere along the way, I got curious about how things behave under the hood… and now I live comfortably in both worlds, designing interfaces and building them into real, usable products.</p>
                 <p>I've worked across <strong>EdTech, service platforms, and internal tools</strong>, helping ideas move from "this could be cool" to "this is live and people are using it." I care a lot about clarity, structure, and making sure users don't have to think harder than they should.</p>
                 <p>My workflow usually looks like this: idea → messy notes → structured flows → clean UI → working product → small obsessive tweaks nobody asked for but everyone benefits from.</p>
                 <p>I'm big on <strong>simple, usable design over flashy noise</strong>; <strong>systems that scale</strong>, not hacks that break later; and <strong>building things, not just talking about them</strong>.</p>
                 <p>If you're building something and want it to be both well-designed and actually functional, we'll get along just fine.</p>
-                <div className="signoff">
-                  <span>— GMT+1, Working Globally</span>
-                  <span className="signature">Oluwatosin</span>
+                <div className="bio-foot">
+                  <span>GMT+1 · Working Globally</span>
+                  <span>— Oluwatosin</span>
                 </div>
               </div>
 
@@ -321,7 +349,20 @@ export default function Portfolio() {
 
             <div className="case-grid">
               {projects.map((p, i) => (
-                <article className="case-card" key={p.title}>
+                <article
+                  className="case-card"
+                  key={p.title}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setActiveProject(p)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setActiveProject(p);
+                    }
+                  }}
+                  aria-label={`Open case study for ${p.title}`}
+                >
                   <div className="case-visual">
                     <span className="badge">CASE 0{i + 1} · {p.title}</span>
                     <span className="yr">{p.year}</span>
@@ -349,9 +390,15 @@ export default function Portfolio() {
                       </div>
                     </div>
                     <div className="case-actions">
-                      <a href="#" className="case-link" onClick={openCase(p)}>View case study →</a>
+                      <span className="case-link">View case study →</span>
                       {p.liveUrl && (
-                        <a href={p.liveUrl} className="case-link soft" target="_blank" rel="noreferrer">Live ↗</a>
+                        <a
+                          href={p.liveUrl}
+                          className="case-link soft"
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                        >Live ↗</a>
                       )}
                     </div>
                   </div>
@@ -537,12 +584,25 @@ const quotes = [
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&family=Manrope:wght@400;500;600;700&display=swap');
 
-  :root{
+  :root, :root[data-theme="dark"]{
     --bg:#0b132a; --bg-2:#111c3d; --bg-3:#16244c;
-    --paper:#f4ecdb; --paper-2:#ebe1ca; --paper-ink:#1a1208;
     --rule:#1d2a52;
     --ink:#f4ecdb; --ink-2:#d2cab6; --ink-3:#8b94b1; --ink-4:#4f5a82;
     --amber:#e8a64c; --amber-2:#f5c073; --amber-ink:#2a1c08; --green:#4caf7d;
+    --topbar-bg:rgba(11,19,42,.85);
+    --card-bg-from:var(--bg-2); --card-bg-to:var(--bg);
+    --skill-color:var(--amber-2);
+    --shadow-strong:0 30px 60px -20px rgba(0,0,0,.5);
+  }
+  :root[data-theme="light"]{
+    --bg:#fbfaf7; --bg-2:#f3f1ec; --bg-3:#e8e4dc;
+    --rule:#e1ddd2;
+    --ink:#161310; --ink-2:#3a3530; --ink-3:#6b6258; --ink-4:#a8a094;
+    --amber:#a26b1c; --amber-2:#7d4f0d; --amber-ink:#fbfaf7; --green:#2f8b58;
+    --topbar-bg:rgba(251,250,247,.85);
+    --card-bg-from:#f3f1ec; --card-bg-to:#e8e4dc;
+    --skill-color:#7d4f0d;
+    --shadow-strong:0 24px 48px -16px rgba(0,0,0,.12);
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
@@ -563,7 +623,7 @@ const styles = `
   /* Neutralize italic emphasis inside headings */
   h1 em, h2 em, h3 em, h4 em,
   .hero h1 em, .section-head h2 em, .case-content h3 em,
-  .paper-card h3 em, .cta-card h2 em, .quote-body em{
+  .bio-card h3 em, .cta-card h2 em, .quote-body em{
     font-style:normal !important;color:inherit !important;
   }
 
@@ -577,7 +637,10 @@ const styles = `
     50%{box-shadow:0 0 0 6px rgba(76,175,125,0)}
   }
 
-  .topbar{position:sticky;top:0;z-index:60;background:rgba(11,19,42,.85);backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--rule)}
+  .topbar{position:sticky;top:0;z-index:60;background:var(--topbar-bg);backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--rule)}
+  .topbar-end{display:flex;align-items:center;gap:12px}
+  .theme-toggle{width:36px;height:36px;border-radius:8px;border:1px solid var(--rule);background:transparent;color:var(--ink-2);cursor:pointer;display:grid;place-items:center;transition:color .15s,border-color .15s,background .15s}
+  .theme-toggle:hover{color:var(--amber);border-color:var(--amber);background:rgba(245,177,76,.06)}
   .topbar-inner{display:flex;align-items:center;justify-content:space-between;padding:14px clamp(24px,5vw,80px);max-width:1400px;margin:0 auto;gap:24px}
   .brand{display:flex;align-items:center;gap:12px;min-width:0}
   .brand-mark{width:34px;height:34px;border-radius:6px;background:linear-gradient(135deg,var(--amber),#a26b1c);display:grid;place-items:center;color:var(--amber-ink);font-family:'Newsreader',serif;font-weight:600;font-size:18px;flex-shrink:0}
@@ -610,7 +673,8 @@ const styles = `
   .btn-primary:hover{background:var(--amber-2)}
   .btn-primary .arr{font-family:'Newsreader',serif;font-size:18px}
   .btn-secondary{display:inline-flex;align-items:center;gap:10px;padding:14px 22px;border-radius:8px;border:1px solid var(--rule);background:transparent;color:var(--ink);font-weight:500;font-size:15px;transition:border-color .15s, background .15s}
-  .btn-secondary:hover{border-color:var(--ink-3);background:rgba(255,255,255,.03)}
+  .btn-secondary:hover{border-color:var(--ink-3);background:rgba(255,255,255,.04)}
+  :root[data-theme="light"] .btn-secondary:hover{background:rgba(0,0,0,.04)}
   .btn-text{font-size:14px;color:var(--ink-3);padding:14px 8px;border-bottom:1px solid var(--ink-4);transition:color .15s, border-color .15s}
   .btn-text:hover{color:var(--amber);border-color:var(--amber)}
 
@@ -639,13 +703,11 @@ const styles = `
   .metrics .m .desc{font-size:13px;color:var(--ink-2);line-height:1.5;margin-top:8px}
 
   .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
-  .paper-card{background:var(--paper);color:var(--paper-ink);border-radius:14px;padding:48px;position:relative;background-image:linear-gradient(180deg,rgba(0,0,0,.02),transparent 12%),repeating-linear-gradient(0deg,transparent 0 39px,rgba(26,18,8,.04) 39px 40px)}
-  .paper-card .pin{position:absolute;top:-12px;left:48px;width:24px;height:24px;border-radius:50%;background:var(--amber);box-shadow:0 4px 8px rgba(0,0,0,.25), inset 0 -3px 6px rgba(0,0,0,.2), inset 0 3px 6px rgba(255,255,255,.3)}
-  .paper-card h3{font-family:'Newsreader',serif;font-weight:400;font-size:32px;line-height:1.15;letter-spacing:-.01em;margin-bottom:20px;color:var(--paper-ink)}
-  .paper-card p{font-size:15px;color:#3a2e18;line-height:1.7;margin-bottom:14px}
-  .paper-card p strong{color:var(--paper-ink);font-weight:600}
-  .paper-card .signoff{margin-top:24px;padding-top:20px;border-top:1px dashed rgba(26,18,8,.2);display:flex;justify-content:space-between;align-items:center;font-family:'Manrope',sans-serif;font-weight:500;font-size:11px;color:#6b5a3a;letter-spacing:.1em}
-  .paper-card .signature{font-family:'Newsreader',serif;font-style:italic;font-size:24px;color:var(--paper-ink)}
+  .bio-card{border:1px solid var(--rule);border-radius:14px;padding:36px;background:linear-gradient(180deg,var(--card-bg-from),var(--card-bg-to))}
+  .bio-card h3{font-family:'Newsreader',serif;font-weight:400;font-size:30px;line-height:1.15;letter-spacing:-.01em;margin-bottom:18px;color:var(--ink)}
+  .bio-card p{font-size:15px;color:var(--ink-2);line-height:1.7;margin-bottom:14px}
+  .bio-card p strong{color:var(--ink);font-weight:600}
+  .bio-foot{margin-top:18px;padding-top:18px;border-top:1px solid var(--rule);display:flex;justify-content:space-between;align-items:center;font-family:'Manrope',sans-serif;font-weight:500;font-size:11px;color:var(--ink-3);letter-spacing:.12em;text-transform:uppercase;flex-wrap:wrap;gap:8px}
 
   .about-side{display:flex;flex-direction:column;gap:24px}
   .info-card,.skills-card{border:1px solid var(--rule);border-radius:14px;padding:28px}
@@ -655,7 +717,7 @@ const styles = `
   .info-card .row .k{color:var(--ink-3);font-size:13px}
   .info-card .row .v{color:var(--ink);font-weight:500;text-align:right}
   .skills-list{display:flex;flex-wrap:wrap;gap:8px}
-  .skills-list .skill{padding:7px 13px;border-radius:6px;background:rgba(245,177,76,.08);border:1px solid rgba(245,177,76,.2);color:var(--amber-2);font-size:13px}
+  .skills-list .skill{padding:7px 13px;border-radius:6px;background:rgba(245,177,76,.08);border:1px solid rgba(245,177,76,.25);color:var(--skill-color);font-size:13px;font-weight:500}
 
   .exp-grid{display:flex;flex-direction:column}
   .exp-job{display:grid;grid-template-columns:200px 1fr 60px;gap:48px;padding:32px 24px;border-top:1px solid var(--rule);align-items:start;transition:background .2s;border-radius:10px}
@@ -673,13 +735,15 @@ const styles = `
   .exp-job:hover .exp-arrow{background:var(--amber);color:var(--amber-ink);border-color:var(--amber);transform:rotate(-45deg)}
 
   .case-grid{display:flex;flex-direction:column;gap:32px}
-  .case-card{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,var(--bg-2),var(--bg));transition:transform .3s, border-color .3s}
-  .case-card:hover{transform:translateY(-3px);border-color:rgba(245,177,76,.3)}
+  .case-card{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,var(--card-bg-from),var(--card-bg-to));transition:transform .3s, border-color .3s, box-shadow .3s;cursor:pointer}
+  .case-card:hover{transform:translateY(-3px);border-color:rgba(245,177,76,.4);box-shadow:var(--shadow-strong)}
+  .case-card:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+  .case-card:hover .case-link{color:var(--amber);border-color:var(--amber)}
   .case-visual{aspect-ratio:auto;min-height:340px;position:relative;overflow:hidden;border-right:1px solid var(--rule);background:linear-gradient(135deg,#2a1f0e 0%,#0b132a 100%)}
   .case-visual .badge{position:absolute;top:18px;left:18px;font-family:'Manrope',sans-serif;font-weight:600;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);padding:6px 10px;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);border-radius:4px;z-index:2}
   .case-visual .yr{position:absolute;top:18px;right:18px;font-family:'Manrope',sans-serif;font-weight:500;font-size:11px;color:var(--ink-2);z-index:2;background:rgba(0,0,0,.5);backdrop-filter:blur(8px);padding:6px 10px;border-radius:4px}
   .case-image-wrap{position:absolute;inset:0;overflow:hidden}
-  .case-image-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,19,42,0) 40%,rgba(11,19,42,.55) 100%),linear-gradient(90deg,rgba(11,19,42,.25),transparent 30%);pointer-events:none}
+  .case-image-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.35) 100%),linear-gradient(90deg,rgba(0,0,0,.18),transparent 30%);pointer-events:none}
   .case-image-wrap img{width:100%;height:100%;object-fit:cover;object-position:center}
 
   .case-content{padding:36px 40px;display:flex;flex-direction:column;justify-content:center;gap:16px}
@@ -710,7 +774,7 @@ const styles = `
   .qrole{font-size:12px;color:var(--ink-3);margin-top:2px}
 
   .cta-section{padding:120px 0;border-top:1px solid var(--rule)}
-  .cta-card{border:1px solid var(--rule);border-radius:20px;padding:64px;background:radial-gradient(60% 80% at 100% 0%,rgba(245,177,76,.18),transparent 60%),radial-gradient(80% 100% at 0% 100%,rgba(76,175,125,.08),transparent 60%),var(--bg-2);display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center;position:relative;overflow:hidden}
+  .cta-card{border:1px solid var(--rule);border-radius:20px;padding:64px;background:radial-gradient(60% 80% at 100% 0%,rgba(245,177,76,.18),transparent 60%),radial-gradient(80% 100% at 0% 100%,rgba(76,175,125,.08),transparent 60%),var(--card-bg-from);display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:center;position:relative;overflow:hidden}
   .cta-card h2{font-family:'Newsreader',serif;font-weight:400;font-size:clamp(32px,3.4vw,46px);line-height:1.05;letter-spacing:-.02em}
   .cta-card p{color:var(--ink-2);font-size:16px;margin-top:16px;line-height:1.55;max-width:440px}
   .cta-actions{display:flex;flex-direction:column;gap:12px}
@@ -757,7 +821,7 @@ const styles = `
     .exp-arrow{display:none}
     .nav-links{display:none}
     .case-content{padding:28px}
-    .paper-card,.cta-card{padding:32px}
+    .bio-card,.cta-card{padding:32px}
   }
   @media (max-width:760px){
     .hero h1{font-size:clamp(46px,12vw,72px)}
@@ -784,7 +848,7 @@ const styles = `
     .case-outcomes{grid-template-columns:1fr;gap:14px}
     .case-content{padding:24px;gap:14px}
     .case-content h3{font-size:24px}
-    .paper-card,.cta-card{padding:24px}
+    .bio-card,.cta-card{padding:24px}
     .info-card,.skills-card,.quote{padding:22px}
     .exp-job{grid-template-columns:1fr;gap:12px;padding:24px 16px}
     .exp-when{flex-direction:row;flex-wrap:wrap;gap:10px 16px}
