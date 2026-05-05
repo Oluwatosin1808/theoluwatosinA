@@ -55,6 +55,19 @@ type ProjectShape = {
 
 const projects: ProjectShape[] = [
   {
+    title: 'Artemis II — 3D Scene',
+    category: 'Creative Coding · 3D',
+    summary: 'A real-time 3D tribute to NASA\'s Artemis II mission. Designed with Maryam Alakoso, built in code on omma.build.',
+    metrics: 'Real-time WebGL',
+    outcome: 'A single scene authored in code — geometry, lighting, and camera all live in source.',
+    image: artemisMockupImage,
+    caseStudy: artemisCaseStudy,
+    liveUrl: 'https://omma.build/p/artemis-ii-3d-scene-code-jwabi0',
+    tags: ['3D', 'WebGL', '2026'],
+    year: '2026',
+    role: 'Design + build (with Maryam Alakoso)',
+  },
+  {
     title: 'Aaron Israel',
     category: 'No-Code Development',
     summary: 'No-code web developer and digital builder shipping production-ready websites in days.',
@@ -64,7 +77,7 @@ const projects: ProjectShape[] = [
     caseStudy: aaronIsraelCaseStudy,
     liveUrl: 'https://aaron.pxxl.click',
     tags: ['No-Code', 'Web', '2024'],
-    year: '2024',
+    year: '2026',
     role: 'Design + No-code build',
   },
   {
@@ -77,7 +90,7 @@ const projects: ProjectShape[] = [
     caseStudy: codelessAgencyCaseStudy,
     liveUrl: 'https://agency.codelessify.org',
     tags: ['Agency', 'Next.js', '2024'],
-    year: '2024',
+    year: '2026',
     role: 'Lead designer + frontend',
   },
   {
@@ -93,19 +106,7 @@ const projects: ProjectShape[] = [
     year: '2025',
     role: 'Lead designer + frontend',
   },
-  {
-    title: 'Artemis II — 3D Scene',
-    category: 'Creative Coding · 3D',
-    summary: 'A real-time 3D tribute to NASA\'s Artemis II mission. Designed with Maryam Alakoso, built in code on omma.build.',
-    metrics: 'Real-time WebGL',
-    outcome: 'A single scene authored in code — geometry, lighting, and camera all live in source.',
-    image: artemisMockupImage,
-    caseStudy: artemisCaseStudy,
-    liveUrl: 'https://omma.build/p/artemis-ii-3d-scene-code-jwabi0',
-    tags: ['3D', 'WebGL', '2026'],
-    year: '2026',
-    role: 'Design + build (with Maryam Alakoso)',
-  },
+  
   {
     title: 'The Glo Up App',
     category: 'Product Design',
@@ -303,7 +304,7 @@ export default function Portfolio() {
               <div>
                 <div className="availability">
                   <span className="pip"></span>
-                  <span>Available for selective projects</span>
+                  <span>Available for select projects</span>
                 </div>
                 <p className="hero-kicker">Hey, I'm</p>
                 <h1>Oluwatosin.</h1>
@@ -404,26 +405,7 @@ export default function Portfolio() {
             </div>
 
             <div className="impact-grid">
-              <div className="globe-stage-wrap">
-                <div className="globe-stage" aria-hidden="true">
-                  <svg className="globe-svg" viewBox="-100 -100 200 200">
-                    <circle className="g-rim" r="80" />
-                    <ellipse className="g-par" rx="80" ry="22" />
-                    <ellipse className="g-par" rx="80" ry="44" />
-                    <ellipse className="g-par" rx="80" ry="65" />
-                    <line className="g-eq" x1="-80" y1="0" x2="80" y2="0" />
-                    <ellipse className="g-mer g-m1" rx="80" ry="80" />
-                    <ellipse className="g-mer g-m2" rx="80" ry="80" />
-                    <ellipse className="g-mer g-m3" rx="80" ry="80" />
-                    <ellipse className="g-mer g-m4" rx="80" ry="80" />
-                    <ellipse className="g-mer g-m5" rx="80" ry="80" />
-                    <ellipse className="g-mer g-m6" rx="80" ry="80" />
-                  </svg>
-                </div>
-                <div className="globe-caption">
-                  <span className="live-dot"></span>Available · GMT+1
-                </div>
-              </div>
+             
 
               <div className="metrics three">
                 <div className="m">
