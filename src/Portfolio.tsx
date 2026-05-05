@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import CaseStudyModal, { CaseStudyData } from './components/CaseStudyModal';
 import {
   dreamAiCaseStudy,
@@ -16,6 +16,7 @@ const gloUpMockupImage = new URL('../img/Notioneverything headers.png', import.m
 const nesoMockupImage = new URL('../img/Notioneverything headers (1).png', import.meta.url).href;
 const aaronMockupImage = new URL('../img/case-0.png', import.meta.url).href;
 const artemisMockupImage = new URL('../img/artemis.jpg', import.meta.url).href;
+const showreelVideo = new URL('../img/0409.mp4', import.meta.url).href;
 
 const CONTACT_EMAIL = 'mosestosyn07@gmail.com';
 const CALENDLY_URL = 'https://calendly.com/mosestosyn07/30min';
@@ -135,6 +136,55 @@ const projects: ProjectShape[] = [
 
 type Theme = 'dark' | 'light';
 
+function LazyVideo({ src }: { src: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section className="showreel">
+      <div className="container">
+        <div className="showreel-frame" ref={ref}>
+          {!ready && (
+            <div className="showreel-placeholder">
+              <div className="showreel-spinner" aria-hidden="true" />
+            </div>
+          )}
+          {inView && (
+            <video
+              src={src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              onCanPlay={() => setReady(true)}
+              className="showreel-video"
+              style={{ display: ready ? 'block' : 'none' }}
+            />
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Portfolio() {
   const [activeProject, setActiveProject] = useState<ProjectShape | null>(null);
   const [theme, setTheme] = useState<Theme>(() => {
@@ -143,13 +193,68 @@ export default function Portfolio() {
     if (stored === 'light' || stored === 'dark') return stored;
     return 'dark';
   });
+  const [isPlaying, setIsPlaying] = useState(false);
+  const spotifyContainerRef = useRef<HTMLDivElement>(null);
+  const spotifyControllerRef = useRef<any>(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     localStorage.setItem('portfolio-theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    let mounted = true;
+
+    const initController = () => {
+      if (!mounted || !spotifyContainerRef.current) return;
+      const api = (window as any).SpotifyIframeApi;
+      if (!api) return;
+      api.createController(
+        spotifyContainerRef.current,
+        { uri: 'spotify:album:60S0Nvtm54AmG6d8lVkhMF', width: '100%', height: 100 },
+        (controller: any) => {
+          if (!mounted) { controller?.destroy?.(); return; }
+          spotifyControllerRef.current = controller;
+          controller.addListener('playback_update', (e: any) => {
+            if (!mounted) return;
+            setIsPlaying(!e.data.isPaused);
+          });
+        }
+      );
+    };
+
+    if ((window as any).SpotifyIframeApi) {
+      initController();
+    } else {
+      const existing = document.querySelector('script[src="https://open.spotify.com/embed/iframe-api/v1"]');
+      if (!existing) {
+        const script = document.createElement('script');
+        script.src = 'https://open.spotify.com/embed/iframe-api/v1';
+        script.async = true;
+        document.body.appendChild(script);
+      }
+      (window as any).onSpotifyIframeApiReady = (api: any) => {
+        (window as any).SpotifyIframeApi = api;
+        initController();
+      };
+    }
+
+    return () => {
+      mounted = false;
+      spotifyControllerRef.current?.destroy?.();
+      spotifyControllerRef.current = null;
+    };
+  }, []);
+
   const toggleTheme = () => setTheme(t => (t === 'dark' ? 'light' : 'dark'));
+
+  const togglePlay = () => {
+    if (spotifyControllerRef.current) {
+      spotifyControllerRef.current.togglePlay();
+    } else {
+      window.open('https://open.spotify.com/album/60S0Nvtm54AmG6d8lVkhMF', '_blank', 'noreferrer');
+    }
+  };
 
   return (
     <>
@@ -158,7 +263,7 @@ export default function Portfolio() {
       <header className="topbar">
         <div className="topbar-inner">
           <a href="#top" className="brand">
-            <div className="brand-mark">O</div>
+            <div className="brand-mark">OA</div>
             <div className="brand-name">Oluwatosin <span>· Product Designer &amp; Frontend Developer</span></div>
           </a>
           <nav className="nav-links">
@@ -242,6 +347,44 @@ export default function Portfolio() {
                   <span>Available for selective projects</span>
                   <span><span className="star">★</span> 4.8 / 5.0 CSAT</span>
                 </div>
+
+                <button
+                  type="button"
+                  className="now-playing-card"
+                  onClick={togglePlay}
+                  aria-label={`${isPlaying ? 'Pause' : 'Play'} REAL, Vol. 1 by Wizkid`}
+                  aria-pressed={isPlaying}
+                >
+                  <div className="np-cover">
+                    <img
+                      src="https://image-cdn-ak.spotifycdn.com/image/ab67616d00001e022d9d222a08cb2e589cf4288e"
+                      alt="REAL, Vol. 1 album cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div className="np-body">
+                    <div className="np-row">
+                      <span className="np-eyebrow">
+                        <span className={`np-pulse${isPlaying ? ' is-playing' : ''}`} aria-hidden="true"><i></i><i></i><i></i></span>
+                        <span>{isPlaying ? 'Now playing' : 'On rotation'}</span>
+                      </span>
+                      <svg className="np-logo" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12.438 1.009C6.368.769 1.251 5.494 1.008 11.565c-.24 6.07 4.485 11.186 10.556 11.426 6.07.242 11.185-4.484 11.427-10.554S18.507 1.251 12.438 1.009m4.644 16.114a.657.657 0 0 1-.897.246 13.2 13.2 0 0 0-4.71-1.602 13.2 13.2 0 0 0-4.968.242.658.658 0 0 1-.31-1.278 14.5 14.5 0 0 1 5.46-.265c1.837.257 3.579.851 5.177 1.76.315.178.425.58.246.896zm1.445-2.887a.853.853 0 0 1-1.158.344 16.2 16.2 0 0 0-5.475-1.797 16.2 16.2 0 0 0-5.758.219.855.855 0 0 1-1.018-.65.85.85 0 0 1 .65-1.018 17.9 17.9 0 0 1 6.362-.241 17.9 17.9 0 0 1 6.049 1.985c.415.224.57.743.344 1.158zm1.602-3.255a1.05 1.05 0 0 1-1.418.448 19.7 19.7 0 0 0-6.341-2.025 19.6 19.6 0 0 0-6.655.199 1.05 1.05 0 1 1-.417-2.06 21.7 21.7 0 0 1 7.364-.22 21.7 21.7 0 0 1 7.019 2.24c.515.268.715.903.448 1.418" />
+                      </svg>
+                    </div>
+                    <div className="np-title">REAL, Vol. 1</div>
+                    <div className="np-meta">Wizkid <span className="np-dot">·</span> Album</div>
+                  </div>
+                  <span className="np-play" aria-hidden="true">
+                    {isPlaying ? (
+                      <svg viewBox="0 0 24 24"><path d="M6 5h3v14H6zm9 0h3v14h-3z" /></svg>
+                    ) : (
+                      <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                    )}
+                  </span>
+                </button>
+                <div ref={spotifyContainerRef} className="spotify-embed-host" aria-hidden="true" />
               </div>
             </div>
           </div>
@@ -252,7 +395,6 @@ export default function Portfolio() {
           <div className="container">
             <div className="section-head">
               <div className="meta">
-                <span className="num">01</span>
                 <span className="eyebrow">By the numbers</span>
               </div>
               <div>
@@ -261,21 +403,44 @@ export default function Portfolio() {
               </div>
             </div>
 
-            <div className="metrics three">
-              <div className="m">
-                <span className="num">4<sub>+</sub></span>
-                <span className="label">Years of experience</span>
-                <span className="desc">Designing and building scalable products end-to-end.</span>
+            <div className="impact-grid">
+              <div className="globe-stage-wrap">
+                <div className="globe-stage" aria-hidden="true">
+                  <svg className="globe-svg" viewBox="-100 -100 200 200">
+                    <circle className="g-rim" r="80" />
+                    <ellipse className="g-par" rx="80" ry="22" />
+                    <ellipse className="g-par" rx="80" ry="44" />
+                    <ellipse className="g-par" rx="80" ry="65" />
+                    <line className="g-eq" x1="-80" y1="0" x2="80" y2="0" />
+                    <ellipse className="g-mer g-m1" rx="80" ry="80" />
+                    <ellipse className="g-mer g-m2" rx="80" ry="80" />
+                    <ellipse className="g-mer g-m3" rx="80" ry="80" />
+                    <ellipse className="g-mer g-m4" rx="80" ry="80" />
+                    <ellipse className="g-mer g-m5" rx="80" ry="80" />
+                    <ellipse className="g-mer g-m6" rx="80" ry="80" />
+                  </svg>
+                </div>
+                <div className="globe-caption">
+                  <span className="live-dot"></span>Available · GMT+1
+                </div>
               </div>
-              <div className="m">
-                <span className="num">20<sub>+</sub></span>
-                <span className="label">Products shipped</span>
-                <span className="desc">Mobile, web, internal tools — production code, not just prototypes.</span>
-              </div>
-              <div className="m">
-                <span className="num">4.8<sub>/5</sub></span>
-                <span className="label">Avg client satisfaction</span>
-                <span className="desc">Across recent engagements. Repeat work is the norm.</span>
+
+              <div className="metrics three">
+                <div className="m">
+                  <span className="num">4<sub>+</sub></span>
+                  <span className="label">Years of experience</span>
+                  <span className="desc">Designing and building scalable products end-to-end.</span>
+                </div>
+                <div className="m">
+                  <span className="num">20<sub>+</sub></span>
+                  <span className="label">Products shipped</span>
+                  <span className="desc">Mobile, web, internal tools — production code, not just prototypes.</span>
+                </div>
+                <div className="m">
+                  <span className="num">4.8<sub>/5</sub></span>
+                  <span className="label">Avg client satisfaction</span>
+                  <span className="desc">Across recent engagements. Repeat work is the norm.</span>
+                </div>
               </div>
             </div>
           </div>
@@ -286,7 +451,6 @@ export default function Portfolio() {
           <div className="container">
             <div className="section-head">
               <div className="meta">
-                <span className="num">02</span>
                 <span className="eyebrow">About</span>
               </div>
               <div>
@@ -338,7 +502,6 @@ export default function Portfolio() {
           <div className="container">
             <div className="section-head">
               <div className="meta">
-                <span className="num">03</span>
                 <span className="eyebrow">Selected Work</span>
               </div>
               <div>
@@ -408,12 +571,14 @@ export default function Portfolio() {
           </div>
         </section>
 
+        {/* SHOWREEL */}
+        <LazyVideo src={showreelVideo} />
+
         {/* EXPERIENCE */}
         <section id="experience">
           <div className="container">
             <div className="section-head">
               <div className="meta">
-                <span className="num">04</span>
                 <span className="eyebrow">Experience</span>
               </div>
               <div>
@@ -447,7 +612,6 @@ export default function Portfolio() {
           <div className="container">
             <div className="section-head">
               <div className="meta">
-                <span className="num">05</span>
                 <span className="eyebrow">Testimonials</span>
               </div>
               <div>
@@ -502,7 +666,7 @@ export default function Portfolio() {
           <div className="footer-grid">
             <div className="col">
               <div className="brand" style={{ marginBottom: 16 }}>
-                <div className="brand-mark">O</div>
+                <div className="brand-mark">OA</div>
                 <div className="brand-name">Oluwatosin</div>
               </div>
               <p>Product Designer and builder crafting meaningful digital products. Working globally on GMT+1.</p>
@@ -643,7 +807,7 @@ const styles = `
   .theme-toggle:hover{color:var(--amber);border-color:var(--amber);background:rgba(245,177,76,.06)}
   .topbar-inner{display:flex;align-items:center;justify-content:space-between;padding:14px clamp(24px,5vw,80px);max-width:1400px;margin:0 auto;gap:24px}
   .brand{display:flex;align-items:center;gap:12px;min-width:0}
-  .brand-mark{width:34px;height:34px;border-radius:6px;background:linear-gradient(135deg,var(--amber),#a26b1c);display:grid;place-items:center;color:var(--amber-ink);font-family:'Newsreader',serif;font-weight:600;font-size:18px;flex-shrink:0}
+  .brand-mark{width:34px;height:34px;border-radius:6px;background:linear-gradient(135deg,var(--amber),#a26b1c);display:grid;place-items:center;color:var(--amber-ink);font-family:'Newsreader',serif;font-weight:600;font-size:14px;letter-spacing:.01em;flex-shrink:0}
   .brand-name{font-weight:500;font-size:15px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .brand-name span{color:var(--ink-3);font-weight:400}
   .nav-links{display:flex;gap:28px}
@@ -687,11 +851,11 @@ const styles = `
   .portrait-caption .star{color:var(--amber)}
 
   section{padding:100px 0;border-top:1px solid var(--rule)}
-  .section-head{display:grid;grid-template-columns:240px 1fr;gap:48px;margin-bottom:60px;align-items:end}
-  .section-head .meta{display:flex;flex-direction:column;gap:8px}
-  .section-head .meta .num{font-family:'Newsreader',serif;font-style:italic;font-size:54px;color:var(--amber);line-height:.9}
-  .section-head h2{font-family:'Newsreader',serif;font-weight:400;font-size:clamp(32px,3.4vw,46px);line-height:1.05;letter-spacing:-.02em}
-  .section-head .lede{font-size:16px;color:var(--ink-3);max-width:520px;margin-top:12px;line-height:1.55}
+  .section-head{display:flex;flex-direction:column;gap:18px;margin-bottom:60px}
+  .section-head .meta .eyebrow{display:inline-flex;align-items:center;gap:14px;color:var(--amber)}
+  .section-head .meta .eyebrow::before{content:"";display:inline-block;width:32px;height:1px;background:currentColor;opacity:.7}
+  .section-head h2{font-family:'Newsreader',serif;font-weight:400;font-size:clamp(32px,3.4vw,46px);line-height:1.05;letter-spacing:-.02em;max-width:820px}
+  .section-head .lede{font-size:16px;color:var(--ink-3);max-width:560px;margin-top:12px;line-height:1.55}
 
   .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--rule);border-radius:14px;background:linear-gradient(180deg,rgba(245,177,76,.04),transparent);overflow:hidden}
   .metrics.three{grid-template-columns:repeat(3,1fr)}
@@ -718,6 +882,50 @@ const styles = `
   .info-card .row .v{color:var(--ink);font-weight:500;text-align:right}
   .skills-list{display:flex;flex-wrap:wrap;gap:8px}
   .skills-list .skill{padding:7px 13px;border-radius:6px;background:rgba(245,177,76,.08);border:1px solid rgba(245,177,76,.25);color:var(--skill-color);font-size:13px;font-weight:500}
+
+  .now-playing-card{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;width:100%;margin-top:16px;padding:12px 14px;border:1px solid var(--rule);border-radius:14px;background:linear-gradient(135deg,rgba(245,177,76,.07) 0%,transparent 55%),linear-gradient(180deg,var(--card-bg-from),var(--card-bg-to));color:var(--ink);font:inherit;text-align:left;cursor:pointer;outline:none;transition:transform .25s, border-color .25s, box-shadow .25s}
+  .now-playing-card:hover{border-color:rgba(245,177,76,.4);transform:translateY(-1px);box-shadow:0 14px 28px -16px rgba(0,0,0,.45)}
+  .now-playing-card:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+  .np-cover{width:56px;height:56px;border-radius:8px;overflow:hidden;background:#0b0b0b;flex-shrink:0;box-shadow:0 6px 14px -8px rgba(0,0,0,.5)}
+  .np-cover img{width:100%;height:100%;object-fit:cover;display:block}
+  .np-body{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .np-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .np-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Manrope',sans-serif;font-weight:600;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+  .np-pulse{display:inline-flex;align-items:flex-end;gap:2px;height:10px}
+  .np-pulse i{display:inline-block;width:2px;background:var(--amber);border-radius:1px;transform-origin:center bottom;animation:eq 1.2s ease-in-out infinite paused}
+  .np-pulse.is-playing i{animation-play-state:running}
+  .np-pulse i:nth-child(1){height:55%;animation-delay:-.4s}
+  .np-pulse i:nth-child(2){height:100%;animation-delay:-.2s}
+  .np-pulse i:nth-child(3){height:75%}
+  @keyframes eq{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
+  .np-logo{width:14px;height:14px;flex-shrink:0;color:var(--ink-3);opacity:.7;transition:color .25s, opacity .25s}
+  .np-logo path{fill:currentColor}
+  .now-playing-card:hover .np-logo{color:#1db954;opacity:1}
+  .np-title{font-family:'Newsreader',serif;font-size:17px;font-weight:500;line-height:1.2;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.005em}
+  .np-meta{font-size:12px;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .np-meta .np-dot{color:var(--ink-4);margin:0 2px}
+  .np-play{width:36px;height:36px;border-radius:50%;background:var(--amber);display:grid;place-items:center;flex-shrink:0;transition:transform .25s, background .25s}
+  .np-play svg{width:13px;height:13px;fill:var(--amber-ink);margin-left:2px}
+  .now-playing-card:hover .np-play{transform:scale(1.05);background:var(--amber-2)}
+  .spotify-embed-host{position:fixed;left:-9999px;top:0;width:300px;height:100px;opacity:0;pointer-events:none}
+
+  .impact-grid{display:grid;grid-template-columns:320px 1fr;gap:48px;align-items:center}
+
+  .globe-stage-wrap{display:flex;flex-direction:column;align-items:center}
+  .globe-stage{position:relative;aspect-ratio:1/1;width:100%;max-width:480px;margin:0 auto;border-radius:50%;overflow:hidden;border:1px solid rgba(245,177,76,.2);background:radial-gradient(circle at 28% 22%,rgba(245,177,76,.28),transparent 42%),radial-gradient(circle at 78% 82%,rgba(0,0,0,.75),transparent 55%),radial-gradient(circle at 50% 50%,var(--bg-3) 0%,var(--bg) 78%);box-shadow:inset 22px 22px 50px rgba(245,177,76,.1),inset -28px -36px 100px rgba(0,0,0,.7),inset 0 0 40px rgba(0,0,0,.3),0 0 32px rgba(245,177,76,.15),0 0 90px rgba(245,177,76,.07),0 30px 60px -24px rgba(0,0,0,.55)}
+  .globe-svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .g-rim{fill:none;stroke:var(--amber);stroke-opacity:.45;stroke-width:.7}
+  .g-par{fill:none;stroke:var(--amber);stroke-opacity:.2;stroke-width:.45}
+  .g-eq{stroke:var(--amber);stroke-opacity:.42;stroke-width:.55}
+  .g-mer{fill:none;stroke:var(--amber);stroke-opacity:.32;stroke-width:.5;animation:g-mer-spin 18s linear infinite}
+  .g-m1{animation-delay:0s}
+  .g-m2{animation-delay:-3s}
+  .g-m3{animation-delay:-6s}
+  .g-m4{animation-delay:-9s}
+  .g-m5{animation-delay:-12s}
+  .g-m6{animation-delay:-15s}
+  @keyframes g-mer-spin{0%{rx:80px}50%{rx:.5px}100%{rx:80px}}
+  .globe-caption{margin-top:18px;display:inline-flex;align-items:center;font-family:'Manrope',sans-serif;font-weight:500;font-size:11px;color:var(--ink-3);letter-spacing:.12em;text-transform:uppercase}
 
   .exp-grid{display:flex;flex-direction:column}
   .exp-job{display:grid;grid-template-columns:200px 1fr 60px;gap:48px;padding:32px 24px;border-top:1px solid var(--rule);align-items:start;transition:background .2s;border-radius:10px}
@@ -762,6 +970,13 @@ const styles = `
   .case-link:hover{color:var(--amber);border-color:var(--amber)}
   .case-link.soft{color:var(--ink-3);border-color:transparent}
   .case-link.soft:hover{color:var(--amber)}
+
+  .showreel{padding:80px 0}
+  .showreel-frame{position:relative;width:100%;border-radius:18px;overflow:hidden;border:1px solid var(--rule);background:var(--bg-2);box-shadow:0 30px 60px -24px rgba(0,0,0,.45)}
+  .showreel-placeholder{width:100%;aspect-ratio:16/9;max-height:75vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,var(--bg-3),var(--bg-2))}
+  .showreel-spinner{width:36px;height:36px;border:2px solid rgba(245,177,76,.15);border-top-color:var(--amber);border-radius:50%;animation:showreel-spin .8s linear infinite}
+  @keyframes showreel-spin{to{transform:rotate(360deg)}}
+  .showreel-video{width:100%;max-height:75vh;object-fit:cover;display:block}
 
   .quotes{display:grid;grid-template-columns:1fr 1fr;gap:24px}
   .quote{border:1px solid var(--rule);border-radius:14px;padding:36px;display:flex;flex-direction:column;gap:24px;background:linear-gradient(180deg,rgba(245,177,76,.03),transparent)}
@@ -808,7 +1023,7 @@ const styles = `
   @media (max-width:980px){
     section{padding:80px 0}
     .hero{padding:60px 0 40px}
-    .hero-grid,.about-grid,.cta-card,.case-card{grid-template-columns:1fr;gap:32px}
+    .hero-grid,.about-grid,.cta-card,.case-card,.impact-grid{grid-template-columns:1fr;gap:32px}
     .portrait-wrap{max-width:520px;margin:0 auto;width:100%}
     .case-visual{border-right:0;border-bottom:1px solid var(--rule);min-height:280px}
     .metrics,.metrics.three{grid-template-columns:1fr 1fr}
@@ -816,7 +1031,7 @@ const styles = `
     .metrics .m:nth-child(2n){border-right:0}
     .metrics .m:nth-last-child(-n+2){border-bottom:0}
     .quotes,.footer-grid{grid-template-columns:1fr}
-    .section-head{grid-template-columns:1fr;gap:16px;margin-bottom:40px}
+    .section-head{gap:14px;margin-bottom:40px}
     .exp-job{grid-template-columns:140px 1fr;gap:24px}
     .exp-arrow{display:none}
     .nav-links{display:none}
@@ -861,7 +1076,7 @@ const styles = `
     .hero-actions{flex-direction:column;align-items:stretch}
     .btn-primary,.btn-secondary{width:100%}
     .top-cta{padding:7px 10px;font-size:11px;gap:4px}
-    .brand-mark{width:30px;height:30px;font-size:16px}
+    .brand-mark{width:30px;height:30px;font-size:12px}
     .brand-name{font-size:13px}
   }
 `;
