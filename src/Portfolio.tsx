@@ -392,8 +392,8 @@ export default function Portfolio() {
         </section>
 
         {/* IMPACT */}
-        <section id="impact" style={{ borderTop: 0 }}>
-          <div className="container">
+        <section id="impact" className="impact-section">
+          <div className="impact-shell">
             <div className="section-head">
               <div className="meta">
                 <span className="eyebrow">By the numbers</span>
@@ -839,6 +839,9 @@ const styles = `
   .section-head h2{font-family:'Newsreader',serif;font-weight:400;font-size:clamp(32px,3.4vw,46px);line-height:1.05;letter-spacing:-.02em;max-width:820px}
   .section-head .lede{font-size:16px;color:var(--ink-3);max-width:560px;margin-top:12px;line-height:1.55}
 
+  .impact-section{position:relative;width:100vw;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;padding:100px 0 80px;border-top:0;background:var(--bg-2);overflow:hidden}
+  .impact-shell{max-width:1800px;margin:0 auto;padding:0 clamp(24px,5vw,80px);}
+
   .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--rule);border-radius:14px;background:linear-gradient(180deg,rgba(245,177,76,.04),transparent);overflow:hidden}
   .metrics.three{grid-template-columns:repeat(3,1fr)}
   .metrics .m{padding:36px 28px;border-right:1px solid var(--rule);display:flex;flex-direction:column;gap:8px}
@@ -891,7 +894,7 @@ const styles = `
   .now-playing-card:hover .np-play{transform:scale(1.05);background:var(--amber-2)}
   .spotify-embed-host{position:fixed;left:-9999px;top:0;width:300px;height:100px;opacity:0;pointer-events:none}
 
-  .impact-grid{display:grid;grid-template-columns:320px 1fr;gap:48px;align-items:center}
+  .impact-grid{display:grid;gap:48px}
 
   .globe-stage-wrap{display:flex;flex-direction:column;align-items:center}
   .globe-stage{position:relative;aspect-ratio:1/1;width:100%;max-width:480px;margin:0 auto;border-radius:50%;overflow:hidden;border:1px solid rgba(245,177,76,.2);background:radial-gradient(circle at 28% 22%,rgba(245,177,76,.28),transparent 42%),radial-gradient(circle at 78% 82%,rgba(0,0,0,.75),transparent 55%),radial-gradient(circle at 50% 50%,var(--bg-3) 0%,var(--bg) 78%);box-shadow:inset 22px 22px 50px rgba(245,177,76,.1),inset -28px -36px 100px rgba(0,0,0,.7),inset 0 0 40px rgba(0,0,0,.3),0 0 32px rgba(245,177,76,.15),0 0 90px rgba(245,177,76,.07),0 30px 60px -24px rgba(0,0,0,.55)}
