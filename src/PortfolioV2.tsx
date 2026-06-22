@@ -1,4 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import CaseStudyModal, { CaseStudyData } from './components/CaseStudyModal';
+import {
+  artemisCaseStudy,
+  codelessAgencyCaseStudy,
+  dreamAiCaseStudy,
+  gloUpCaseStudy,
+  nesoCaseStudy,
+  aaronIsraelCaseStudy,
+} from './caseStudies';
 
 // model-viewer is a custom element registered globally (script loaded in index.html).
 declare global {
@@ -16,10 +25,56 @@ const GS = "'General Sans', sans-serif";
 
 const MODEL_SRC = 'https://tosin-model-host.vercel.app/tosin-model.glb';
 
+// ── Assets ──────────────────────────────────────────────────────────────────
+const portraitImg = new URL('../img/me.png', import.meta.url).href;
+const imgArtemis = new URL('../img/artemis.jpg', import.meta.url).href;
+const imgCodeless = new URL('../img/Mockup 26.png', import.meta.url).href;
+const imgDreamAI = new URL('../img/Mockup Ribbon 11.png', import.meta.url).href;
+const imgGloUp = new URL('../img/Notioneverything headers.png', import.meta.url).href;
+const imgNeso = new URL('../img/Notioneverything headers (1).png', import.meta.url).href;
+const imgAaron = new URL('../img/case-0.png', import.meta.url).href;
+
+// ── Real contact / links ────────────────────────────────────────────────────
+const EMAIL = 'mosestosyn07@gmail.com';
+const TWITTER = 'https://x.com/Oluwat0s1n';
+const LINKEDIN = 'https://www.linkedin.com/in/tosin-aborishade/';
+// TODO: paste the real Instagram + résumé links here when available.
+const INSTAGRAM = '#';
+const RESUME = '#';
+
+const MAIL_SUBJECT = "Project inquiry — let's chat";
+const MAIL_BODY = `Hi Oluwatosin,
+
+I came across your portfolio and wanted to reach out.
+
+A bit about the project:
+• What we're building:
+• Timeline / start date:
+• Scope (design, build, both):
+• Budget range:
+
+Looking forward to hearing from you.
+
+—`;
+const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(MAIL_SUBJECT)}&body=${encodeURIComponent(MAIL_BODY)}`;
+
 type Stat = { n: string; target: string; suffix: string; label: string };
-type Project = { n: string; name: string; type: string; tags: string; year: string };
 type Career = { period: string; role: string; org: string; desc: string };
 type Quote = { quote: string; name: string; title: string };
+type ProjectV2 = {
+  n: string;
+  name: string;
+  type: string;
+  tags: string;
+  year: string;
+  image: string;
+  category: string;
+  summary: string;
+  metrics: string;
+  outcome: string;
+  caseStudy?: CaseStudyData;
+  liveUrl?: string;
+};
 
 const stats: Stat[] = [
   { n: '01', target: '4', suffix: '', label: 'Years experience' },
@@ -30,29 +85,75 @@ const stats: Stat[] = [
 
 const skills = ['Product Design', 'UI / UX', 'Frontend', 'Webflow', 'Framer', 'Bubble', 'Prototyping', 'Motion'];
 
-const projects: Project[] = [
-  { n: '01', name: 'Artemis II', type: 'WebGL · 3D Scene', tags: 'Three.js, GLSL', year: '2024' },
-  { n: '02', name: 'Codeless', type: 'No-code Platform', tags: 'Webflow, CMS', year: '2024' },
-  { n: '03', name: 'DreamAI', type: 'AI Product', tags: 'Bubble, GPT', year: '2023' },
-  { n: '04', name: 'The Glo Up', type: 'Fintech Mobile', tags: 'iOS, Product', year: '2023' },
-  { n: '05', name: 'Nepo', type: 'Health & Fitness', tags: 'Mobile, Nutrition', year: '2023' },
-  { n: '06', name: 'Aaron Israel', type: 'Portfolio Site', tags: 'Frontend, Webflow', year: '2024' },
+const projects: ProjectV2[] = [
+  {
+    n: '01', name: 'Artemis II', type: 'Creative Coding · 3D', tags: 'Three.js, WebGL', year: '2026', image: imgArtemis,
+    category: 'Creative Coding · 3D',
+    summary: "A real-time 3D tribute to NASA's Artemis II mission. Designed with Maryam Alakoso, built in code on omma.build.",
+    metrics: 'Real-time WebGL',
+    outcome: 'A single scene authored in code — geometry, lighting, and camera all live in source.',
+    caseStudy: artemisCaseStudy, liveUrl: 'https://omma.build/p/artemis-ii-3d-scene-code-jwabi0',
+  },
+  {
+    n: '02', name: 'Codeless', type: 'Agency · Next.js', tags: 'Webflow, Next.js', year: '2024', image: imgCodeless,
+    category: 'Product Design + Development',
+    summary: 'A home for a no-code agency that needed to look anything but ordinary.',
+    metrics: '38% increase in activation',
+    outcome: 'Reduced drop-offs with data-driven flows and personalized nudges.',
+    caseStudy: codelessAgencyCaseStudy, liveUrl: 'https://agency.codelessify.org',
+  },
+  {
+    n: '03', name: 'DreamAI', type: 'AI Product · Bubble', tags: 'Bubble, GPT', year: '2025', image: imgDreamAI,
+    category: 'No-Code Build & Design',
+    summary: 'Designed and shipped an AI-powered dream journaling & interpretation web app.',
+    metrics: 'Built on Bubble',
+    outcome: 'AI-powered interpretation delivered in seconds with a journaling-first UX.',
+    caseStudy: dreamAiCaseStudy, liveUrl: 'https://dreamai-52691.bubbleapps.io/version-test',
+  },
+  {
+    n: '04', name: 'The Glo Up', type: 'Dating · Mobile', tags: 'iOS, Product', year: '2023', image: imgGloUp,
+    category: 'Product Design',
+    summary: 'A dating app that helps users find potential dates beyond the heterosexual default.',
+    metrics: 'Mobile app in development',
+    outcome: 'Connect based on sexuality and interests with options beyond romance.',
+    caseStudy: gloUpCaseStudy,
+    liveUrl: 'https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FOdXozCiTmU0EFVpB6esD3Y%2FThe-Glo-Up-Dating-App%3Fnode-id%3D0%253A1%26t%3DGpxOALxhnck2XF3y-1',
+  },
+  {
+    n: '05', name: 'Neso', type: 'Health & Fitness', tags: 'Mobile, Nutrition', year: '2023', image: imgNeso,
+    category: 'Product Design',
+    summary: 'Workout and fitness tracker with built-in nutrition monitoring.',
+    metrics: 'Fitness + nutrition tracking',
+    outcome: 'Workout setup, progress tracking, and nutrition monitoring in one program-led experience.',
+    caseStudy: nesoCaseStudy,
+    liveUrl: 'https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FRp5R4gmO5aSdevyzHz57Qb%2FTrain-and-Earn-Fitness-App-(Copy)%3Fnode-id%3D0%253A1',
+  },
+  {
+    n: '06', name: 'Aaron Israel', type: 'Portfolio · No-Code', tags: 'Webflow, Framer', year: '2024', image: imgAaron,
+    category: 'No-Code Development',
+    summary: 'No-code web developer and digital builder shipping production-ready websites in days.',
+    metrics: '40+ projects shipped',
+    outcome: '3x faster delivery than traditional dev cycles with a 98% client satisfaction rate.',
+    caseStudy: aaronIsraelCaseStudy, liveUrl: 'https://aaron.pxxl.click',
+  },
 ];
 
 const career: Career[] = [
-  { period: '2024 — PRESENT', role: 'Design Engineer', org: 'Codeless', desc: 'Designing and shipping no-code products end to end — from first sketch to live production.' },
-  { period: '2022 — 2024', role: 'Product Designer', org: 'Freelance', desc: 'Partnered with startups across fintech, health and AI to design intuitive, high-converting products.' },
-  { period: '2021 — 2022', role: 'UI Designer', org: 'Studio', desc: 'Crafted interfaces and early design systems for emerging brands and founders.' },
+  { period: '2025 — PRESENT', role: 'Design Engineer', org: 'Codeless Solutions', desc: 'Lead end-to-end development of DreamAI — a no-code product integrating Azure OpenAI GPT for dream interpretation, wellness insights, and personalized recommendations.' },
+  { period: '2024', role: 'Product Designer', org: 'Jrun Global', desc: 'Developed cohesive design systems and comprehensive style guides to ensure visual consistency across the web application.' },
 ];
 
 const quotes: Quote[] = [
-  { quote: 'Oluwatosin translated our product vision into a clean, scalable system. The new onboarding lifted activation within weeks.', name: 'Aaron Israel', title: 'Founder, CandleLeap' },
-  { quote: 'From strategy to build, every detail was intentional. Our team now ships faster with confidence.', name: 'Gabriel Oladubu', title: 'CTO, Funema' },
-  { quote: 'A rare designer who can build exactly what he designs. Reliable, creative and precise.', name: 'Omijuke Abolade', title: 'Product Manager, Mindspace' },
-  { quote: 'He effortlessly turned messy ideas into a memorable experience. Highly recommended.', name: 'Wendy Edeke', title: 'Founder, Agioweb' },
+  { quote: 'Oluwatosin translated our product vision into a clean, scalable system. The new onboarding flow lifted activation within weeks.', name: 'Aaron Israel', title: 'CEO, Codeless Solutions' },
+  { quote: 'From strategy to build, every detail was intentional. Our team now ships faster with confidence.', name: 'Godwin Okechukwu', title: 'Founder, Shyne Africa' },
 ];
 
-const socials = ['Twitter', 'Instagram', 'LinkedIn', 'Résumé'];
+const socials = [
+  { label: 'Twitter', href: TWITTER },
+  { label: 'Instagram', href: INSTAGRAM },
+  { label: 'LinkedIn', href: LINKEDIN },
+  { label: 'Résumé', href: RESUME },
+];
 
 const css = `
 *{box-sizing:border-box}
@@ -62,8 +163,8 @@ html[data-theme="light"]{--chrome-bg:rgba(236,238,241,.72);--chrome-fg:#16181d;-
 body{background-color:var(--body-bg);font-family:'General Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 ::selection{background:var(--chrome-accent);color:#fff}
 
-[data-root="c"]{--bg:#0f1115;--fg:#e9eaee;--muted:#aeb1bb;--faint:#757985;--line:rgba(233,234,238,.12);--surface:#15171d;--surface2:#1a1d24;--accent:#2f6bff;--accent-ink:#fff;--grid:rgba(233,234,238,.045)}
-html[data-theme="light"] [data-root="c"]{--bg:#eceef1;--fg:#16181d;--muted:#54585f;--faint:#7a7e88;--line:rgba(22,24,29,.13);--surface:#e0e3e7;--surface2:#d7dadf;--accent:#2f6bff;--accent-ink:#fff;--grid:rgba(22,24,29,.05)}
+[data-root="c"]{--bg:#0f1115;--fg:#e9eaee;--muted:#aeb1bb;--faint:#757985;--line:rgba(233,234,238,.12);--surface:#15171d;--surface2:#1a1d24;--accent:#2f6bff;--accent-ink:#fff;--grid:rgba(233,234,238,.045);--ink:var(--fg);--ink-2:var(--muted);--ink-3:var(--faint);--rule:var(--line);--amber:var(--accent);--amber-2:#5b8bff;--amber-ink:var(--accent-ink);--skill-color:var(--accent);--card-bg-from:var(--surface2);--card-bg-to:var(--surface);--bg-2:var(--surface2)}
+html[data-theme="light"] [data-root="c"]{--bg:#eceef1;--fg:#16181d;--muted:#54585f;--faint:#7a7e88;--line:rgba(22,24,29,.13);--surface:#e0e3e7;--surface2:#d7dadf;--accent:#2f6bff;--accent-ink:#fff;--grid:rgba(22,24,29,.05);--amber-2:#2057e6}
 
 model-viewer{--poster-color:transparent;background-color:transparent}
 @keyframes ot-blink{0%,100%{opacity:1}50%{opacity:.25}}
@@ -73,11 +174,32 @@ model-viewer{--poster-color:transparent;background-color:transparent}
 @keyframes ot-glow{0%,100%{opacity:.8}50%{opacity:1}}
 @keyframes ot-orbitline{0%,100%{transform:scaleX(.4);opacity:.3}50%{transform:scaleX(1);opacity:.8}}
 
-/* interactive hover states (compiled from style-hover in the source design) */
-.v2-proj:hover .v2-proj-img{border-color:var(--accent);transform:translateY(-4px)}
-.v2-proj:hover .v2-proj-title{color:var(--accent)}
-.v2-quote:hover{border-color:var(--accent)}
-.v2-social:hover{color:var(--fg)}
+/* portrait */
+.v2-portrait img{transition:filter .5s ease, transform .8s cubic-bezier(.2,.7,.15,1)}
+.v2-portrait:hover img{filter:none;transform:scale(1.03)}
+
+/* project entrance reveal (case studies) */
+.v2-proj-figure{clip-path:inset(0 0 100% 0);transition:clip-path 1s cubic-bezier(.16,.84,.32,1),border-color .3s,transform .4s}
+.v2-proj-photo{transform:scale(1.18);transition:transform 1.25s cubic-bezier(.16,.84,.32,1);will-change:transform}
+.v2-proj-caption{opacity:0;transform:translateY(38px);transition:opacity .85s ease .18s,transform .9s cubic-bezier(.2,.7,.15,1) .18s}
+.v2-proj[data-shown="1"] .v2-proj-figure{clip-path:inset(0 0 0 0)}
+.v2-proj[data-shown="1"] .v2-proj-photo{transform:scale(1)}
+.v2-proj[data-shown="1"] .v2-proj-caption{opacity:1;transform:none}
+.v2-proj:hover .v2-proj-figure,.v2-proj:focus-visible .v2-proj-figure{border-color:var(--accent);transform:translateY(-4px)}
+.v2-proj:hover .v2-proj-title,.v2-proj:focus-visible .v2-proj-title{color:var(--accent)}
+.v2-proj-view{opacity:0;transform:translateY(6px);transition:opacity .3s ease,transform .3s ease}
+.v2-proj:hover .v2-proj-view,.v2-proj:focus-visible .v2-proj-view{opacity:1;transform:none}
+.v2-proj:focus-visible{outline:none;box-shadow:0 0 0 2px var(--accent)}
+
+/* case study modal — re-themed from the old palette to v2 tokens */
+[data-root="c"] .modal-content,[data-root="c"] .modal-header{background:var(--surface)}
+[data-root="c"] .modal-meta h2,[data-root="c"] .cs-heading,[data-root="c"] .cs-stat-num,[data-root="c"] .cs-quote-text,[data-root="c"] .cs-step-num{font-family:'Cabinet Grotesk',sans-serif;font-style:normal}
+[data-root="c"] .cs-subtitle,[data-root="c"] .cs-eyebrow,[data-root="c"] .modal-badge,[data-root="c"] .cs-meta-label,[data-root="c"] .cs-stat-desc,[data-root="c"] .cs-tech-pill,[data-root="c"] .cs-quote-cite,[data-root="c"] .cs-table th,[data-root="c"] .external-link-btn,[data-root="c"] .modal-close{font-family:'Space Mono',monospace;font-style:normal}
+[data-root="c"] .modal-badge{background:color-mix(in srgb,var(--accent) 14%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+[data-root="c"] .cs-tech-pill{background:color-mix(in srgb,var(--accent) 10%,transparent);border-color:color-mix(in srgb,var(--accent) 28%,transparent)}
+[data-root="c"] .cs-result-dot{background:color-mix(in srgb,var(--accent) 20%,transparent)}
+html[data-theme="light"] [data-root="c"] .modal-overlay{background:rgba(15,17,21,.34)}
+html[data-theme="light"] [data-root="c"] .modal-badge{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
 
 /* responsive */
 @media (max-width:860px){
@@ -90,11 +212,18 @@ model-viewer{--poster-color:transparent;background-color:transparent}
 @media (max-width:480px){
   .v2-stats{grid-template-columns:1fr !important}
 }
+
+@media (prefers-reduced-motion: reduce){
+  .v2-proj-figure{clip-path:none !important}
+  .v2-proj-photo{transform:none !important}
+  .v2-proj-caption{opacity:1 !important;transform:none !important}
+}
 `;
 
 export default function PortfolioV2() {
   const themeRef = useRef<'dark' | 'light'>('dark');
   const themeBtnRef = useRef<HTMLButtonElement>(null);
+  const [active, setActive] = useState<ProjectV2 | null>(null);
 
   const applyTheme = () => {
     document.documentElement.setAttribute('data-theme', themeRef.current);
@@ -134,6 +263,11 @@ export default function PortfolioV2() {
     c.dataset.on = '0';
     c.style.opacity = '0';
     c.style.transform = 'translate(-50%,-150%) scale(.6)';
+  };
+
+  const openProject = (p: ProjectV2) => {
+    rowLeave();
+    setActive(p);
   };
 
   useEffect(() => {
@@ -180,7 +314,7 @@ export default function PortfolioV2() {
     };
     document.addEventListener('mousemove', onMove);
 
-    // scroll reveal
+    // scroll reveal (generic fade/slide for headers, text, etc.)
     let io: IntersectionObserver | null = null;
     const revealEls = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'));
     revealEls.forEach((el) => {
@@ -211,6 +345,27 @@ export default function PortfolioV2() {
       revealEls.forEach(show);
     }
     setT(() => revealEls.forEach((el) => { if (el.dataset.shown !== '1') show(el); }), 3800);
+
+    // project entrance reveal (case studies) — cinematic clip + scale + title rise
+    let pio: IntersectionObserver | null = null;
+    const projEls = Array.from(document.querySelectorAll<HTMLElement>('.v2-proj'));
+    if ('IntersectionObserver' in window) {
+      pio = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((en) => {
+            if (en.isIntersecting) {
+              (en.target as HTMLElement).dataset.shown = '1';
+              pio!.unobserve(en.target);
+            }
+          });
+        },
+        { rootMargin: '0px 0px -12% 0px', threshold: 0.15 }
+      );
+      projEls.forEach((el) => pio!.observe(el));
+    } else {
+      projEls.forEach((el) => { el.dataset.shown = '1'; });
+    }
+    setT(() => projEls.forEach((el) => { el.dataset.shown = '1'; }), 4200);
 
     // headline split-in animation (preserves <br> and the coloured "." span)
     const splitText = () => {
@@ -310,6 +465,7 @@ export default function PortfolioV2() {
       document.removeEventListener('mousemove', onMove);
       window.clearInterval(clockId);
       if (io) io.disconnect();
+      if (pio) pio.disconnect();
       timeouts.forEach((id) => window.clearTimeout(id));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -483,7 +639,7 @@ export default function PortfolioV2() {
               </p>
               <div data-reveal style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 34 }}>
                 <a
-                  href="mailto:hello@oluwatosin.site"
+                  href={MAILTO}
                   data-magnetic
                   onMouseMove={magMove}
                   onMouseLeave={magLeave}
@@ -816,17 +972,26 @@ export default function PortfolioV2() {
               </div>
               <div data-reveal>
                 <div
+                  className="v2-portrait"
                   style={{
+                    position: 'relative',
                     border: '1px solid var(--line)',
-                    background: 'repeating-linear-gradient(135deg,var(--surface) 0 11px,var(--bg) 11px 22px)',
                     aspectRatio: '3/4',
-                    display: 'flex',
-                    alignItems: 'flex-end',
-                    padding: 14,
-                    filter: 'grayscale(1) contrast(1.04)',
+                    overflow: 'hidden',
+                    background: 'var(--surface)',
                   }}
                 >
-                  <span style={{ fontFamily: MONO, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--faint)' }}>portrait.jpg</span>
+                  <img
+                    src={portraitImg}
+                    alt="Portrait of Oluwatosin"
+                    loading="lazy"
+                    decoding="async"
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 22%', filter: 'grayscale(1) contrast(1.03)' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 58%, rgba(0,0,0,.5) 100%)', pointerEvents: 'none' }} />
+                  <span style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: MONO, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,.82)' }}>
+                    oluwatosin.jpg
+                  </span>
                 </div>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
                   {skills.map((k) => (
@@ -850,7 +1015,7 @@ export default function PortfolioV2() {
             </div>
           </section>
 
-          {/* ============ FEATURED PROJECTS ============ */}
+          {/* ============ FEATURED PROJECTS / CASE STUDIES ============ */}
           <section id="work" style={{ paddingBottom: 'clamp(50px,7vw,90px)' }}>
             <div data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'clamp(28px,4vw,52px)' }}>
               <div style={labelStyle}>// SELECTED WORK</div>
@@ -871,34 +1036,43 @@ export default function PortfolioV2() {
               Featured<br />projects
             </h2>
             {projects.map((p) => (
-              <div
+              <article
                 key={p.n}
                 className="v2-proj"
                 data-name={p.name}
                 onMouseEnter={rowEnter}
                 onMouseLeave={rowLeave}
-                data-reveal
+                onClick={() => openProject(p)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openProject(p);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Open case study for ${p.name}`}
                 style={{ margin: '0 auto clamp(48px,7vw,88px)', maxWidth: 820, cursor: 'pointer' }}
               >
                 <div
-                  className="v2-proj-img"
-                  style={{
-                    position: 'relative',
-                    aspectRatio: '16/10',
-                    background: 'repeating-linear-gradient(135deg,var(--surface) 0 12px,var(--bg) 12px 24px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    border: '1px solid var(--line)',
-                    overflow: 'hidden',
-                    transition: 'border-color .3s,transform .4s',
-                  }}
+                  className="v2-proj-figure"
+                  style={{ position: 'relative', aspectRatio: '16/10', border: '1px solid var(--line)', overflow: 'hidden', background: 'var(--surface)' }}
                 >
-                  <span style={{ position: 'absolute', top: 14, left: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.1em', color: 'var(--accent)' }}>[{p.n}]</span>
-                  <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--faint)' }}>{p.type} — mockup</span>
-                  <span style={{ position: 'absolute', bottom: 14, right: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.08em', color: 'var(--faint)' }}>{p.tags}</span>
+                  <img
+                    className="v2-proj-photo"
+                    src={p.image}
+                    alt={`${p.name} — ${p.type}`}
+                    loading="lazy"
+                    decoding="async"
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.5) 0%, transparent 26%, transparent 62%, rgba(0,0,0,.55) 100%)', pointerEvents: 'none' }} />
+                  <span style={{ position: 'absolute', top: 14, left: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.1em', color: '#fff' }}>[{p.n}]</span>
+                  <span style={{ position: 'absolute', top: 14, right: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.85)' }}>{p.type}</span>
+                  <span className="v2-proj-view" style={{ position: 'absolute', bottom: 14, left: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: '#fff' }}>View case study →</span>
+                  <span style={{ position: 'absolute', bottom: 14, right: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.08em', color: 'rgba(255,255,255,.8)' }}>{p.tags}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 18, gap: 16 }}>
+                <div className="v2-proj-caption" style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 18, gap: 16 }}>
                   <h3
                     className="v2-proj-title"
                     style={{ margin: 0, fontFamily: CAB, fontWeight: 800, fontSize: 'clamp(30px,5vw,64px)', lineHeight: 0.92, letterSpacing: '-.03em', color: 'var(--fg)', transition: 'color .3s' }}
@@ -907,12 +1081,12 @@ export default function PortfolioV2() {
                   </h3>
                   <span style={{ fontFamily: MONO, fontSize: 12, color: 'var(--faint)', whiteSpace: 'nowrap' }}>{p.year} ↗</span>
                 </div>
-              </div>
+              </article>
             ))}
 
             <div data-reveal style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22, padding: 'clamp(40px,6vw,72px) 0 clamp(20px,3vw,40px)' }}>
               <a
-                href="#"
+                href={MAILTO}
                 data-magnetic
                 onMouseMove={magMove}
                 onMouseLeave={magLeave}
@@ -932,7 +1106,7 @@ export default function PortfolioV2() {
               >
                 →
               </a>
-              <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--faint)' }}>Explore more projects</span>
+              <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--faint)' }}>Let's build the next one</span>
             </div>
           </section>
 
@@ -984,11 +1158,20 @@ export default function PortfolioV2() {
                         width: 36,
                         height: 36,
                         border: '1px solid var(--line)',
-                        background: 'repeating-linear-gradient(135deg,var(--surface) 0 6px,var(--bg) 6px 12px)',
-                        filter: 'grayscale(1)',
+                        borderRadius: '50%',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontFamily: CAB,
+                        fontWeight: 800,
+                        fontSize: 14,
+                        color: 'var(--accent)',
+                        background: 'color-mix(in srgb,var(--accent) 10%,transparent)',
                         flex: 'none',
                       }}
-                    />
+                    >
+                      {q.name.charAt(0)}
+                    </div>
                     <div>
                       <div style={{ fontFamily: CAB, fontWeight: 700, fontSize: 15 }}>{q.name}</div>
                       <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--faint)', marginTop: 2 }}>{q.title}</div>
@@ -1009,7 +1192,7 @@ export default function PortfolioV2() {
               Have a product to<br />launch or refine?
             </h2>
             <a
-              href="mailto:hello@oluwatosin.site"
+              href={MAILTO}
               data-magnetic
               onMouseMove={magMove}
               onMouseLeave={magLeave}
@@ -1028,14 +1211,24 @@ export default function PortfolioV2() {
                 transition: 'transform .2s',
               }}
             >
-              hello@oluwatosin.site →
+              {EMAIL} →
             </a>
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginTop: 8, fontFamily: MONO, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--faint)' }}>
-              {socials.map((soc) => (
-                <a key={soc} href="#" className="v2-social" style={{ color: 'var(--faint)', textDecoration: 'none', transition: 'color .2s' }}>
-                  {soc} ↗
-                </a>
-              ))}
+              {socials.map((soc) => {
+                const external = soc.href.startsWith('http');
+                return (
+                  <a
+                    key={soc.label}
+                    href={soc.href}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noreferrer' : undefined}
+                    className="v2-social"
+                    style={{ color: 'var(--faint)', textDecoration: 'none', transition: 'color .2s' }}
+                  >
+                    {soc.label} ↗
+                  </a>
+                );
+              })}
             </div>
           </section>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: MONO, fontSize: 11, color: 'var(--faint)', paddingBottom: 40 }}>
@@ -1043,6 +1236,22 @@ export default function PortfolioV2() {
             <span id="ot-coord">0000 · 0000</span>
           </div>
         </div>
+
+        {active && (
+          <CaseStudyModal
+            isOpen
+            onClose={() => setActive(null)}
+            project={{
+              title: active.name,
+              category: active.category,
+              summary: active.summary,
+              metrics: active.metrics,
+              outcome: active.outcome,
+              caseStudy: active.caseStudy,
+              liveUrl: active.liveUrl,
+            }}
+          />
+        )}
       </div>
     </>
   );
