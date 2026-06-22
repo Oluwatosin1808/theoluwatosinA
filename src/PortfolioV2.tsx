@@ -626,9 +626,9 @@ export default function PortfolioV2() {
               </div>
               <h1
                 data-split="chars"
-                style={{ margin: 0, fontFamily: CAB, fontWeight: 900, fontSize: 'clamp(54px,9.2vw,132px)', lineHeight: 0.9, letterSpacing: '-.035em', opacity: 0 }}
+                style={{ margin: 0, fontFamily: CAB, fontWeight: 900, fontSize: 'clamp(42px,8vw,108px)', lineHeight: 1, letterSpacing: '-.035em', whiteSpace: 'nowrap', opacity: 0 }}
               >
-                Oluwa<br />tosin<span style={{ color: 'var(--accent)' }}>.</span>
+                Oluwatosin<span style={{ color: 'var(--accent)' }}>.</span>
               </h1>
               <p data-reveal style={{ margin: '26px 0 0', maxWidth: '46ch', fontSize: 'clamp(16px,1.55vw,20px)', lineHeight: 1.6, color: 'var(--muted)' }}>
                 I design things that make sense, then build them so they actually work — scalable, user-focused digital products from concept to
@@ -787,9 +787,6 @@ export default function PortfolioV2() {
                     src={MODEL_SRC}
                     alt="3D character of Oluwatosin"
                     camera-controls="true"
-                    auto-rotate="true"
-                    rotation-per-second="16deg"
-                    auto-rotate-delay="0"
                     autoplay=""
                     animation-name="Armature.001|mixamo.com|Layer0"
                     interaction-prompt="none"
@@ -966,31 +963,7 @@ export default function PortfolioV2() {
                   4+ years, 20+ products shipped end-to-end across fintech, health and AI. Currently going deeper on motion, 3D and the craft of
                   interaction.
                 </p>
-              </div>
-              <div data-reveal>
-                <div
-                  className="v2-portrait"
-                  style={{
-                    position: 'relative',
-                    border: '1px solid var(--line)',
-                    aspectRatio: '3/4',
-                    overflow: 'hidden',
-                    background: 'var(--surface)',
-                  }}
-                >
-                  <img
-                    src={portraitImg}
-                    alt="Portrait of Oluwatosin"
-                    loading="lazy"
-                    decoding="async"
-                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 22%', filter: 'grayscale(1) contrast(1.03)' }}
-                  />
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 58%, rgba(0,0,0,.5) 100%)', pointerEvents: 'none' }} />
-                  <span style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: MONO, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,.82)' }}>
-                    oluwatosin.jpg
-                  </span>
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 14 }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 28 }}>
                   {skills.map((k) => (
                     <span
                       key={k}
@@ -1007,6 +980,30 @@ export default function PortfolioV2() {
                       {k}
                     </span>
                   ))}
+                </div>
+              </div>
+              <div data-reveal>
+                <div
+                  className="v2-portrait"
+                  style={{
+                    position: 'relative',
+                    border: '1px solid var(--line)',
+                    aspectRatio: '1/1',
+                    overflow: 'hidden',
+                    background: 'var(--surface)',
+                  }}
+                >
+                  <img
+                    src={portraitImg}
+                    alt="Portrait of Oluwatosin"
+                    loading="lazy"
+                    decoding="async"
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%', filter: 'grayscale(1) contrast(1.03)' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 58%, rgba(0,0,0,.5) 100%)', pointerEvents: 'none' }} />
+                  <span style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: MONO, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,.82)' }}>
+                    oluwatosin.jpg
+                  </span>
                 </div>
               </div>
             </div>
