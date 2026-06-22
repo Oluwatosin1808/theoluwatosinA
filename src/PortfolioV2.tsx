@@ -26,21 +26,19 @@ const GS = "'General Sans', sans-serif";
 const MODEL_SRC = 'https://tosin-model-host.vercel.app/tosin-model.glb';
 
 // ── Assets ──────────────────────────────────────────────────────────────────
-const portraitImg = new URL('../img/me.png', import.meta.url).href;
-const imgArtemis = new URL('../img/artemis.jpg', import.meta.url).href;
-const imgCodeless = new URL('../img/Mockup 26.png', import.meta.url).href;
-const imgDreamAI = new URL('../img/Mockup Ribbon 11.png', import.meta.url).href;
-const imgGloUp = new URL('../img/Notioneverything headers.png', import.meta.url).href;
-const imgNeso = new URL('../img/Notioneverything headers (1).png', import.meta.url).href;
-const imgAaron = new URL('../img/case-0.png', import.meta.url).href;
+const portraitImg = new URL('../img/me.webp', import.meta.url).href;
+const imgArtemis = new URL('../img/artemis.webp', import.meta.url).href;
+const imgCodeless = new URL('../img/Mockup 26.webp', import.meta.url).href;
+const imgDreamAI = new URL('../img/Mockup Ribbon 11.webp', import.meta.url).href;
+const imgGloUp = new URL('../img/Notioneverything headers.webp', import.meta.url).href;
+const imgNeso = new URL('../img/Notioneverything headers (1).webp', import.meta.url).href;
+const imgAaron = new URL('../img/case-0.webp', import.meta.url).href;
 
 // ── Real contact / links ────────────────────────────────────────────────────
 const EMAIL = 'mosestosyn07@gmail.com';
 const TWITTER = 'https://x.com/Oluwat0s1n';
 const LINKEDIN = 'https://www.linkedin.com/in/tosin-aborishade/';
-// TODO: paste the real Instagram + résumé links here when available.
-const INSTAGRAM = '#';
-const RESUME = '#';
+const RESUME = '/Oluwatosin_Ayomide_Aborishade_Resume.pdf';
 
 const MAIL_SUBJECT = "Project inquiry — let's chat";
 const MAIL_BODY = `Hi Oluwatosin,
@@ -150,7 +148,6 @@ const quotes: Quote[] = [
 
 const socials = [
   { label: 'Twitter', href: TWITTER },
-  { label: 'Instagram', href: INSTAGRAM },
   { label: 'LinkedIn', href: LINKEDIN },
   { label: 'Résumé', href: RESUME },
 ];
@@ -1215,7 +1212,7 @@ export default function PortfolioV2() {
             </a>
             <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap', marginTop: 8, fontFamily: MONO, fontSize: 12, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--faint)' }}>
               {socials.map((soc) => {
-                const external = soc.href.startsWith('http');
+                const external = soc.href.startsWith('http') || soc.href.startsWith('/');
                 return (
                   <a
                     key={soc.label}

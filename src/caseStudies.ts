@@ -1,8 +1,8 @@
 import { CaseStudyData } from './components/CaseStudyModal';
 
-const aaronCaseStudyImageOne = new URL('../img/case-0.png', import.meta.url).href;
-const aaronCaseStudyImageTwo = new URL('../img/case-0-2.png', import.meta.url).href;
-const artemisImage = new URL('../img/artemis.jpg', import.meta.url).href;
+const aaronCaseStudyImageOne = new URL('../img/case-0.webp', import.meta.url).href;
+const aaronCaseStudyImageTwo = new URL('../img/case-0-2.webp', import.meta.url).href;
+const artemisImage = new URL('../img/artemis.webp', import.meta.url).href;
 
 export const codelessAgencyCaseStudy: CaseStudyData = {
   title: 'Codeless Solutions',
