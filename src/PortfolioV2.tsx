@@ -93,7 +93,7 @@ const projects: ProjectV2[] = [
     caseStudy: artemisCaseStudy, liveUrl: 'https://omma.build/p/artemis-ii-3d-scene-code-jwabi0',
   },
   {
-    n: '02', name: 'Codeless', type: 'Agency · Next.js', tags: 'Webflow, Next.js', year: '2024', image: imgCodeless,
+    n: '02', name: 'Codeless', type: 'Agency · Next.js', tags: 'Webflow, Next.js', year: '2026', image: imgCodeless,
     category: 'Product Design + Development',
     summary: 'A home for a no-code agency that needed to look anything but ordinary.',
     metrics: '38% increase in activation',
@@ -127,7 +127,7 @@ const projects: ProjectV2[] = [
     liveUrl: 'https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FRp5R4gmO5aSdevyzHz57Qb%2FTrain-and-Earn-Fitness-App-(Copy)%3Fnode-id%3D0%253A1',
   },
   {
-    n: '06', name: 'Aaron Israel', type: 'Portfolio · No-Code', tags: 'Webflow, Framer', year: '2024', image: imgAaron,
+    n: '06', name: 'Aaron Israel', type: 'Portfolio · No-Code', tags: 'Webflow, Framer', year: '2026', image: imgAaron,
     category: 'No-Code Development',
     summary: 'No-code web developer and digital builder shipping production-ready websites in days.',
     metrics: '40+ projects shipped',
@@ -285,7 +285,7 @@ export default function PortfolioV2() {
     // live clock
     const tick = () => {
       const el = document.getElementById('ot-clock');
-      if (el) el.textContent = new Date().toLocaleTimeString('en-GB') + ' WAT';
+      if (el) el.textContent = new Date().toLocaleTimeString('en-GB') + ' GMT+1';
     };
     const clockId = window.setInterval(tick, 1000);
     tick();
@@ -605,8 +605,8 @@ export default function PortfolioV2() {
             }}
           >
             <span>[ DESIGN ENGINEER ]</span>
-            <span id="ot-clock" style={{ color: 'var(--accent)' }}>--:--:-- WAT</span>
-            <span>LAGOS · 6.5244° N</span>
+            <span id="ot-clock" style={{ color: 'var(--accent)' }}>--:--:-- GMT+1</span>
+            <span>REMOTE · WORLDWIDE</span>
           </div>
 
           {/* ============ HERO ============ */}
@@ -695,7 +695,7 @@ export default function PortfolioV2() {
                 }}
               >
                 <div><div style={{ color: 'var(--accent)' }}>ROLE</div><div style={{ color: 'var(--fg)' }}>Design Engineer</div></div>
-                <div><div style={{ color: 'var(--accent)' }}>BASED</div><div style={{ color: 'var(--fg)' }}>Lagos, NG</div></div>
+                <div><div style={{ color: 'var(--accent)' }}>BASED</div><div style={{ color: 'var(--fg)' }}>Remote</div></div>
                 <div><div style={{ color: 'var(--accent)' }}>EXP</div><div style={{ color: 'var(--fg)' }}>4 years</div></div>
                 <div><div style={{ color: 'var(--accent)' }}>SHIPPED</div><div style={{ color: 'var(--fg)' }}>20+ products</div></div>
               </div>
