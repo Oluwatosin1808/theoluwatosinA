@@ -1,0 +1,1349 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oluwatosin — Product Designer & Frontend Developer</title>
+  <meta name="description" content="Product Designer and Frontend Developer specializing in UI/UX design, no-code development, and modern web applications using Bubble, Webflow, Framer, and Next.js." />
+  <script src="https://unpkg.com/three@0.155.0/build/three.min.js"></script>
+  <style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap');
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.portfolio-root {
+  font-family: 'Manrope', system-ui, sans-serif;
+  background: radial-gradient(circle at 10% 10%, #f8f1e8 0%, #f5f4f0 42%, #eff2f0 100%);
+  color: #191919;
+  min-height: 100vh;
+  padding: 0 1.5rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.background-glow {
+  position: absolute;
+  inset: -30% -10% auto auto;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(245, 185, 74, 0.2), rgba(245, 185, 74, 0));
+  pointer-events: none;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2rem 0 0;
+  gap: 1.5rem;
+}
+
+.logo {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #3c3c3c;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.nav-cta {
+  text-decoration: none;
+  border: 1px solid #1b1b1b;
+  color: #1b1b1b;
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.hero {
+  padding: 4rem 0 2rem;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.intro {
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #5b5b5b;
+  margin: 0;
+}
+
+.name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: clamp(2.8rem, 5vw, 4.6rem);
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.role {
+  margin: 0;
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+  font-weight: 600;
+  color: #1f1f1f;
+}
+
+.role-wrapper {
+  display: inline-flex;
+  position: relative;
+  height: 1.3em;
+  min-width: 16ch;
+  overflow: hidden;
+  align-items: center;
+}
+
+.role-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.role-text.fade {
+  opacity: 0;
+  transform: translateY(-14px);
+}
+
+.supporting {
+  font-size: 1.05rem;
+  color: #404040;
+  max-width: 520px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.role-ats {
+  font-size: 0.95rem;
+  color: #6a6a6a;
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.cta {
+  text-decoration: none;
+  padding: 0.85rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta.primary {
+  background: #f5b94a;
+  color: #1b1b1b;
+  box-shadow: 0 16px 30px rgba(245, 185, 74, 0.3);
+}
+
+.cta.secondary {
+  border: 1px solid #1b1b1b;
+  color: #1b1b1b;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+}
+
+.location {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-weight: 600;
+}
+
+.location-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #6a6a6a;
+}
+
+.location-value {
+  font-size: 1.1rem;
+}
+
+.hero-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  font-size: 0.95rem;
+  color: #5d5d5d;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.75);
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.stat-card h3 {
+  margin: 0 0 0.2rem;
+  font-size: 1.4rem;
+}
+
+.stat-card p {
+  margin: 0;
+  color: #6b6b6b;
+  font-size: 0.85rem;
+}
+
+.hero-globe {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.globe-shell {
+  position: relative;
+  width: min(420px, 90vw);
+  aspect-ratio: 1 / 1;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.3));
+  border-radius: 36px;
+  padding: 1.2rem;
+  box-shadow: 0 24px 60px rgba(25, 25, 25, 0.12);
+  overflow: hidden;
+}
+
+.globe-shell.is-ready .globe-fallback {
+  opacity: 0;
+}
+
+.globe-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.globe-fallback {
+  position: absolute;
+  inset: 1.2rem;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #f5f2ea, #b0c4d4 68%, #6e7e8b 100%);
+  animation: float 4s ease-in-out infinite;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.globe-caption {
+  position: absolute;
+  bottom: 1.2rem;
+  left: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #4d4d4d;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
+}
+
+.globe-caption .pulse {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: #f5b94a;
+  box-shadow: 0 0 0 6px rgba(245, 185, 74, 0.2);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+.section {
+  padding: 3.5rem 0;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.section-heading h2 {
+  margin: 0.2rem 0 0;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.section-lead {
+  margin: 0;
+  max-width: 420px;
+  color: #5a5a5a;
+  font-size: 1rem;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  color: #8a8a8a;
+  margin: 0;
+}
+
+.work-grid,
+.service-grid,
+.process-grid,
+.testimonial-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.work-grid {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.work-card {
+  background: rgba(255, 255, 255, 0.85);
+  padding: 1.6rem;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: 0 16px 40px rgba(25, 25, 25, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.work-card h3 {
+  margin: 0.8rem 0 0.6rem;
+}
+
+.work-card p {
+  margin: 0;
+  color: #5a5a5a;
+  line-height: 1.5;
+}
+
+.work-meta .badge {
+  display: inline-flex;
+  background: rgba(245, 185, 74, 0.2);
+  color: #1b1b1b;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.work-stats {
+  background: rgba(245, 245, 245, 0.7);
+  padding: 1rem;
+  border-radius: 16px;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.work-stats strong {
+  font-size: 1.1rem;
+}
+
+.work-label {
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  color: #6b6b6b;
+  letter-spacing: 0.08em;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+}
+
+.about-copy p {
+  margin-top: 0;
+  color: #4c4c4c;
+  line-height: 1.7;
+}
+
+.about-copy ul {
+  padding-left: 1.2rem;
+  margin: 1rem 0 0;
+  color: #4c4c4c;
+}
+
+.about-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tag-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.tag-grid span {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+}
+
+.about-note {
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  padding-top: 0.8rem;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.9rem;
+  color: #5a5a5a;
+}
+
+.service-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.service-card {
+  padding: 1.4rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.service-card h3 {
+  margin-top: 0;
+}
+
+.service-card p {
+  color: #5a5a5a;
+  margin-bottom: 0;
+}
+
+.process-grid {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.process-card {
+  padding: 1.4rem;
+  border-radius: 18px;
+  background: rgba(245, 245, 245, 0.9);
+}
+
+.process-step {
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  color: #6b6b6b;
+}
+
+.carousel {
+  overflow: hidden;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1.2rem;
+  width: max-content;
+  animation: scroll 18s linear infinite;
+}
+
+.carousel:hover .carousel-track {
+  animation-play-state: paused;
+}
+
+.tool-card {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.9rem 1.2rem;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 18px;
+  min-width: 210px;
+  box-shadow: 0 10px 24px rgba(25, 25, 25, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tool-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(245, 185, 74, 0.16);
+}
+
+.tool-icon img {
+  width: 22px;
+  height: 22px;
+}
+
+.tool-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.tool-name {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.tool-group {
+  font-size: 0.75rem;
+  color: #6b6b6b;
+}
+
+.testimonial-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.testimonial-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 18px;
+  padding: 1.4rem;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.testimonial-card p {
+  margin: 0;
+  color: #4c4c4c;
+  line-height: 1.6;
+}
+
+.testimonial-card strong {
+  display: block;
+}
+
+.testimonial-card span {
+  font-size: 0.85rem;
+  color: #6b6b6b;
+}
+
+.timeline {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr;
+  gap: 1.5rem;
+  padding: 1.2rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.timeline-year {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8a8a8a;
+}
+
+.timeline-company {
+  color: #6b6b6b;
+  margin-top: 0.3rem;
+}
+
+.cta-section {
+  padding: 3rem;
+  border-radius: 24px;
+  background: #1b1b1b;
+  color: #f5f4f0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.cta-section .section-lead {
+  color: #d0d0d0;
+}
+
+.cta-section .cta.secondary {
+  border-color: #f5f4f0;
+  color: #f5f4f0;
+  background: transparent;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.contact-card {
+  padding: 1.6rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  display: grid;
+  gap: 0.7rem;
+}
+
+.contact-card.accent {
+  background: rgba(245, 185, 74, 0.2);
+}
+
+.footer {
+  max-width: 1200px;
+  margin: 3rem auto 0;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.footer p {
+  color: #5a5a5a;
+  max-width: 320px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.footer a {
+  color: #1b1b1b;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.seo-block {
+  max-width: 760px;
+  margin-top: 1.5rem;
+  padding: 1rem 0 1.5rem;
+  color: #6b6b6b;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 185, 74, 0.45);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(245, 185, 74, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 185, 74, 0);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+  }
+
+  .cta-section {
+    padding: 2rem;
+  }
+
+  .timeline-item {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 3.5rem 0 1.5rem;
+  }
+
+  .cta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .globe-shell {
+    width: min(360px, 90vw);
+  }
+
+  .carousel-track {
+    animation-duration: 22s;
+  }
+
+  .section-heading {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .section-lead {
+    max-width: 100%;
+  }
+}
+  </style>
+</head>
+<body>
+  <div class="portfolio-root">
+    <div class="background-glow" aria-hidden="true"></div>
+    <main class="main">
+      <nav class="nav">
+        <div class="logo">O.</div>
+        <div class="nav-links">
+          <a href="#work">Work</a>
+          <a href="#about">About</a>
+          <a href="#services">Services</a>
+          <a href="#tools">Tools</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <a class="nav-cta" href="#contact">Let's talk</a>
+      </nav>
+
+      <header class="hero" id="hero">
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="intro">Hey, I'm</p>
+            <h1 class="name">Oluwatosin</h1>
+            <h2 class="role" aria-live="polite">
+              <span class="role-wrapper">
+                <span class="role-text">Product Designer</span>
+              </span>
+            </h2>
+            <p class="supporting">
+              I design and build scalable, user-focused digital products from concept to production.
+            </p>
+            <div class="role-ats">Product Designer • No-Code Developer • Frontend Developer</div>
+            <div class="cta-row">
+              <a class="cta primary" href="#work">View Work</a>
+              <a class="cta secondary" href="#contact">Work With Me</a>
+            </div>
+            <div class="location">
+              <span class="location-label">Living in</span>
+              <span class="location-value">Nigeria</span>
+            </div>
+            <div class="hero-strip">
+              <span>Available for selective projects</span>
+              <span>hello@oluwatosin.design</span>
+            </div>
+            <div class="stat-grid">
+              <div class="stat-card">
+                <h3>7+</h3>
+                <p>Years of experience</p>
+              </div>
+              <div class="stat-card">
+                <h3>30+</h3>
+                <p>Products shipped</p>
+              </div>
+              <div class="stat-card">
+                <h3>4.8/5</h3>
+                <p>Avg. CSAT</p>
+              </div>
+            </div>
+          </div>
+          <div class="hero-globe">
+            <div class="globe-shell">
+              <canvas class="globe-canvas" aria-hidden="true"></canvas>
+              <div class="globe-fallback" aria-hidden="true"></div>
+              <div class="globe-caption">
+                <span class="pulse" aria-hidden="true"></span>
+                Nigeria Highlight
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="seo-block">
+        <p>
+          Product Designer and Frontend Developer specializing in UI/UX design, no-code development, and modern
+          web applications using Bubble, Webflow, Framer, and Next.js.
+        </p>
+      </section>
+
+      <section class="section" id="work">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Selected Work</p>
+            <h2>Product stories that move the metrics</h2>
+          </div>
+          <p class="section-lead">A snapshot of digital products I've designed and shipped end-to-end.</p>
+        </div>
+        <div class="work-grid">
+          <div class="work-card">
+            <div class="work-meta">
+              <span class="badge">Product Design + Growth</span>
+              <h3>Atlas Digital Banking</h3>
+              <p>Reimagined onboarding and savings experience for a consumer fintech platform across mobile and web.</p>
+            </div>
+            <div class="work-stats">
+              <div>
+                <span class="work-label">Impact</span>
+                <strong>38% increase in activation</strong>
+              </div>
+              <p>Reduced drop-offs with data-driven flows and personalized nudges.</p>
+            </div>
+          </div>
+          <div class="work-card">
+            <div class="work-meta">
+              <span class="badge">No-Code Build + Automation</span>
+              <h3>Pulse Logistics Portal</h3>
+              <p>Designed and shipped an ops portal for dispatch teams with live ETA tracking and dispatch automation.</p>
+            </div>
+            <div class="work-stats">
+              <div>
+                <span class="work-label">Impact</span>
+                <strong>52% faster dispatch</strong>
+              </div>
+              <p>Connected Airtable, Make, and Webflow for a unified workflow.</p>
+            </div>
+          </div>
+          <div class="work-card">
+            <div class="work-meta">
+              <span class="badge">UX Strategy + UI System</span>
+              <h3>Nexa Health Platform</h3>
+              <p>Built a modular UI system and patient booking experience for a telehealth startup.</p>
+            </div>
+            <div class="work-stats">
+              <div>
+                <span class="work-label">Impact</span>
+                <strong>4.8/5 user satisfaction</strong>
+              </div>
+              <p>Scaled interface to support 12 specialty verticals.</p>
+            </div>
+          </div>
+          <div class="work-card">
+            <div class="work-meta">
+              <span class="badge">Frontend + Motion</span>
+              <h3>Nova Creator Studio</h3>
+              <p>Crafted a high-converting portfolio and booking site with custom motion and performance tuning.</p>
+            </div>
+            <div class="work-stats">
+              <div>
+                <span class="work-label">Impact</span>
+                <strong>2.4x inquiry growth</strong>
+              </div>
+              <p>Optimized delivery using Framer and Next.js.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section about" id="about">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">About</p>
+            <h2>Designing with clarity, building with momentum</h2>
+          </div>
+          <p class="section-lead">
+            I partner with founders and product teams to craft digital experiences that are elegant, scalable, and
+            commercially grounded.
+          </p>
+        </div>
+        <div class="about-grid">
+          <div class="about-copy">
+            <p>
+              From discovery workshops to polished UI systems, I translate strategy into interfaces that feel intuitive
+              and ship-ready. My process blends research, experimentation, and a bias for delivery.
+            </p>
+            <ul>
+              <li>Senior-level product thinking with measurable outcomes.</li>
+              <li>Hands-on shipping using no-code or modern frontend stacks.</li>
+              <li>Comfortable collaborating with founders, PMs, and engineers.</li>
+            </ul>
+          </div>
+          <div class="about-card">
+            <h3>Core Focus</h3>
+            <div class="tag-grid">
+              <span>UX Strategy</span>
+              <span>Design Systems</span>
+              <span>Rapid Prototyping</span>
+              <span>Conversion UX</span>
+              <span>Automation</span>
+              <span>Frontend Delivery</span>
+            </div>
+            <div class="about-note">
+              <span>Currently</span>
+              <p>Open for new projects starting next month.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="services">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Services</p>
+            <h2>End-to-end product support</h2>
+          </div>
+          <p class="section-lead">Strategy, design, and delivery combined into one collaborative engagement.</p>
+        </div>
+        <div class="service-grid">
+          <div class="service-card">
+            <h3>Product Strategy</h3>
+            <p>Research, positioning, and product direction that align business goals with real user needs.</p>
+          </div>
+          <div class="service-card">
+            <h3>UX + Interface Design</h3>
+            <p>High-fidelity UI, rapid prototyping, and design systems ready for scale.</p>
+          </div>
+          <div class="service-card">
+            <h3>No-Code Delivery</h3>
+            <p>Production-ready builds in Bubble, Webflow, and Framer with integrations and automation.</p>
+          </div>
+          <div class="service-card">
+            <h3>Frontend Development</h3>
+            <p>Modern, accessible web apps built with Next.js, React, and scalable component libraries.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section process">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Process</p>
+            <h2>Focused, collaborative, and delivery-ready</h2>
+          </div>
+          <p class="section-lead">A simple, proven flow for turning ideas into scalable products.</p>
+        </div>
+        <div class="process-grid">
+          <div class="process-card">
+            <span class="process-step">01</span>
+            <h3>Discover</h3>
+            <p>Align goals, audit data, and map user journeys to define opportunity spaces.</p>
+          </div>
+          <div class="process-card">
+            <span class="process-step">02</span>
+            <h3>Design</h3>
+            <p>Create flows, prototypes, and UI systems with measurable outcomes.</p>
+          </div>
+          <div class="process-card">
+            <span class="process-step">03</span>
+            <h3>Deliver</h3>
+            <p>Build and iterate with no-code or frontend, ensuring performance and accessibility.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="tools">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Toolbox</p>
+            <h2>Tools I Work With</h2>
+          </div>
+          <p class="section-lead">Designing, building, and shipping products using modern tools and frameworks.</p>
+        </div>
+        <div class="carousel">
+          <div class="carousel-track">
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/figma/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Figma</span><span class="tool-group">Design</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/figjam/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">FigJam</span><span class="tool-group">Design</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/bubble/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Bubble</span><span class="tool-group">No-Code / Builders</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/webflow/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Webflow</span><span class="tool-group">No-Code / Builders</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/framer/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Framer</span><span class="tool-group">No-Code / Builders</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/flutter/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">FlutterFlow</span><span class="tool-group">No-Code / Builders</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/nextdotjs/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Next.js</span><span class="tool-group">Frontend</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/html5/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">HTML</span><span class="tool-group">Frontend</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/css3/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">CSS</span><span class="tool-group">Frontend</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/javascript/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">JavaScript</span><span class="tool-group">Frontend</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/airtable/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Airtable</span><span class="tool-group">Automation & Data</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/make/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Make</span><span class="tool-group">Automation & Data</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/postman/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">REST APIs</span><span class="tool-group">Automation & Data</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/figma/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Figma</span><span class="tool-group">Design</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/figjam/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">FigJam</span><span class="tool-group">Design</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/bubble/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Bubble</span><span class="tool-group">No-Code / Builders</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/webflow/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Webflow</span><span class="tool-group">No-Code / Builders</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/framer/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Framer</span><span class="tool-group">No-Code / Builders</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/flutter/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">FlutterFlow</span><span class="tool-group">No-Code / Builders</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/nextdotjs/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Next.js</span><span class="tool-group">Frontend</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/html5/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">HTML</span><span class="tool-group">Frontend</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/css3/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">CSS</span><span class="tool-group">Frontend</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/javascript/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">JavaScript</span><span class="tool-group">Frontend</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/airtable/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Airtable</span><span class="tool-group">Automation & Data</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/make/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">Make</span><span class="tool-group">Automation & Data</span></div>
+            </div>
+            <div class="tool-card">
+              <div class="tool-icon"><img src="https://cdn.simpleicons.org/postman/1a1a1a" alt="" /></div>
+              <div class="tool-meta"><span class="tool-name">REST APIs</span><span class="tool-group">Automation & Data</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section testimonials">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Testimonials</p>
+            <h2>Trusted by product teams</h2>
+          </div>
+          <p class="section-lead">Feedback from partners and leaders I've worked with.</p>
+        </div>
+        <div class="testimonial-grid">
+          <div class="testimonial-card">
+            <p>"Oluwatosin translated our product vision into a clean, scalable system. The new onboarding flow lifted activation within weeks."</p>
+            <div>
+              <strong>Halima A.</strong>
+              <span>Head of Product, Atlas</span>
+            </div>
+          </div>
+          <div class="testimonial-card">
+            <p>"From strategy to build, every detail was intentional. Our team now ships faster with confidence."</p>
+            <div>
+              <strong>David O.</strong>
+              <span>CEO, Pulse Logistics</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="experience">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Experience</p>
+            <h2>Career highlights</h2>
+          </div>
+          <p class="section-lead">A snapshot of recent roles and collaborations.</p>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div>
+              <span class="timeline-year">2024 - Now</span>
+              <h3>Senior Product Designer</h3>
+              <p class="timeline-company">Independent</p>
+            </div>
+            <p>Leading product strategy, design systems, and no-code delivery for global startups.</p>
+          </div>
+          <div class="timeline-item">
+            <div>
+              <span class="timeline-year">2021 - 2024</span>
+              <h3>Product Designer</h3>
+              <p class="timeline-company">Nexa Health</p>
+            </div>
+            <p>Owned onboarding, telehealth dashboards, and growth experiments across mobile and web.</p>
+          </div>
+          <div class="timeline-item">
+            <div>
+              <span class="timeline-year">2018 - 2021</span>
+              <h3>UI/UX Designer</h3>
+              <p class="timeline-company">Freelance</p>
+            </div>
+            <p>Delivered conversion-focused design and development for agencies and SaaS teams.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta-section">
+        <div>
+          <p class="eyebrow">Let's build</p>
+          <h2>Have a product to launch or refine?</h2>
+          <p class="section-lead">I help teams design, build, and ship polished experiences with measurable impact.</p>
+        </div>
+        <div class="cta-row">
+          <a class="cta primary" href="#contact">Book a Call</a>
+          <a class="cta secondary" href="#work">View Case Studies</a>
+        </div>
+      </section>
+
+      <section class="section contact" id="contact">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Contact</p>
+            <h2>Start a conversation</h2>
+          </div>
+          <p class="section-lead">Share your goals, timeline, and challenges. I respond within 48 hours.</p>
+        </div>
+        <div class="contact-grid">
+          <div class="contact-card">
+            <h3>Project intake</h3>
+            <p>hello@oluwatosin.design</p>
+            <p>Based in Nigeria, working globally.</p>
+          </div>
+          <div class="contact-card accent">
+            <h3>Availability</h3>
+            <p>Next opening: March 2026</p>
+            <p>Available for product design, no-code builds, and frontend delivery.</p>
+            <a class="cta primary" href="mailto:hello@oluwatosin.design">Send an email</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div>
+        <strong>Oluwatosin</strong>
+        <p>Product designer and builder crafting meaningful digital products.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+        <a href="https://dribbble.com" target="_blank" rel="noreferrer">Dribbble</a>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    const roles = ["Product Designer", "No-Code Developer", "Frontend Developer"];
+    const roleText = document.querySelector('.role-text');
+    let roleIndex = 0;
+
+    if (roleText) {
+      setInterval(() => {
+        roleText.classList.add('fade');
+        setTimeout(() => {
+          roleIndex = (roleIndex + 1) % roles.length;
+          roleText.textContent = roles[roleIndex];
+          roleText.classList.remove('fade');
+        }, 320);
+      }, 2600);
+    }
+
+    const canvas = document.querySelector('.globe-canvas');
+    const container = document.querySelector('.globe-shell');
+
+    if (canvas && container && window.THREE) {
+      let renderer;
+      let scene;
+      let camera;
+      let sphere;
+      let ring;
+      let marker;
+      let frameId = 0;
+      let rotationSpeed = 0.002;
+
+      const init = () => {
+        const width = container.clientWidth;
+        const height = container.clientHeight;
+
+        renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setSize(width, height);
+
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+        camera.position.set(0, 0, 3.2);
+
+        const ambient = new THREE.AmbientLight(0xffffff, 0.75);
+        const directional = new THREE.DirectionalLight(0xffffff, 0.55);
+        directional.position.set(3, 2, 4);
+        scene.add(ambient, directional);
+
+        const geometry = new THREE.SphereGeometry(1, 64, 64);
+        const texture = new THREE.TextureLoader().load(
+          "https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg"
+        );
+        const material = new THREE.MeshStandardMaterial({ map: texture, roughness: 0.9, metalness: 0.1 });
+        sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
+
+        const markerPosition = latLongToVector3(9.082, 8.6753, 1.02);
+        const markerGeometry = new THREE.SphereGeometry(0.035, 18, 18);
+        const markerMaterial = new THREE.MeshBasicMaterial({ color: "#f5b94a" });
+        marker = new THREE.Mesh(markerGeometry, markerMaterial);
+        marker.position.set(markerPosition.x, markerPosition.y, markerPosition.z);
+        scene.add(marker);
+
+        const ringGeometry = new THREE.RingGeometry(0.05, 0.085, 32);
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: "#f5b94a",
+          transparent: true,
+          opacity: 0.55,
+          side: THREE.DoubleSide
+        });
+        ring = new THREE.Mesh(ringGeometry, ringMaterial);
+        ring.position.copy(marker.position);
+        ring.lookAt(new THREE.Vector3(0, 0, 0));
+        scene.add(ring);
+
+        const resize = () => {
+          const nextWidth = container.clientWidth;
+          const nextHeight = container.clientHeight;
+          renderer.setSize(nextWidth, nextHeight);
+          camera.aspect = nextWidth / nextHeight;
+          camera.updateProjectionMatrix();
+        };
+
+        const observer = new ResizeObserver(resize);
+        observer.observe(container);
+
+        const animate = () => {
+          sphere.rotation.y += rotationSpeed;
+          sphere.rotation.x = -0.2;
+          ring.scale.setScalar(1 + Math.sin(Date.now() * 0.002) * 0.08);
+          ring.material.opacity = 0.35 + Math.sin(Date.now() * 0.002) * 0.15;
+          renderer.render(scene, camera);
+          frameId = requestAnimationFrame(animate);
+        };
+
+        const handleEnter = () => { rotationSpeed = 0.0008; };
+        const handleLeave = () => { rotationSpeed = 0.002; };
+
+        container.addEventListener('mouseenter', handleEnter);
+        container.addEventListener('mouseleave', handleLeave);
+
+        animate();
+        container.classList.add('is-ready');
+      };
+
+      const latLongToVector3 = (latitude, longitude, radius) => {
+        const phi = (90 - latitude) * (Math.PI / 180);
+        const theta = (longitude + 180) * (Math.PI / 180);
+        return {
+          x: -(radius * Math.sin(phi) * Math.cos(theta)),
+          z: radius * Math.sin(phi) * Math.sin(theta),
+          y: radius * Math.cos(phi)
+        };
+      };
+
+      init();
+      window.addEventListener('beforeunload', () => {
+        if (frameId) cancelAnimationFrame(frameId);
+        if (renderer) renderer.dispose();
+      });
+    }
+  </script>
+</body>
+</html>
