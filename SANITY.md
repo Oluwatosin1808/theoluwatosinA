@@ -20,13 +20,17 @@ scripts/migrate-case-studies.mjs   caseStudies.ts → NDJSON
 1. **Create a project** at [sanity.io/manage](https://www.sanity.io/manage)
    (free tier is plenty). Note the **Project ID**; dataset `production` is fine.
 
-2. **Configure the app** — copy `.env.example` to `.env` and fill in:
+2. **Configure the app** — nothing to do for this project: the app defaults
+   to project `jrft938h`, dataset `production` (project ids are public,
+   client-side config). To point at a different project, copy `.env.example`
+   to `.env` and set:
    ```env
    VITE_SANITY_PROJECT_ID=yourProjectId
    VITE_SANITY_DATASET=production
    ```
-   Restart `npm run dev`. Without these vars the app runs fully on bundled
-   content — nothing breaks.
+   (overrides the defaults — restart `npm run dev`). If the fetch fails or a
+   slug doesn't exist in Sanity, the bundled `src/caseStudies.ts` content is
+   used — nothing breaks.
 
 3. **Install & run the Studio** (separate dependency tree):
    ```powershell
@@ -53,6 +57,24 @@ scripts/migrate-case-studies.mjs   caseStudies.ts → NDJSON
   **Sanity doc wins per slug → bundled study fills the gap → nothing found →
   the project's inline `caseStudy` is used.**
 - Fetch errors log a warning and fall back silently.
+
+## CORS origins (required for browser reads)
+
+Sanity rejects any browser request whose `Origin` isn't on the project's
+allow-list — `403 {"message":"CORS Origin not allowed"}`. The app then
+silently falls back to bundled content, so a CORS problem looks like "my
+edits don't show up". Current state for `jrft938h`:
+
+| Origin | Status | Used by |
+|---|---|---|
+| `https://oluwatosin.site` | ✅ allowed | production site on Vercel |
+| `http://localhost:3333` | ✅ allowed | local Studio |
+| `http://localhost:517x` | not needed | dev goes through Vite's `/__sanity` proxy — same-origin requests carry no `Origin` header |
+| `https://www.oluwatosin.site` | ❌ 403 | add it in Manage, or redirect `www` → apex in Vercel |
+
+Manage the list at [sanity.io/manage](https://www.sanity.io/manage) → project
+**jrft938h** → **API** → **CORS origins**. Production builds query the CDN
+directly (`src/lib/sanity.ts` only uses the proxy on localhost).
 
 ## Content model
 

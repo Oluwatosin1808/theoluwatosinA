@@ -2,7 +2,7 @@
   "name": "portfolio-case-studies-studio",
   "private": true,
   "version": "0.1.0",
-  "description": "Sanity Studio for the case studies on oluwatosin.dev",
+  "description": "Sanity Studio for the case studies on oluwatosin.site",
   "scripts": {
     "dev": "sanity dev",
     "build": "sanity build",
@@ -13,7 +13,9 @@
     "@sanity/vision": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sanity": "^3.0.0"
+    "react-is": "^18.3.1",
+    "sanity": "^3.0.0",
+    "styled-components": "^6.6.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0"

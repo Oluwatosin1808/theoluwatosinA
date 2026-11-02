@@ -219,6 +219,20 @@ html[data-theme="light"] [data-root="c"]{--bg:#eceef1;--fg:#16181d;--muted:#5458
 .v2-proj-grid .v2-proj{margin:0}
 .v2-proj-grid .v2-proj:nth-child(even){margin-top:clamp(28px,4.5vw,76px)} /* editorial offset for the right column */
 
+/* personal projects — coming soon banner */
+.v2-soon{position:relative;border:1px solid var(--line);background:linear-gradient(165deg,var(--surface2),var(--surface) 72%);padding:clamp(26px,4vw,52px);overflow:hidden;transition:border-color .35s}
+.v2-soon:hover{border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.v2-soon::before{content:"";position:absolute;top:-45%;right:-8%;width:54%;height:190%;background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 13%,transparent),transparent 72%);pointer-events:none}
+.v2-soon-head{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.v2-soon-badge{display:inline-flex;align-items:center;gap:9px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 38%,transparent);background:color-mix(in srgb,var(--accent) 10%,transparent);padding:8px 15px;border-radius:999px}
+.v2-soon-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:ot-blink 1.5s ease-in-out infinite}
+.v2-soon-meta{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.v2-soon-title{position:relative;z-index:1;margin:clamp(20px,3vw,36px) 0 0;font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(36px,6.5vw,84px);line-height:.9;letter-spacing:-.03em;color:var(--fg)}
+.v2-soon-desc{position:relative;z-index:1;margin:16px 0 0;max-width:58ch;font-size:clamp(15px,1.7vw,18px);line-height:1.6;color:var(--muted)}
+.v2-soon-slots{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:clamp(26px,3.5vw,44px)}
+.v2-soon-slot{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px dashed color-mix(in srgb,var(--fg) 26%,transparent);padding:16px 18px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);background:color-mix(in srgb,var(--bg) 55%,transparent);transition:border-color .3s,color .3s}
+.v2-soon-slot:hover{border-color:color-mix(in srgb,var(--accent) 45%,transparent);color:var(--muted)}
+
 /* case study modal — re-themed from the old palette to v2 tokens */
 [data-root="c"] .modal-content,[data-root="c"] .modal-header{background:var(--surface)}
 [data-root="c"] .modal-meta h2,[data-root="c"] .cs-heading,[data-root="c"] .cs-stat-num,[data-root="c"] .cs-quote-text,[data-root="c"] .cs-step-num{font-family:'Cabinet Grotesk',sans-serif;font-style:normal}
@@ -238,6 +252,7 @@ html[data-theme="light"] [data-root="c"] .modal-badge{background:color-mix(in sr
   .v2-quotes{grid-template-columns:1fr !important}
   .v2-proj-grid{grid-template-columns:1fr}
   .v2-proj-grid .v2-proj:nth-child(even){margin-top:0}
+  .v2-soon-slots{grid-template-columns:1fr}
 }
 @media (max-width:480px){
   .v2-stats{grid-template-columns:1fr !important}
@@ -247,6 +262,7 @@ html[data-theme="light"] [data-root="c"] .modal-badge{background:color-mix(in sr
   .v2-proj-figure{clip-path:none !important}
   .v2-proj-photo{transform:none !important}
   .v2-proj-caption{opacity:1 !important;transform:none !important}
+  .v2-soon-dot{animation:none}
 }
 `;
 
@@ -1112,6 +1128,37 @@ export default function PortfolioV2() {
                 →
               </a>
               <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--faint)' }}>Let's build the next one</span>
+            </div>
+          </section>
+
+          {/* ============ PERSONAL PROJECTS (coming soon) ============ */}
+          <section id="personal" style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
+            <div data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'clamp(28px,4vw,52px)' }}>
+              <div style={labelStyle}>// PERSONAL PROJECTS</div>
+              <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--faint)' }}>INDEX 07</div>
+            </div>
+            <div data-reveal className="v2-soon">
+              <div className="v2-soon-head">
+                <span className="v2-soon-badge">
+                  <span className="v2-soon-dot" />
+                  Coming soon
+                </span>
+                <span className="v2-soon-meta">Side projects · experiments · open source</span>
+              </div>
+              <h2 className="v2-soon-title">Personal projects</h2>
+              <p className="v2-soon-desc">
+                Built in my own time — tools, experiments and open source that don't fit inside client
+                work. They're in the workshop right now and will land here soon.
+              </p>
+              <div className="v2-soon-slots">
+                {['Experiments', 'Tools & scripts', 'Open source'].map((t, i) => (
+                  <div key={t} className="v2-soon-slot">
+                    <span>[{String(i + 1).padStart(2, '0')}]</span>
+                    <span>{t}</span>
+                    <span>Soon</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
 

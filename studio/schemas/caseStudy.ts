@@ -5,7 +5,7 @@ import { defineArrayMember, defineField, defineType } from 'sanity';
  * `CaseStudySection` in src/components/CaseStudyModal.tsx exactly, so GROQ
  * results can be handed to the existing modal renderer without a mapper.
  */
-const caseStudySection = defineType({
+export const caseStudySection = defineType({
   name: 'caseStudySection',
   title: 'Section',
   type: 'object',

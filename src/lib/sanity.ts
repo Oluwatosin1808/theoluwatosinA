@@ -11,13 +11,14 @@ import { localCaseStudies } from '../caseStudies';
  * <CaseStudyModal /> without any component changes.
  *
  * - Reads are client-side, CDN-cached, and public (no token needed).
- * - If VITE_SANITY_PROJECT_ID is unset, the fetch is skipped entirely and the
- *   bundled caseStudies.ts data is used.
+ * - The project id defaults to jrft938h — project ids are public, client-side
+ *   config, so production works without a dashboard env var. Set
+ *   VITE_SANITY_PROJECT_ID / VITE_SANITY_DATASET to point somewhere else.
  * - If a slug has no (published) Sanity document, the bundled study is used —
  *   so editing Sanity can never punch a hole in the site.
  */
 
-const projectId = import.meta.env.VITE_SANITY_PROJECT_ID;
+const projectId = import.meta.env.VITE_SANITY_PROJECT_ID ?? 'jrft938h';
 const dataset = import.meta.env.VITE_SANITY_DATASET ?? 'production';
 const apiVersion = '2026-01-01';
 
@@ -112,16 +113,21 @@ function toCaseStudy(doc: RawDoc): CaseStudyData | null {
 /**
  * Run the GROQ query.
  *
- * In development the browser must not call Sanity directly: this project's
- * CORS allow-list rejects every unlisted origin and the app's localhost origin
- * isn't on it (403 "CORS Origin not allowed"). A same-origin GET carries no
- * `Origin` header, so dev traffic goes through Vite's proxy instead (see
+ * When the page is served from localhost (dev server and `vite preview`) the
+ * browser must not call Sanity directly: localhost isn't on this project's
+ * CORS allow-list (403 "CORS Origin not allowed"). A same-origin GET carries
+ * no `Origin` header, so local traffic goes through Vite's proxy instead (see
  * vite.config.ts) and reaches Sanity looking exactly like a server-side call.
- * Production talks to the CDN directly, which needs the deployed domain on the
- * allow-list once.
+ * The deployed site (https://oluwatosin.site) is allow-listed and queries the
+ * CDN directly.
  */
+const isLocalhost =
+  typeof location !== 'undefined' &&
+  (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
+const useSanityProxy = import.meta.env.DEV || isLocalhost;
+
 async function queryCaseStudies(): Promise<RawDoc[]> {
-  if (import.meta.env.DEV) {
+  if (useSanityProxy) {
     const url = `/__sanity/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(CASE_STUDIES_QUERY)}`;
     const res = await fetch(url, { headers: { accept: 'application/json' } });
     if (!res.ok) throw new Error(`sanity proxy responded ${res.status}`);
