@@ -116,9 +116,21 @@ created by `studioHost: 'oluwatosin'` in `studio/sanity.cli.ts` (committed).
 
 ```powershell
 cd studio
-npx sanity deploy -y        # build (~90 s) + upload, prints the final URL
+npx sanity deploy -y        # build + upload, prints the final URL
 npx sanity undeploy         # release the hostname
 ```
+
+What the URL does — worth knowing, it looks broken but isn't:
+
+- Opening `https://oluwatosin.sanity.studio/` in a browser **302-redirects to
+  `https://www.sanity.io/@o8phl1an6/studio/<appId>`** (your org's Dashboard,
+  behind Sanity's login). That is the intended flow: bare navigation goes to
+  the Dashboard, and the Dashboard embeds the studio back from
+  `https://oluwatosin.sanity.studio/?_context=…`.
+- Directly requesting `/` **with** `_context` returns the real studio HTML —
+  so the deploy is fine; only the address-bar entry point redirects.
+- Sanity's own `/static/*` files (manifest, favicon) always serve 200, which
+  is the quick way to confirm a deploy landed.
 
 Auth notes — these matter, the commands fail without them:
 
@@ -136,16 +148,64 @@ Auth notes — these matter, the commands fail without them:
 - Sanity serves the built files with no auth of its own, but *editing* always
   requires a signed-in Sanity account — that part is Sanity's, not ours.
 
+### Dashboard compatibility (required)
+
+`sanity deploy` pins the app id and lets Sanity keep the deployment on
+`@latest` — without this the Dashboard reports **"Studio is not fully
+compatible"**:
+
+```typescript
+// studio/sanity.cli.ts
+deployment: {
+  appId: 'i3yt9hamyusw9pihjp59seah',
+  autoUpdates: true,
+},
+```
+
+Two things the Dashboard checks, both currently satisfied:
+
+| Requirement | Status |
+|---|---|
+| Studio `>= 5.1.0` (Dashboard shows the version + compatibility) | ✅ `sanity` **6.21.0** → *"Fully compatible"* |
+| Structure tool registered | ✅ `structureTool()` in `sanity.config.ts` |
+
+**The Structure tool is no longer implicit** since Sanity v4/v5 — if you omit
+it the Studio boots with only Vision, the tools manifest lists no
+`sanity/structure`, and there is *no document list to edit*. It must be
+imported explicitly and listed **first** so it stays the default tool:
+
+```typescript
+import { structureTool } from 'sanity/structure';
+// …
+plugins: [structureTool(), visionTool()],
+```
+
+Upgrading to `>= 5.1.0` also forces **React 19** (`sanity`/`@sanity/vision`
+peer `react@^19.2.2`). That only touches `studio/package.json` — the main app
+keeps React 18.
+
 ## Day-to-day editing
 
 **Hosted (recommended):** open <https://oluwatosin.sanity.studio>, sign in with
-the Google account that owns project `jrft938h`, edit, **Publish**.
+the Google account that owns project `jrft938h` (it lands in the Dashboard,
+which embeds the Studio), edit, **Publish**. You should see the **Content**
+tool listing all 6 case studies.
 
 **Local:** `cd studio && npm run dev` → <http://localhost:3333>.
 
 Either way: **Publish** (drafts are never fetched by the site). The CDN cache
 refreshes within ~60 s; for an instant check, bump the cache by temporarily
 setting `useCdn: false` in `src/lib/sanity.ts`.
+
+## npm audit
+
+- **App (repo root): 0 vulnerabilities.**
+- **`studio/`: 20** (17 moderate, 3 high) — all `undici` inside
+  `@module-federation/dts-plugin` ← `@module-federation/vite` ←
+  `@sanity/cli-core`, i.e. Sanity's own CLI dev-tree. Not shipped in the
+  studio bundle, and `npm audit fix` can't touch them; the only "fix" is
+  `npm audit fix --force`, which downgrades to `sanity@6.1.0` (breaking).
+  Re-check after each `sanity` upgrade — it was 28 before the 6.21.0 upgrade.
 
 ## Later upgrades (not done yet)
 
