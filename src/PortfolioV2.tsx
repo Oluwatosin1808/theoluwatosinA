@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import CaseStudyModal, { CaseStudyData } from './components/CaseStudyModal';
+import Character3D from './components/Character3D';
+import { getCaseStudy, useCaseStudyOverrides } from './lib/sanity';
 import {
   artemisCaseStudy,
   codelessAgencyCaseStudy,
@@ -9,21 +11,9 @@ import {
   aaronIsraelCaseStudy,
 } from './caseStudies';
 
-// model-viewer is a custom element registered globally (script loaded in index.html).
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace JSX {
-    interface IntrinsicElements {
-      'model-viewer': any;
-    }
-  }
-}
-
 const MONO = "'Space Mono', monospace";
 const CAB = "'Cabinet Grotesk', sans-serif";
 const GS = "'General Sans', sans-serif";
-
-const MODEL_SRC = 'https://tosin-model-host.vercel.app/tosin-model.glb';
 
 // ── Assets ──────────────────────────────────────────────────────────────────
 const portraitImg = new URL('../img/me.webp', import.meta.url).href;
@@ -72,6 +62,8 @@ type ProjectV2 = {
   outcome: string;
   caseStudy?: CaseStudyData;
   liveUrl?: string;
+  /** Sanity document slug (keys into localCaseStudies / fetched overrides). */
+  slug: string;
 };
 
 const stats: Stat[] = [
@@ -91,6 +83,7 @@ const projects: ProjectV2[] = [
     metrics: 'Real-time WebGL',
     outcome: 'A single scene authored in code — geometry, lighting, and camera all live in source.',
     caseStudy: artemisCaseStudy, liveUrl: 'https://omma.build/p/artemis-ii-3d-scene-code-jwabi0',
+    slug: 'artemis-ii-3d-scene',
   },
   {
     n: '02', name: 'Codeless', type: 'Agency · Next.js', tags: 'Webflow, Next.js', year: '2026', image: imgCodeless,
@@ -99,6 +92,7 @@ const projects: ProjectV2[] = [
     metrics: '38% increase in activation',
     outcome: 'Reduced drop-offs with data-driven flows and personalized nudges.',
     caseStudy: codelessAgencyCaseStudy, liveUrl: 'https://agency.codelessify.org',
+    slug: 'codeless-solutions',
   },
   {
     n: '03', name: 'DreamAI', type: 'AI Product · Bubble', tags: 'Bubble, GPT', year: '2025', image: imgDreamAI,
@@ -107,6 +101,7 @@ const projects: ProjectV2[] = [
     metrics: 'Built on Bubble',
     outcome: 'AI-powered interpretation delivered in seconds with a journaling-first UX.',
     caseStudy: dreamAiCaseStudy, liveUrl: 'https://dreamai-52691.bubbleapps.io/version-test',
+    slug: 'dreamai',
   },
   {
     n: '04', name: 'The Glo Up', type: 'Dating · Mobile', tags: 'iOS, Product', year: '2023', image: imgGloUp,
@@ -116,6 +111,7 @@ const projects: ProjectV2[] = [
     outcome: 'Connect based on sexuality and interests with options beyond romance.',
     caseStudy: gloUpCaseStudy,
     liveUrl: 'https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FOdXozCiTmU0EFVpB6esD3Y%2FThe-Glo-Up-Dating-App%3Fnode-id%3D0%253A1%26t%3DGpxOALxhnck2XF3y-1',
+    slug: 'the-glo-up-app',
   },
   {
     n: '05', name: 'Neso', type: 'Health & Fitness', tags: 'Mobile, Nutrition', year: '2023', image: imgNeso,
@@ -125,6 +121,7 @@ const projects: ProjectV2[] = [
     outcome: 'Workout setup, progress tracking, and nutrition monitoring in one program-led experience.',
     caseStudy: nesoCaseStudy,
     liveUrl: 'https://www.figma.com/embed?embed_host=notion&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FRp5R4gmO5aSdevyzHz57Qb%2FTrain-and-Earn-Fitness-App-(Copy)%3Fnode-id%3D0%253A1',
+    slug: 'neso',
   },
   {
     n: '06', name: 'Aaron Israel', type: 'Portfolio · No-Code', tags: 'Webflow, Framer', year: '2026', image: imgAaron,
@@ -133,11 +130,12 @@ const projects: ProjectV2[] = [
     metrics: '40+ projects shipped',
     outcome: '3x faster delivery than traditional dev cycles with a 98% client satisfaction rate.',
     caseStudy: aaronIsraelCaseStudy, liveUrl: 'https://aaron.pxxl.click',
+    slug: 'aaron-israel',
   },
 ];
 
 const career: Career[] = [
-  { period: '2025 — PRESENT', role: 'Design Engineer', org: 'Codeless Solutions', desc: 'Lead end-to-end development of DreamAI — a no-code product integrating Azure OpenAI GPT for dream interpretation, wellness insights, and personalized recommendations.' },
+  { period: '2025 - 2026', role: 'Design Engineer', org: 'Codeless Solutions', desc: 'Lead end-to-end development of DreamAI — a no-code product integrating Azure OpenAI GPT for dream interpretation, wellness insights, and personalized recommendations.' },
   { period: '2024', role: 'Product Designer', org: 'Jrun Global', desc: 'Developed cohesive design systems and comprehensive style guides to ensure visual consistency across the web application.' },
 ];
 
@@ -163,7 +161,6 @@ body{background-color:var(--body-bg);font-family:'General Sans',system-ui,sans-s
 [data-root="c"]{--bg:#0f1115;--fg:#e9eaee;--muted:#aeb1bb;--faint:#757985;--line:rgba(233,234,238,.12);--surface:#15171d;--surface2:#1a1d24;--accent:#2f6bff;--accent-ink:#fff;--grid:rgba(233,234,238,.045);--ink:var(--fg);--ink-2:var(--muted);--ink-3:var(--faint);--rule:var(--line);--amber:var(--accent);--amber-2:#5b8bff;--amber-ink:var(--accent-ink);--skill-color:var(--accent);--card-bg-from:var(--surface2);--card-bg-to:var(--surface);--bg-2:var(--surface2)}
 html[data-theme="light"] [data-root="c"]{--bg:#eceef1;--fg:#16181d;--muted:#54585f;--faint:#7a7e88;--line:rgba(22,24,29,.13);--surface:#e0e3e7;--surface2:#d7dadf;--accent:#2f6bff;--accent-ink:#fff;--grid:rgba(22,24,29,.05);--amber-2:#2057e6}
 
-model-viewer{--poster-color:transparent;background-color:transparent}
 @keyframes ot-blink{0%,100%{opacity:1}50%{opacity:.25}}
 @keyframes ot-grid{from{background-position:0 0}to{background-position:0 44px}}
 @keyframes ot-scan{0%{top:3%;opacity:0}12%{opacity:.75}88%{opacity:.75}100%{top:95%;opacity:0}}
@@ -179,14 +176,48 @@ model-viewer{--poster-color:transparent;background-color:transparent}
 .v2-proj-figure{clip-path:inset(0 0 100% 0);transition:clip-path 1s cubic-bezier(.16,.84,.32,1),border-color .3s,transform .4s}
 .v2-proj-photo{transform:scale(1.18);transition:transform 1.25s cubic-bezier(.16,.84,.32,1);will-change:transform}
 .v2-proj-caption{opacity:0;transform:translateY(38px);transition:opacity .85s ease .18s,transform .9s cubic-bezier(.2,.7,.15,1) .18s}
+
+/* Staggered animation delays */
+.v2-proj[data-index="0"] .v2-proj-figure,
+.v2-proj[data-index="0"] .v2-proj-photo,
+.v2-proj[data-index="0"] .v2-proj-caption { transition-delay: 0s; }
+.v2-proj[data-index="1"] .v2-proj-figure,
+.v2-proj[data-index="1"] .v2-proj-photo,
+.v2-proj[data-index="1"] .v2-proj-caption { transition-delay: 0.1s; }
+.v2-proj[data-index="2"] .v2-proj-figure,
+.v2-proj[data-index="2"] .v2-proj-photo,
+.v2-proj[data-index="2"] .v2-proj-caption { transition-delay: 0.2s; }
+.v2-proj[data-index="3"] .v2-proj-figure,
+.v2-proj[data-index="3"] .v2-proj-photo,
+.v2-proj[data-index="3"] .v2-proj-caption { transition-delay: 0.3s; }
+.v2-proj[data-index="4"] .v2-proj-figure,
+.v2-proj[data-index="4"] .v2-proj-photo,
+.v2-proj[data-index="4"] .v2-proj-caption { transition-delay: 0.4s; }
+.v2-proj[data-index="5"] .v2-proj-figure,
+.v2-proj[data-index="5"] .v2-proj-photo,
+.v2-proj[data-index="5"] .v2-proj-caption { transition-delay: 0.5s; }
+
+.v2-proj[data-shown="0"] .v2-proj-figure{clip-path:inset(0 0 100% 0)}
+.v2-proj[data-shown="0"] .v2-proj-photo{transform:scale(1.18)}
+.v2-proj[data-shown="0"] .v2-proj-caption{opacity:0;transform:translateY(38px)}
 .v2-proj[data-shown="1"] .v2-proj-figure{clip-path:inset(0 0 0 0)}
 .v2-proj[data-shown="1"] .v2-proj-photo{transform:scale(1)}
 .v2-proj[data-shown="1"] .v2-proj-caption{opacity:1;transform:none}
+
+/* Parallax hover effect */
+.v2-proj:hover .v2-proj-photo {
+  transform: scale(1.05) translateY(-5px);
+}
 .v2-proj:hover .v2-proj-figure,.v2-proj:focus-visible .v2-proj-figure{border-color:var(--accent);transform:translateY(-4px)}
 .v2-proj:hover .v2-proj-title,.v2-proj:focus-visible .v2-proj-title{color:var(--accent)}
 .v2-proj-view{opacity:0;transform:translateY(6px);transition:opacity .3s ease,transform .3s ease}
 .v2-proj:hover .v2-proj-view,.v2-proj:focus-visible .v2-proj-view{opacity:1;transform:none}
 .v2-proj:focus-visible{outline:none;box-shadow:0 0 0 2px var(--accent)}
+
+/* featured projects grid */
+.v2-proj-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(34px,4.5vw,64px) clamp(20px,3vw,44px);align-items:start}
+.v2-proj-grid .v2-proj{margin:0}
+.v2-proj-grid .v2-proj:nth-child(even){margin-top:clamp(28px,4.5vw,76px)} /* editorial offset for the right column */
 
 /* case study modal — re-themed from the old palette to v2 tokens */
 [data-root="c"] .modal-content,[data-root="c"] .modal-header{background:var(--surface)}
@@ -205,6 +236,8 @@ html[data-theme="light"] [data-root="c"] .modal-badge{background:color-mix(in sr
   .v2-about{grid-template-columns:1fr !important}
   .v2-career-row{grid-template-columns:1fr !important;gap:6px !important}
   .v2-quotes{grid-template-columns:1fr !important}
+  .v2-proj-grid{grid-template-columns:1fr}
+  .v2-proj-grid .v2-proj:nth-child(even){margin-top:0}
 }
 @media (max-width:480px){
   .v2-stats{grid-template-columns:1fr !important}
@@ -221,6 +254,9 @@ export default function PortfolioV2() {
   const themeRef = useRef<'dark' | 'light'>('dark');
   const themeBtnRef = useRef<HTMLButtonElement>(null);
   const [active, setActive] = useState<ProjectV2 | null>(null);
+  // Case studies from Sanity (empty until/unless the fetch resolves — the
+  // bundled caseStudies.ts content fills any gap, see getCaseStudy).
+  const caseStudyOverrides = useCaseStudyOverrides();
 
   const applyTheme = () => {
     document.documentElement.setAttribute('data-theme', themeRef.current);
@@ -264,7 +300,9 @@ export default function PortfolioV2() {
 
   const openProject = (p: ProjectV2) => {
     rowLeave();
-    setActive(p);
+    // Sanity content wins for this slug; fall back to the bundled study.
+    const caseStudy = getCaseStudy(p.slug, caseStudyOverrides) ?? p.caseStudy;
+    setActive(caseStudy ? { ...p, caseStudy } : p);
   };
 
   useEffect(() => {
@@ -343,7 +381,8 @@ export default function PortfolioV2() {
     }
     setT(() => revealEls.forEach((el) => { if (el.dataset.shown !== '1') show(el); }), 3800);
 
-    // project entrance reveal (case studies) — cinematic clip + scale + title rise
+    // project entrance reveal (case studies) — cinematic clip + scale + title rise.
+    // Cards reveal independently and stay revealed (grid layout: several are on screen at once)
     let pio: IntersectionObserver | null = null;
     const projEls = Array.from(document.querySelectorAll<HTMLElement>('.v2-proj'));
     if ('IntersectionObserver' in window) {
@@ -352,17 +391,15 @@ export default function PortfolioV2() {
           entries.forEach((en) => {
             if (en.isIntersecting) {
               (en.target as HTMLElement).dataset.shown = '1';
-              pio!.unobserve(en.target);
             }
           });
         },
-        { rootMargin: '0px 0px -12% 0px', threshold: 0.15 }
+        { rootMargin: '0px 0px -12% 0px', threshold: 0.25 }
       );
       projEls.forEach((el) => pio!.observe(el));
     } else {
       projEls.forEach((el) => { el.dataset.shown = '1'; });
     }
-    setT(() => projEls.forEach((el) => { el.dataset.shown = '1'; }), 4200);
 
     // headline split-in animation (preserves <br> and the coloured "." span)
     const splitText = () => {
@@ -737,7 +774,7 @@ export default function PortfolioV2() {
                     <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--accent)', animation: 'ot-blink 1.6s infinite' }} />
                     tosin-model.glb
                   </span>
-                  <span>drag to rotate</span>
+                  <span>drag · gaze follows you</span>
                 </div>
 
                 {/* 3D stage */}
@@ -783,36 +820,7 @@ export default function PortfolioV2() {
                       filter: 'blur(5px)',
                     }}
                   />
-                  <model-viewer
-                    src={MODEL_SRC}
-                    alt="3D character of Oluwatosin"
-                    camera-controls="true"
-                    autoplay=""
-                    animation-name="Armature.001|mixamo.com|Layer0"
-                    interaction-prompt="none"
-                    disable-zoom="true"
-                    disable-pan="true"
-                    touch-action="pan-y"
-                    loading="eager"
-                    reveal="auto"
-                    exposure="1.08"
-                    shadow-intensity="0.9"
-                    shadow-softness="1"
-                    environment-image="neutral"
-                    camera-orbit="8deg 86deg auto"
-                    field-of-view="32deg"
-                    min-field-of-view="32deg"
-                    max-field-of-view="32deg"
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      width: '100%',
-                      height: '100%',
-                      zIndex: 1,
-                      backgroundColor: 'transparent',
-                      '--progress-bar-color': 'var(--accent)',
-                    }}
-                  ></model-viewer>
+                  <Character3D />
                   <div
                     style={{
                       position: 'absolute',
@@ -1029,10 +1037,12 @@ export default function PortfolioV2() {
             >
               Featured<br />projects
             </h2>
-            {projects.map((p) => (
+            <div className="v2-proj-grid">
+            {projects.map((p, i) => (
               <article
                 key={p.n}
                 className="v2-proj"
+                data-index={i}
                 data-name={p.name}
                 onMouseEnter={rowEnter}
                 onMouseLeave={rowLeave}
@@ -1046,7 +1056,7 @@ export default function PortfolioV2() {
                 role="button"
                 tabIndex={0}
                 aria-label={`Open case study for ${p.name}`}
-                style={{ margin: '0 auto clamp(48px,7vw,88px)', maxWidth: 820, cursor: 'pointer' }}
+                style={{ cursor: 'pointer' }}
               >
                 <div
                   className="v2-proj-figure"
@@ -1066,10 +1076,10 @@ export default function PortfolioV2() {
                   <span className="v2-proj-view" style={{ position: 'absolute', bottom: 14, left: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: '#fff' }}>View case study →</span>
                   <span style={{ position: 'absolute', bottom: 14, right: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.08em', color: 'rgba(255,255,255,.8)' }}>{p.tags}</span>
                 </div>
-                <div className="v2-proj-caption" style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 18, gap: 16 }}>
+                <div className="v2-proj-caption" style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 16, gap: 12 }}>
                   <h3
                     className="v2-proj-title"
-                    style={{ margin: 0, fontFamily: CAB, fontWeight: 800, fontSize: 'clamp(30px,5vw,64px)', lineHeight: 0.92, letterSpacing: '-.03em', color: 'var(--fg)', transition: 'color .3s' }}
+                    style={{ margin: 0, fontFamily: CAB, fontWeight: 800, fontSize: 'clamp(24px,3vw,40px)', lineHeight: 0.95, letterSpacing: '-.03em', color: 'var(--fg)', transition: 'color .3s' }}
                   >
                     {p.name}
                   </h3>
@@ -1077,6 +1087,7 @@ export default function PortfolioV2() {
                 </div>
               </article>
             ))}
+            </div>
 
             <div data-reveal style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22, padding: 'clamp(40px,6vw,72px) 0 clamp(20px,3vw,40px)' }}>
               <a

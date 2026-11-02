@@ -6,12 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "migrate:case-studies": "node scripts/migrate-case-studies.mjs",
+    "import:case-studies": "node scripts/import-case-studies.mjs"
   },
   "dependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
+    "@sanity/client": "^8.14.1",
+    "framer-motion": "^12.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "framer-motion": "^12.0.0",
     "three": "^0.155.0"
   },
   "devDependencies": {

@@ -382,3 +382,17 @@ export const artemisCaseStudy: CaseStudyData = {
     },
   ],
 };
+
+// ── Bundled fallback content ────────────────────────────────────────────────
+// Sanity is the source of truth once configured (src/lib/sanity.ts); these
+// studies remain the offline/unconfigured fallback. Keys are the document
+// slugs used in the Studio — identical to what scripts/migrate-case-studies.mjs
+// generates when importing this file as NDJSON.
+export const localCaseStudies: Record<string, CaseStudyData> = {
+  'codeless-solutions': codelessAgencyCaseStudy,
+  'aaron-israel': aaronIsraelCaseStudy,
+  neso: nesoCaseStudy,
+  'the-glo-up-app': gloUpCaseStudy,
+  dreamai: dreamAiCaseStudy,
+  'artemis-ii-3d-scene': artemisCaseStudy,
+};
