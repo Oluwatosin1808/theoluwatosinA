@@ -68,9 +68,10 @@ edits don't show up". Current state for `jrft938h`:
 | Origin | Status | Used by |
 |---|---|---|
 | `https://oluwatosin.site` | ✅ allowed | production site on Vercel |
+| `https://www.oluwatosin.site` | ✅ allowed | `www` apex redirect on Vercel |
+| `https://oluwatosin.sanity.studio` | ✅ allowed | hosted Studio — Sanity auto-allows its own `*.sanity.studio` domains (no dashboard action needed) |
 | `http://localhost:3333` | ✅ allowed | local Studio |
 | `http://localhost:517x` | not needed | dev goes through Vite's `/__sanity` proxy — same-origin requests carry no `Origin` header |
-| `https://www.oluwatosin.site` | ❌ 403 | add it in Manage, or redirect `www` → apex in Vercel |
 
 Manage the list at [sanity.io/manage](https://www.sanity.io/manage) → project
 **jrft938h** → **API** → **CORS origins**. Production builds query the CDN
@@ -108,18 +109,48 @@ natural later upgrade — it only touches `src/lib/sanity.ts`.
 (`localCaseStudies`) and on each project entry (`slug` in
 `src/PortfolioV2.tsx`). Keep them in sync with the Studio documents.
 
+## Hosted Studio (sanity.io — no localhost needed)
+
+The Studio is deployed to Sanity hosting at **<https://oluwatosin.sanity.studio>**,
+created by `studioHost: 'oluwatosin'` in `studio/sanity.cli.ts` (committed).
+
+```powershell
+cd studio
+npx sanity deploy -y        # build (~90 s) + upload, prints the final URL
+npx sanity undeploy         # release the hostname
+```
+
+Auth notes — these matter, the commands fail without them:
+
+- **Deploys need a full CLI login**, not an API token. The first `deploy`
+  creates the hostname and requires the `sanity.project.deployStudio` grant,
+  which scoped API tokens don't carry (`Forbidden - User is missing required
+  grant sanity.project.deployStudio`). Run `npx sanity login --no-open
+  --provider google` once; credentials land in `%USERPROFILE%\.config\sanity\config.json`.
+- **Never set `SANITY_AUTH_TOKEN` when deploying** — the env token takes
+  precedence over the stored login and the deploy fails again. (It's fine for
+  `sanity dataset import` / schema commands.)
+- Deploy uploads to `/user-applications/<appId>/deployments`; Sanity returns
+  the hostname as the location. App id `i3yt9hamyusw9pihjp59seah`,
+  deployment `a5decl5rdkqela5mtytky8l9`, org `o8phl1an6`.
+- Sanity serves the built files with no auth of its own, but *editing* always
+  requires a signed-in Sanity account — that part is Sanity's, not ours.
+
 ## Day-to-day editing
 
-1. `cd studio && npm run dev`
-2. Edit a case study → **Publish** (drafts are never fetched by the site).
-3. CDN cache refreshes within ~60 s; for an instant check, bump the cache by
-   temporarily setting `useCdn: false` in `src/lib/sanity.ts`.
+**Hosted (recommended):** open <https://oluwatosin.sanity.studio>, sign in with
+the Google account that owns project `jrft938h`, edit, **Publish**.
+
+**Local:** `cd studio && npm run dev` → <http://localhost:3333>.
+
+Either way: **Publish** (drafts are never fetched by the site). The CDN cache
+refreshes within ~60 s; for an instant check, bump the cache by temporarily
+setting `useCdn: false` in `src/lib/sanity.ts`.
 
 ## Later upgrades (not done yet)
 
 - **Sanity image assets** + `@sanity/image-url` (responsive images).
-- **Hosted Studio** (`npm run deploy` from `studio/`) so you can edit from
-  sanity.io without running anything locally.
+- **Hosted Studio** — done: <https://oluwatosin.sanity.studio> (see above).
 - **Build-time fetch** → static JSON for SEO/faster first paint (currently
   client-side fetch, which suits the modal-only usage).
 - **Delete the duplicated case-study data** in `src/App.tsx` and
