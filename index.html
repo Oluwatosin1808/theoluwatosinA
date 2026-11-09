@@ -10,6 +10,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
     <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800,900&f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet" />
+    <style>
+      /* no white flash before React + the boot screen mount */
+      html, body { background: #0f1115; }
+      html[data-theme="light"], html[data-theme="light"] body { background: #eceef1; }
+    </style>
   </head>
   <body>
     <div id="root"></div>

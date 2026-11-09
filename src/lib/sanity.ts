@@ -126,16 +126,20 @@ const isLocalhost =
   (location.hostname === 'localhost' || location.hostname === '127.0.0.1');
 const useSanityProxy = import.meta.env.DEV || isLocalhost;
 
-async function queryCaseStudies(): Promise<RawDoc[]> {
+async function groqQuery<T>(query: string): Promise<T> {
   if (useSanityProxy) {
-    const url = `/__sanity/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(CASE_STUDIES_QUERY)}`;
+    const url = `/__sanity/v${apiVersion}/data/query/${dataset}?query=${encodeURIComponent(query)}`;
     const res = await fetch(url, { headers: { accept: 'application/json' } });
     if (!res.ok) throw new Error(`sanity proxy responded ${res.status}`);
-    const json = (await res.json()) as { result?: RawDoc[] | null };
-    return json.result ?? [];
+    const json = (await res.json()) as { result?: T | null };
+    return (json.result ?? []) as T;
   }
-  if (!sanityClient) return [];
-  return sanityClient.fetch<RawDoc[]>(CASE_STUDIES_QUERY);
+  if (!sanityClient) return [] as unknown as T;
+  return sanityClient.fetch<T>(query);
+}
+
+async function queryCaseStudies(): Promise<RawDoc[]> {
+  return groqQuery<RawDoc[]>(CASE_STUDIES_QUERY);
 }
 
 /** Fetch every case study, keyed by slug. Never throws — returns {} on any failure. */
@@ -177,4 +181,85 @@ export function useCaseStudyOverrides(): Record<string, CaseStudyData> {
 /** Merged view: Sanity content wins per slug, bundled data fills the gaps. */
 export function getCaseStudy(slug: string, overrides: Record<string, CaseStudyData>): CaseStudyData | undefined {
   return overrides[slug] ?? localCaseStudies[slug];
+}
+
+// ── Personal projects ───────────────────────────────────────────────────────
+// Docs created in the Studio (`personalProject` schema, studio/schemas/
+// personalProject.ts) and published. Image URLs are built in GROQ against the
+// Sanity CDN: a full card-sized version plus a 24px thumbnail that the site
+// upscales with image-rendering:pixelated as the loading state.
+
+const PERSONAL_PROJECTS_QUERY = `*[_type == "personalProject" && defined(slug.current) && featured != false] | order(order asc, _createdAt desc) {
+  "slug": slug.current,
+  title,
+  type,
+  tags,
+  year,
+  summary,
+  liveUrl,
+  repoUrl,
+  "image": image.asset->url + "?w=1200&h=750&fit=crop&crop=entropy&auto=format&q=80",
+  // NOTE: Sanity's CDN only accepts whole-number blur values (blur=1.5 → 400),
+  // and the pixel effect comes from the upscale anyway — so no blur here.
+  "pixel": image.asset->url + "?w=30&h=19&fit=crop&crop=entropy"
+}`;
+
+export type PersonalProject = {
+  slug: string;
+  title: string;
+  type?: string;
+  tags?: string;
+  year?: string;
+  summary?: string;
+  liveUrl?: string;
+  repoUrl?: string;
+  /** Card-sized CDN URL. */
+  image?: string;
+  /** Tiny CDN thumbnail — shown pixelated until `image` finishes loading. */
+  pixel?: string;
+};
+
+/** Fetch published personal projects. Never throws — returns [] on failure. */
+export async function fetchPersonalProjects(): Promise<PersonalProject[]> {
+  try {
+    const docs = await groqQuery<Array<Record<string, unknown>>>(PERSONAL_PROJECTS_QUERY);
+    return docs
+      .filter((d): d is Record<string, unknown> & { slug?: string; title?: string } => Boolean(d?.slug && d?.title))
+      .map((d) => ({
+        slug: d.slug!,
+        title: d.title!,
+        type: typeof d.type === 'string' ? d.type : undefined,
+        tags: typeof d.tags === 'string' ? d.tags : undefined,
+        year: typeof d.year === 'string' ? d.year : undefined,
+        summary: typeof d.summary === 'string' ? d.summary : undefined,
+        liveUrl: typeof d.liveUrl === 'string' ? d.liveUrl : undefined,
+        repoUrl: typeof d.repoUrl === 'string' ? d.repoUrl : undefined,
+        image: typeof d.image === 'string' ? d.image : undefined,
+        pixel: typeof d.pixel === 'string' ? d.pixel : undefined,
+      }));
+  } catch (err) {
+    console.warn('[sanity] personal project fetch failed', err);
+    return [];
+  }
+}
+
+export type PersonalProjectsState = {
+  items: PersonalProject[];
+  /** true until the fetch settles (drives the pixelated loading state). */
+  loading: boolean;
+};
+
+/** Hook: published personal projects from Sanity + a loading flag. */
+export function usePersonalProjects(): PersonalProjectsState {
+  const [state, setState] = useState<PersonalProjectsState>({ items: [], loading: true });
+  useEffect(() => {
+    let alive = true;
+    fetchPersonalProjects().then((items) => {
+      if (alive) setState({ items, loading: false });
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+  return state;
 }

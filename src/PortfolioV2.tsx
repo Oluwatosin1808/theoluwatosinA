@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import CaseStudyModal, { CaseStudyData } from './components/CaseStudyModal';
 import Character3D from './components/Character3D';
-import { getCaseStudy, useCaseStudyOverrides } from './lib/sanity';
+import MiniGames from './components/MiniGames';
+import PixelImage from './components/PixelImage';
+import { getCaseStudy, useCaseStudyOverrides, usePersonalProjects } from './lib/sanity';
 import {
   artemisCaseStudy,
   codelessAgencyCaseStudy,
@@ -46,6 +48,19 @@ Looking forward to hearing from you.
 —`;
 const MAILTO = `mailto:${EMAIL}?subject=${encodeURIComponent(MAIL_SUBJECT)}&body=${encodeURIComponent(MAIL_BODY)}`;
 
+/** Playlist behind the ♪ button — swap this id for any open.spotify.com playlist. */
+const SPOTIFY_PLAYLIST_ID = '37i9dQZF1E37DSFUJ2rXjD';
+
+/** Nav-bar anchors (ids exist on the sections further down the page). */
+const NAV_ITEMS = [
+  { id: 'work', label: 'Work' },
+  { id: 'personal', label: 'Personal' },
+  { id: 'career', label: 'Career' },
+  { id: 'tools', label: 'Tools' },
+  { id: 'play', label: 'Play' },
+  { id: 'contact', label: 'Contact' },
+] as const;
+
 type Stat = { n: string; target: string; suffix: string; label: string };
 type Career = { period: string; role: string; org: string; desc: string };
 type Quote = { quote: string; name: string; title: string };
@@ -74,6 +89,23 @@ const stats: Stat[] = [
 ];
 
 const skills = ['Product Design', 'UI / UX', 'Frontend', 'Webflow', 'Framer', 'Bubble', 'Prototyping', 'Motion'];
+
+// ── Tools (logo revealed on hover — masks read /img/tools/*.svg) ────────────
+type Tool = { name: string; logo?: string; role: string };
+const tools: Tool[] = [
+  { name: 'Figma', logo: 'figma', role: 'interface design' },
+  { name: 'Framer', logo: 'framer', role: 'prototyping · sites' },
+  { name: 'Webflow', logo: 'webflow', role: 'no-code build' },
+  { name: 'Bubble', role: 'no-code apps' }, // no Simple Icons entry → monogram
+  { name: 'React', logo: 'react', role: 'frontend' },
+  { name: 'Three.js', logo: 'threedotjs', role: '3D · WebGL' },
+  { name: 'Sanity', logo: 'sanity', role: 'headless CMS' },
+  { name: 'Vite', logo: 'vite', role: 'tooling' },
+  { name: 'TypeScript', logo: 'typescript', role: 'type safety' },
+  { name: 'Tailwind', logo: 'tailwindcss', role: 'styling' },
+  { name: 'Next.js', logo: 'nextdotjs', role: 'react framework' },
+  { name: 'Vercel', logo: 'vercel', role: 'hosting' },
+];
 
 const projects: ProjectV2[] = [
   {
@@ -135,6 +167,7 @@ const projects: ProjectV2[] = [
 ];
 
 const career: Career[] = [
+  { period: '2026 — Present', role: 'Design Engineer', org: 'Finbloom Capital Ltd', desc: 'Designing and building product experiences for finance — taking features from research and interface design through to shipped, production-grade frontend.' },
   { period: '2025 - 2026', role: 'Design Engineer', org: 'Codeless Solutions', desc: 'Lead end-to-end development of DreamAI — a no-code product integrating Azure OpenAI GPT for dream interpretation, wellness insights, and personalized recommendations.' },
   { period: '2024', role: 'Product Designer', org: 'Jrun Global', desc: 'Developed cohesive design systems and comprehensive style guides to ensure visual consistency across the web application.' },
 ];
@@ -243,6 +276,83 @@ html[data-theme="light"] [data-root="c"]{--bg:#eceef1;--fg:#16181d;--muted:#5458
 html[data-theme="light"] [data-root="c"] .modal-overlay{background:rgba(15,17,21,.34)}
 html[data-theme="light"] [data-root="c"] .modal-badge{background:color-mix(in srgb,var(--accent) 16%,transparent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
 
+/* ── nav bar ─────────────────────────────────────────────────────────────── */
+html{scroll-behavior:smooth}
+section[id]{scroll-margin-top:88px}
+.v2-nav{display:flex;align-items:center;gap:clamp(2px,.8vw,10px)}
+.v2-nav a{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--chrome-fg);opacity:.5;text-decoration:none;padding:7px 9px;border:1px solid transparent;transition:opacity .2s,color .2s,border-color .2s,background .2s}
+.v2-nav a:hover{opacity:1;color:var(--chrome-accent)}
+.v2-nav a.on{opacity:1;color:var(--chrome-accent);border-color:color-mix(in srgb,var(--chrome-accent) 38%,transparent);background:color-mix(in srgb,var(--chrome-accent) 12%,transparent)}
+.v2-chipbtn{border:1px solid var(--chip-line);background:var(--chip-bg);color:var(--chrome-fg);cursor:pointer;height:38px;min-width:38px;padding:0 11px;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:7px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.1em;transition:all .22s;flex:none}
+.v2-chipbtn:hover{border-color:color-mix(in srgb,var(--chrome-accent) 55%,transparent);color:var(--chrome-accent)}
+.v2-chipbtn.on{background:var(--chrome-accent);border-color:var(--chrome-accent);color:#fff}
+.v2-chipbtn.on:hover{color:#fff}
+.v2-navtoggle{display:none}
+.v2-menu{display:none}
+@media (max-width:940px){ .v2-status{display:none} }
+@media (max-width:840px){
+  .v2-nav{display:none}
+  .v2-navtoggle{display:flex}
+  .v2-menu.open{display:flex;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:var(--chrome-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--chrome-line);padding:6px clamp(16px,4vw,40px) 14px;gap:2px;z-index:5}
+  .v2-menu a{font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--chrome-fg);text-decoration:none;padding:11px 4px;border-bottom:1px solid var(--chrome-line)}
+  .v2-menu a:last-child{border-bottom:none}
+  .v2-menu a.on{color:var(--chrome-accent)}
+}
+
+/* ── pixelated image loading state ───────────────────────────────────────── */
+.v2-fade-in{opacity:0;transition:opacity .5s ease}
+.v2-fade-in.v2-img-ready{opacity:1}
+.v2-proj-photo.v2-fade-in{transition:opacity .5s ease,transform 1.25s cubic-bezier(.16,.84,.32,1)}
+.v2-pixel-ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;image-rendering:crisp-edges;z-index:0;transition:opacity .45s ease}
+.v2-pixel-loader{position:absolute;inset:0;z-index:1;overflow:hidden;background:color-mix(in srgb,var(--surface) 94%,transparent);display:grid;place-items:center;pointer-events:none}
+.v2-pixel-loader--soft{background:color-mix(in srgb,var(--bg) 38%,transparent)}
+.v2-pixel-checker{position:absolute;inset:-34px;background-image:conic-gradient(color-mix(in srgb,var(--accent) 17%,transparent) 0 25%,transparent 0 50%,color-mix(in srgb,var(--accent) 17%,transparent) 0 75%,transparent 0);background-size:32px 32px;animation:ot-pixscroll 1.1s steps(4) infinite}
+.v2-pixel-loader--soft .v2-pixel-checker{opacity:.55;animation-duration:1.7s}
+@keyframes ot-pixscroll{from{background-position:0 0}to{background-position:32px 0}}
+.v2-pixel-loader-center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:9px}
+.v2-pixel-blocks{display:flex;gap:5px}
+.v2-pixel-blocks i{width:10px;height:10px;background:var(--line);animation:ot-pixblock .9s steps(2) infinite}
+.v2-pixel-blocks i:nth-child(2){animation-delay:.15s}
+.v2-pixel-blocks i:nth-child(3){animation-delay:.3s}
+.v2-pixel-blocks i:nth-child(4){animation-delay:.45s}
+@keyframes ot-pixblock{0%,100%{background:var(--line);transform:none}50%{background:var(--accent);transform:scale(1.3)}}
+.v2-pixel-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);background:color-mix(in srgb,var(--bg) 80%,transparent);border:1px solid var(--line);padding:5px 9px;white-space:nowrap}
+
+/* personal-project skeleton while Sanity responds */
+.v2-skel-bar{height:26px;background:var(--surface2);position:relative;overflow:hidden;display:block}
+.v2-skel-bar::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--fg) 8%,transparent),transparent);animation:ot-sheen 1.2s steps(7) infinite}
+@keyframes ot-sheen{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.v2-skel-cap{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;gap:12px}
+
+/* ── tools: logo on hover ────────────────────────────────────────────────── */
+.v2-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px}
+.v2-tool{position:relative;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 45%,transparent);padding:16px;min-height:112px;display:flex;flex-direction:column;justify-content:flex-end;gap:5px;overflow:hidden;transition:border-color .25s,background .25s}
+.v2-tool:hover{border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.v2-tool-idx{position:absolute;top:12px;left:14px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--faint)}
+.v2-tool-mark{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) scale(.68);width:44px;height:44px;opacity:0;transition:opacity .26s steps(3),transform .3s cubic-bezier(.2,.8,.2,1);background:var(--accent);mask-position:center;mask-repeat:no-repeat;mask-size:contain;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat;-webkit-mask-size:contain;pointer-events:none}
+.v2-tool:hover .v2-tool-mark{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.v2-tool-mono{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) scale(.68);width:44px;height:44px;opacity:0;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font-family:'Cabinet Grotesk',sans-serif;font-weight:800;font-size:16px;letter-spacing:-.02em;transition:opacity .26s steps(3),transform .3s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.v2-tool:hover .v2-tool-mono{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.v2-tool-name{font-family:'Cabinet Grotesk',sans-serif;font-weight:700;font-size:17px;letter-spacing:-.01em;transition:opacity .25s}
+.v2-tool:hover .v2-tool-name{opacity:.32}
+.v2-tool-role{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);transition:opacity .25s}
+.v2-tool:hover .v2-tool-role{opacity:.45}
+@media (hover:none){
+  .v2-tool-mark,.v2-tool-mono{opacity:.92;transform:translate(-50%,-50%) scale(.9)}
+  .v2-tool-name{opacity:.55}
+  .v2-tool:hover .v2-tool-name{opacity:.55}
+}
+
+/* ── Spotify mini player ─────────────────────────────────────────────────── */
+.v2-player{position:fixed;left:clamp(12px,3vw,28px);bottom:clamp(12px,3vw,24px);width:min(352px,calc(100vw - 24px));z-index:115;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 94%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:0 20px 55px rgba(0,0,0,.45);animation:v2-player-in .34s cubic-bezier(.2,.8,.2,1) both}
+@keyframes v2-player-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.v2-player-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 11px;border-bottom:1px solid var(--line);font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+.v2-player-live{display:flex;align-items:center;gap:8px;color:var(--accent)}
+.v2-player-live i{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:ot-blink 1.5s steps(2) infinite}
+.v2-player-close{border:1px solid var(--line);background:none;color:var(--faint);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:12px;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.v2-player-close:hover{border-color:var(--accent);color:var(--accent)}
+.v2-player iframe{display:block;border:0;width:100%}
+
 /* responsive */
 @media (max-width:860px){
   .v2-hero{grid-template-columns:1fr !important}
@@ -259,10 +369,13 @@ html[data-theme="light"] [data-root="c"] .modal-badge{background:color-mix(in sr
 }
 
 @media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
   .v2-proj-figure{clip-path:none !important}
   .v2-proj-photo{transform:none !important}
   .v2-proj-caption{opacity:1 !important;transform:none !important}
   .v2-soon-dot{animation:none}
+  .v2-pixel-checker,.v2-pixel-blocks i,.v2-skel-bar::after,.v2-player{animation:none}
+  .v2-tool-mark,.v2-tool-mono,.v2-tool-name{transition:none}
 }
 `;
 
@@ -273,6 +386,11 @@ export default function PortfolioV2() {
   // Case studies from Sanity (empty until/unless the fetch resolves — the
   // bundled caseStudies.ts content fills any gap, see getCaseStudy).
   const caseStudyOverrides = useCaseStudyOverrides();
+  // Personal projects published from the Studio (drives the second grid).
+  const { items: personalProjects, loading: personalLoading } = usePersonalProjects();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [playerOpen, setPlayerOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('work');
 
   const applyTheme = () => {
     document.documentElement.setAttribute('data-theme', themeRef.current);
@@ -364,6 +482,20 @@ export default function PortfolioV2() {
       }
     };
     document.addEventListener('mousemove', onMove);
+
+    // scrollspy: highlight the section the reader is actually in
+    const sectionIds: string[] = NAV_ITEMS.map((n) => n.id);
+    const onScrollSpy = () => {
+      let current = sectionIds[0];
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= window.innerHeight * 0.38) current = id;
+      }
+      setActiveSection((prev) => (prev === current ? prev : current));
+    };
+    window.addEventListener('scroll', onScrollSpy, { passive: true });
+    onScrollSpy();
 
     // scroll reveal (generic fade/slide for headers, text, etc.)
     let io: IntersectionObserver | null = null;
@@ -513,6 +645,7 @@ export default function PortfolioV2() {
 
     return () => {
       document.removeEventListener('mousemove', onMove);
+      window.removeEventListener('scroll', onScrollSpy);
       window.clearInterval(clockId);
       if (io) io.disconnect();
       if (pio) pio.disconnect();
@@ -520,6 +653,43 @@ export default function PortfolioV2() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Reveal pass for cards that mount after first paint — personal projects
+  // arrive from Sanity once their fetch resolves, so they miss the observers
+  // set up in the effect above.
+  useEffect(() => {
+    const fresh = Array.from(document.querySelectorAll<HTMLElement>('.v2-proj:not([data-shown])'));
+    if (fresh.length === 0) return;
+    fresh.forEach((el) => {
+      el.dataset.shown = '0';
+    });
+    if (!('IntersectionObserver' in window)) {
+      fresh.forEach((el) => {
+        el.dataset.shown = '1';
+      });
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            (en.target as HTMLElement).dataset.shown = '1';
+            io.unobserve(en.target);
+          }
+        });
+      },
+      { rootMargin: '0px 0px -12% 0px', threshold: 0.25 }
+    );
+    fresh.forEach((el) => io.observe(el));
+    const t = window.setTimeout(
+      () => fresh.forEach((el) => { el.dataset.shown = '1'; }),
+      4200
+    );
+    return () => {
+      io.disconnect();
+      window.clearTimeout(t);
+    };
+  }, [personalProjects.length, personalLoading]);
 
   const labelStyle: React.CSSProperties = {
     fontFamily: MONO,
@@ -582,9 +752,16 @@ export default function PortfolioV2() {
             Oluwatosin
           </span>
         </div>
+        <nav className="v2-nav" aria-label="Sections">
+          {NAV_ITEMS.map((n) => (
+            <a key={n.id} href={`#${n.id}`} className={activeSection === n.id ? 'on' : ''}>
+              {n.label}
+            </a>
+          ))}
+        </nav>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <a href="#work" style={{ display: 'none' }}>work</a>
           <span
+            className="v2-status"
             style={{
               fontFamily: MONO,
               fontSize: 11,
@@ -601,28 +778,46 @@ export default function PortfolioV2() {
             Open to work
           </span>
           <button
+            className={`v2-chipbtn${playerOpen ? ' on' : ''}`}
+            onClick={() => setPlayerOpen((v) => !v)}
+            title={playerOpen ? 'Close the playlist player' : 'Play my Spotify playlist in a mini player'}
+            aria-label="Toggle Spotify mini player"
+            aria-pressed={playerOpen}
+            style={{ fontSize: 15 }}
+          >
+            ♪
+          </button>
+          <button
+            className="v2-chipbtn v2-navtoggle"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            style={{ fontSize: 13 }}
+          >
+            {menuOpen ? '✕' : '☰'}
+          </button>
+          <button
             id="ot-theme"
             ref={themeBtnRef}
             onClick={toggleTheme}
             title="Toggle light / dark"
-            style={{
-              border: '1px solid var(--chip-line)',
-              background: 'var(--chip-bg)',
-              color: 'var(--chrome-fg)',
-              cursor: 'pointer',
-              width: 38,
-              height: 38,
-              borderRadius: 999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 15,
-              transition: 'all .25s',
-              flex: 'none',
-            }}
+            className="v2-chipbtn"
+            style={{ fontSize: 15 }}
           >
             ☀
           </button>
+        </div>
+        <div className={`v2-menu${menuOpen ? ' open' : ''}`}>
+          {NAV_ITEMS.map((n) => (
+            <a
+              key={n.id}
+              href={`#${n.id}`}
+              className={activeSection === n.id ? 'on' : ''}
+              onClick={() => setMenuOpen(false)}
+            >
+              {n.label}
+            </a>
+          ))}
         </div>
       </div>
 
@@ -1078,13 +1273,12 @@ export default function PortfolioV2() {
                   className="v2-proj-figure"
                   style={{ position: 'relative', aspectRatio: '16/10', border: '1px solid var(--line)', overflow: 'hidden', background: 'var(--surface)' }}
                 >
-                  <img
-                    className="v2-proj-photo"
+                  <PixelImage
                     src={p.image}
                     alt={`${p.name} — ${p.type}`}
-                    loading="lazy"
-                    decoding="async"
-                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                    imgClassName="v2-proj-photo"
+                    imgStyle={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                    label="loading pixels…"
                   />
                   <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.5) 0%, transparent 26%, transparent 62%, rgba(0,0,0,.55) 100%)', pointerEvents: 'none' }} />
                   <span style={{ position: 'absolute', top: 14, left: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.1em', color: '#fff' }}>[{p.n}]</span>
@@ -1131,39 +1325,173 @@ export default function PortfolioV2() {
             </div>
           </section>
 
-          {/* ============ PERSONAL PROJECTS (coming soon) ============ */}
+          {/* ============ PERSONAL PROJECTS (published from Sanity) ============ */}
           <section id="personal" style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
             <div data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'clamp(28px,4vw,52px)' }}>
               <div style={labelStyle}>// PERSONAL PROJECTS</div>
-              <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--faint)' }}>INDEX 07</div>
-            </div>
-            <div data-reveal className="v2-soon">
-              <div className="v2-soon-head">
-                <span className="v2-soon-badge">
-                  <span className="v2-soon-dot" />
-                  Coming soon
-                </span>
-                <span className="v2-soon-meta">Side projects · experiments · open source</span>
-              </div>
-              <h2 className="v2-soon-title">Personal projects</h2>
-              <p className="v2-soon-desc">
-                Built in my own time — tools, experiments and open source that don't fit inside client
-                work. They're in the workshop right now and will land here soon.
-              </p>
-              <div className="v2-soon-slots">
-                {['Experiments', 'Tools & scripts', 'Open source'].map((t, i) => (
-                  <div key={t} className="v2-soon-slot">
-                    <span>[{String(i + 1).padStart(2, '0')}]</span>
-                    <span>{t}</span>
-                    <span>Soon</span>
-                  </div>
-                ))}
+              <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--faint)' }}>
+                INDEX {personalLoading ? '··' : String(personalProjects.length).padStart(2, '0')}
               </div>
             </div>
+
+            {(personalLoading || personalProjects.length > 0) && (
+              <div className="v2-proj-grid">
+                {/* pixelated skeleton while the Sanity fetch is in flight */}
+                {personalLoading &&
+                  [0, 1, 2].map((i) => (
+                    <article key={`personal-skel-${i}`} className="v2-proj" data-index={i} aria-hidden="true">
+                      <div
+                        className="v2-proj-figure"
+                        style={{ position: 'relative', aspectRatio: '16/10', border: '1px solid var(--line)', overflow: 'hidden', background: 'var(--surface)' }}
+                      >
+                        <div className="v2-pixel-loader">
+                          <div className="v2-pixel-checker" />
+                          <div className="v2-pixel-loader-center">
+                            <span className="v2-pixel-blocks">
+                              <i />
+                              <i />
+                              <i />
+                              <i />
+                            </span>
+                            <span className="v2-pixel-tag">fetching from sanity…</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="v2-skel-cap">
+                        <span className="v2-skel-bar" style={{ width: '54%' }} />
+                        <span className="v2-skel-bar" style={{ width: 64, height: 20 }} />
+                      </div>
+                    </article>
+                  ))}
+
+                {personalProjects.map((p, i) => {
+                  const href = p.liveUrl || p.repoUrl;
+                  const open = () => {
+                    if (href) window.open(href, '_blank', 'noopener,noreferrer');
+                  };
+                  return (
+                    <article
+                      key={p.slug}
+                      className="v2-proj"
+                      data-index={i}
+                      data-name={p.title}
+                      onMouseEnter={href ? rowEnter : undefined}
+                      onMouseLeave={href ? rowLeave : undefined}
+                      onClick={href ? open : undefined}
+                      onKeyDown={
+                        href
+                          ? (e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                open();
+                              }
+                            }
+                          : undefined
+                      }
+                      role={href ? 'button' : undefined}
+                      tabIndex={href ? 0 : undefined}
+                      aria-label={href ? `Open ${p.title}` : undefined}
+                      style={{ cursor: href ? 'pointer' : 'default' }}
+                    >
+                      <div
+                        className="v2-proj-figure"
+                        style={{ position: 'relative', aspectRatio: '16/10', border: '1px solid var(--line)', overflow: 'hidden', background: 'var(--surface)' }}
+                      >
+                        {p.image && (
+                          <PixelImage
+                            src={p.image}
+                            pixelSrc={p.pixel}
+                            alt={`${p.title}${p.type ? ` — ${p.type}` : ''}`}
+                            imgClassName="v2-proj-photo"
+                            imgStyle={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                            label="developing pixels…"
+                          />
+                        )}
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,.5) 0%, transparent 26%, transparent 62%, rgba(0,0,0,.55) 100%)', pointerEvents: 'none' }} />
+                        <span style={{ position: 'absolute', top: 14, left: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.1em', color: '#fff' }}>
+                          [{String(i + 1).padStart(2, '0')}]
+                        </span>
+                        {p.type && (
+                          <span style={{ position: 'absolute', top: 14, right: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.85)' }}>
+                            {p.type}
+                          </span>
+                        )}
+                        {href && (
+                          <span className="v2-proj-view" style={{ position: 'absolute', bottom: 14, left: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: '#fff' }}>
+                            Open ↗
+                          </span>
+                        )}
+                        {p.tags && (
+                          <span style={{ position: 'absolute', bottom: 14, right: 16, fontFamily: MONO, fontSize: 11, letterSpacing: '.08em', color: 'rgba(255,255,255,.8)' }}>
+                            {p.tags}
+                          </span>
+                        )}
+                      </div>
+                      <div className="v2-proj-caption" style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 16, gap: 12 }}>
+                        <h3
+                          className="v2-proj-title"
+                          style={{ margin: 0, fontFamily: CAB, fontWeight: 800, fontSize: 'clamp(24px,3vw,40px)', lineHeight: 0.95, letterSpacing: '-.03em', color: 'var(--fg)', transition: 'color .3s' }}
+                        >
+                          {p.title}
+                        </h3>
+                        <span style={{ fontFamily: MONO, fontSize: 12, color: 'var(--faint)', whiteSpace: 'nowrap' }}>
+                          {p.year ?? '—'}
+                          {href ? ' ↗' : ''}
+                        </span>
+                      </div>
+                      {p.summary && (
+                        <p
+                          style={{
+                            margin: '8px 0 0',
+                            fontSize: 14,
+                            lineHeight: 1.6,
+                            color: 'var(--muted)',
+                            maxWidth: '58ch',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          {p.summary}
+                        </p>
+                      )}
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* empty state — no published personal projects yet */}
+            {!personalLoading && personalProjects.length === 0 && (
+              <div data-reveal className="v2-soon">
+                <div className="v2-soon-head">
+                  <span className="v2-soon-badge">
+                    <span className="v2-soon-dot" />
+                    Workshop
+                  </span>
+                  <span className="v2-soon-meta">Side projects · experiments · open source</span>
+                </div>
+                <h2 className="v2-soon-title">Personal projects</h2>
+                <p className="v2-soon-desc">
+                  Built in my own time — tools, experiments and open source that don't fit inside client
+                  work. Publish one from the Sanity Studio and it lands right here.
+                </p>
+                <div className="v2-soon-slots">
+                  {['Experiments', 'Tools & scripts', 'Open source'].map((t, i) => (
+                    <div key={t} className="v2-soon-slot">
+                      <span>[{String(i + 1).padStart(2, '0')}]</span>
+                      <span>{t}</span>
+                      <span>Soon</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
 
           {/* ============ CAREER ============ */}
-          <section style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
+          <section id="career" style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
             <div data-reveal style={{ ...labelStyle, marginBottom: 24 }}>// CAREER LOG</div>
             {career.map((c, i) => (
               <div
@@ -1182,6 +1510,62 @@ export default function PortfolioV2() {
               </div>
             ))}
             <div style={{ borderTop: '1px solid var(--line)' }} />
+          </section>
+
+          {/* ============ TOOLS (logo on hover) ============ */}
+          <section id="tools" style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
+            <div data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'clamp(28px,4vw,52px)' }}>
+              <div style={labelStyle}>// STACK &amp; TOOLS</div>
+              <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--faint)' }}>INDEX 08</div>
+            </div>
+            <div className="v2-tools">
+              {tools.map((t, i) => (
+                <div key={t.name} data-reveal className="v2-tool">
+                  <span className="v2-tool-idx">[{String(i + 1).padStart(2, '0')}]</span>
+                  {t.logo ? (
+                    <span
+                      className="v2-tool-mark"
+                      aria-hidden="true"
+                      style={{
+                        maskImage: `url(/img/tools/${t.logo}.svg)`,
+                        WebkitMaskImage: `url(/img/tools/${t.logo}.svg)`,
+                      }}
+                    />
+                  ) : (
+                    <span className="v2-tool-mono" aria-hidden="true">
+                      {t.name.slice(0, 2)}
+                    </span>
+                  )}
+                  <span className="v2-tool-name">{t.name}</span>
+                  <span className="v2-tool-role">{t.role}</span>
+                </div>
+              ))}
+            </div>
+            <div data-reveal style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '.1em', textTransform: 'uppercase', color: 'var(--faint)', marginTop: 16 }}>
+              hover a tile to reveal the logo
+            </div>
+          </section>
+
+          {/* ============ MINI BROWSER GAMES ============ */}
+          <section id="play" style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
+            <div data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'clamp(28px,4vw,52px)' }}>
+              <div style={labelStyle}>// MINI GAMES</div>
+              <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--faint)' }}>INDEX 09</div>
+            </div>
+            <div className="v2-play" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', justifyItems: 'center', gap: 'clamp(24px,4vw,44px)' }}>
+              <div data-reveal style={{ textAlign: 'center', maxWidth: '62ch' }}>
+                <h2 style={{ margin: 0, fontFamily: CAB, fontWeight: 900, fontSize: 'clamp(34px,6vw,72px)', lineHeight: 0.95, letterSpacing: '-.03em' }}>
+                  Take five. Play something.
+                </h2>
+                <p style={{ margin: '16px auto 0', fontSize: 16, lineHeight: 1.65, color: 'var(--muted)' }}>
+                  Three tiny games living inside this page — no installs, no accounts, they just run in
+                  your browser while the coffee cools.
+                </p>
+              </div>
+              <div data-reveal style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                <MiniGames />
+              </div>
+            </div>
           </section>
 
           {/* ============ TESTIMONIALS ============ */}
@@ -1236,6 +1620,7 @@ export default function PortfolioV2() {
 
           {/* ============ CONTACT ============ */}
           <section
+            id="contact"
             data-reveal
             style={{ border: '1px solid var(--line)', padding: 'clamp(40px,6vw,80px)', marginBottom: 60, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 24 }}
           >
@@ -1288,6 +1673,30 @@ export default function PortfolioV2() {
             <span id="ot-coord">0000 · 0000</span>
           </div>
         </div>
+
+        {/* ============ SPOTIFY MINI PLAYER ============ */}
+        {playerOpen && (
+          <div className="v2-player" role="region" aria-label="Spotify playlist player">
+            <div className="v2-player-head">
+              <span className="v2-player-live">
+                <i />
+                now playing · playlist
+              </span>
+              <button className="v2-player-close" onClick={() => setPlayerOpen(false)} aria-label="Close player">
+                ✕
+              </button>
+            </div>
+            <iframe
+              src={`https://open.spotify.com/embed/playlist/${SPOTIFY_PLAYLIST_ID}?utm_source=generator&theme=0`}
+              width="100%"
+              height="172"
+              frameBorder="0"
+              loading="lazy"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              title="Spotify playlist"
+            />
+          </div>
+        )}
 
         {active && (
           <CaseStudyModal

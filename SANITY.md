@@ -9,7 +9,9 @@ mirrors its `CaseStudyData` type 1:1, so GROQ results plug straight in.
 studio/                      Sanity Studio (own package.json — not part of the app build)
   sanity.config.ts           projectId/dataset from studio/.env
   schemas/caseStudy.ts       caseStudy document + flexible section object
+  schemas/personalProject.ts personalProject document (personal-projects grid)
 src/lib/sanity.ts            @sanity/client, GROQ query, useCaseStudyOverrides()
+                             + usePersonalProjects() (personal grid, pixel URLs)
 src/caseStudies.ts           localCaseStudies (slug-keyed fallback content)
 scripts/migrate-case-studies.mjs   caseStudies.ts → NDJSON
 .env.example                 VITE_SANITY_PROJECT_ID / VITE_SANITY_DATASET
@@ -102,6 +104,42 @@ renderer skips anything empty:
 to Sanity assets (with `@sanity/image-url` for responsive `srcset`) is a
 natural later upgrade — it only touches `src/lib/sanity.ts`.
 
+## Personal projects (`personalProject`)
+
+The **Personal projects** section of the site (`#personal` in
+`src/PortfolioV2.tsx`) renders published `personalProject` documents — create
+them at <https://oluwatosin.sanity.studio> → **Personal Project** → **New** →
+fill in → **Publish**. They appear on the site within ~60 s (CDN).
+
+| Field | Notes |
+|---|---|
+| `title*`, `slug*` | required |
+| `image*` | required, hotspot enabled — card cover |
+| `type` | eyebrow on the card, e.g. `Experiment · JS` |
+| `tags` | comma-separated pill on the card, e.g. `Canvas, API` |
+| `year` | shown next to the title |
+| `summary` | clamped to 2 lines on the card |
+| `liveUrl`, `repoUrl` | card opens the first one that's set (↗) |
+| `order` | lower first; empty → newest first (`order asc, _createdAt desc`) |
+| `featured` | uncheck to keep a doc in the Studio but off the site |
+
+Behavior worth knowing:
+
+- **Pixelated loading state.** The GROQ projection builds two CDN URLs per
+  doc: `image` (`?w=1200&h=750&fit=crop…`, the real card) and `pixel`
+  (`?w=30&h=19&fit=crop&crop=entropy`, a 30 px thumbnail). `PixelImage`
+  upscales the thumbnail with `image-rendering: pixelated` until the full
+  image fires `load`, then cross-fades. While the fetch itself is in flight,
+  three skeleton cards with an animated checker show.
+- **Gotcha: Sanity's CDN rejects fractional `blur` values** — `blur=1.5`
+  returns an error (whole numbers like `blur=1` are fine). The pixel look
+  comes from the upscale anyway, so the projection uses no blur. If you add
+  one, use an integer.
+- **Image URL building is plain GROQ string concat**
+  (`image.asset->url + "?w=…"`) — no `@sanity/image-url` dependency.
+- **Empty state:** with no published docs the section shows the "Workshop"
+  banner (`INDEX 00`) instead of an empty grid.
+
 ## Slugs
 
 `artemis-ii-3d-scene` · `codeless-solutions` · `dreamai` · `the-glo-up-app` ·
@@ -189,7 +227,7 @@ keeps React 18.
 **Hosted (recommended):** open <https://oluwatosin.sanity.studio>, sign in with
 the Google account that owns project `jrft938h` (it lands in the Dashboard,
 which embeds the Studio), edit, **Publish**. You should see the **Content**
-tool listing all 6 case studies.
+tool listing all 6 case studies plus any **Personal Project** documents.
 
 **Local:** `cd studio && npm run dev` → <http://localhost:3333>.
 

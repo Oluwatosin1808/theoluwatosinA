@@ -340,7 +340,7 @@ const chip = {
   },
 };
 
-export default function Character3D() {
+export default function Character3D({ showStatus = true }: { showStatus?: boolean }) {
   const stageRef = useRef<HTMLDivElement | null>(null);
   const [ready, setReady] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -513,7 +513,7 @@ export default function Character3D() {
 
       {crashed && fallback}
 
-      {!ready && !crashed && (
+      {!ready && !crashed && showStatus && (
         <div
           style={{
             position: 'absolute',
