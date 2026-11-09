@@ -533,12 +533,12 @@ function MemoryGame() {
 
 // ── frame ───────────────────────────────────────────────────────────────────
 
-export default function MiniGames() {
+export default function MiniGames({ variant = 'card' }: { variant?: 'card' | 'page' } = {}) {
   const [tab, setTab] = useState<GameKey>('snake');
   const active = GAME_TABS.find((t) => t.id === tab)!;
 
   return (
-    <div className="mg-frame">
+    <div className={`mg-frame${variant === 'page' ? ' mg-frame--page' : ''}`}>
       <style>{MG_CSS}</style>
       <div className="mg-chrome">
         <span className="mg-dots" aria-hidden="true">
@@ -576,6 +576,17 @@ export default function MiniGames() {
 
 const MG_CSS = `
 .mg-frame{border:1px solid var(--line);background:var(--surface);overflow:hidden;max-width:640px}
+/* page variant — /play arcade: fill the viewport instead of the card column */
+.mg-frame--page{max-width:none;width:100%;display:flex;flex-direction:column;flex:1}
+.mg-frame--page .mg-stage{flex:1;align-items:center;padding:clamp(20px,3.5vh,44px) clamp(16px,3vw,44px)}
+.mg-frame--page .mg-game{max-width:min(680px,100%);gap:clamp(14px,2.5vh,22px)}
+.mg-frame--page .mg-canvas-wrap{width:min(100%,540px);align-self:center}
+.mg-frame--page .mg-overlay-title{font-size:clamp(34px,6vw,68px)}
+.mg-frame--page .mg-cell{font-size:clamp(44px,7vw,84px)}
+.mg-frame--page .mg-memcard{font-size:clamp(22px,3.4vw,36px)}
+.mg-frame--page .mg-hud{font-size:11px}
+.mg-frame--page .mg-note{font-size:10.5px}
+.mg-frame--page .mg-url{font-size:11px;padding:6px 12px}
 .mg-chrome{display:flex;align-items:center;gap:14px;padding:11px 16px;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--surface2) 80%,transparent)}
 .mg-dots{display:flex;gap:6px}
 .mg-dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}

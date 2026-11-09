@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import CaseStudyModal, { CaseStudyData } from './components/CaseStudyModal';
 import Character3D from './components/Character3D';
-import MiniGames from './components/MiniGames';
 import PixelImage from './components/PixelImage';
 import { getCaseStudy, useCaseStudyOverrides, usePersonalProjects } from './lib/sanity';
+import { BASE_CSS } from './theme';
 import {
   artemisCaseStudy,
   codelessAgencyCaseStudy,
@@ -183,18 +183,8 @@ const socials = [
   { label: 'Résumé', href: RESUME },
 ];
 
-const css = `
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-html{--chrome-bg:rgba(15,17,21,.6);--chrome-fg:#e9eaee;--chrome-line:rgba(255,255,255,.09);--chip-bg:rgba(255,255,255,.06);--chip-line:rgba(255,255,255,.12);--body-bg:#0f1115;--chrome-accent:#2f6bff}
-html[data-theme="light"]{--chrome-bg:rgba(236,238,241,.72);--chrome-fg:#16181d;--chrome-line:rgba(0,0,0,.1);--chip-bg:rgba(0,0,0,.045);--chip-line:rgba(0,0,0,.1);--body-bg:#eceef1}
-body{background-color:var(--body-bg);font-family:'General Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
-::selection{background:var(--chrome-accent);color:#fff}
-
-[data-root="c"]{--bg:#0f1115;--fg:#e9eaee;--muted:#aeb1bb;--faint:#757985;--line:rgba(233,234,238,.12);--surface:#15171d;--surface2:#1a1d24;--accent:#2f6bff;--accent-ink:#fff;--grid:rgba(233,234,238,.045);--ink:var(--fg);--ink-2:var(--muted);--ink-3:var(--faint);--rule:var(--line);--amber:var(--accent);--amber-2:#5b8bff;--amber-ink:var(--accent-ink);--skill-color:var(--accent);--card-bg-from:var(--surface2);--card-bg-to:var(--surface);--bg-2:var(--surface2)}
-html[data-theme="light"] [data-root="c"]{--bg:#eceef1;--fg:#16181d;--muted:#54585f;--faint:#7a7e88;--line:rgba(22,24,29,.13);--surface:#e0e3e7;--surface2:#d7dadf;--accent:#2f6bff;--accent-ink:#fff;--grid:rgba(22,24,29,.05);--amber-2:#2057e6}
-
-@keyframes ot-blink{0%,100%{opacity:1}50%{opacity:.25}}
+// Base reset / theme vars / ot-blink live in src/theme.ts (shared with /play).
+const css = BASE_CSS + `
 @keyframes ot-grid{from{background-position:0 0}to{background-position:0 44px}}
 @keyframes ot-scan{0%{top:3%;opacity:0}12%{opacity:.75}88%{opacity:.75}100%{top:95%;opacity:0}}
 @keyframes ot-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
@@ -353,6 +343,28 @@ section[id]{scroll-margin-top:88px}
 .v2-player-close:hover{border-color:var(--accent);color:var(--accent)}
 .v2-player iframe{display:block;border:0;width:100%}
 
+/* ── arcade teaser (links to the full-screen /play page) ────────────────── */
+.v2-arcade{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:clamp(20px,4vw,56px);align-items:center;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 55%,transparent);padding:clamp(28px,5vw,60px);overflow:hidden;text-decoration:none;color:inherit;transition:border-color .3s ease,transform .3s ease,background .3s ease}
+.v2-arcade:hover{border-color:color-mix(in srgb,var(--accent) 55%,transparent);background:color-mix(in srgb,var(--accent) 8%,transparent);transform:translateY(-3px)}
+.v2-arcade-grid{position:absolute;top:-56px;right:-56px;width:320px;height:320px;background-image:linear-gradient(color-mix(in srgb,var(--accent) 30%,transparent) 1px,transparent 1px),linear-gradient(90deg,color-mix(in srgb,var(--accent) 30%,transparent) 1px,transparent 1px);background-size:26px 26px;background-position:0 0;mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);-webkit-mask-image:radial-gradient(closest-side,#000 30%,transparent 78%);animation:v2-arcadegrid 4s steps(4) infinite;pointer-events:none}
+@keyframes v2-arcadegrid{from{background-position:0 0}to{background-position:26px 26px}}
+.v2-arcade-body{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:14px;min-width:0}
+.v2-arcade-badge{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);background:color-mix(in srgb,var(--accent) 12%,transparent);padding:6px 11px}
+.v2-arcade-dot{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:ot-blink 1.5s steps(2) infinite}
+.v2-arcade h2{margin:0;font-family:'Cabinet Grotesk',sans-serif;font-weight:900;font-size:clamp(34px,5.5vw,68px);line-height:.95;letter-spacing:-.03em;color:var(--fg)}
+.v2-arcade p{margin:0;font-size:15.5px;line-height:1.65;color:var(--muted);max-width:56ch}
+.v2-arcade-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+.v2-arcade-chips span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);border:1px solid var(--line);padding:6px 10px;transition:color .25s,border-color .25s}
+.v2-arcade:hover .v2-arcade-chips span{color:var(--muted);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.v2-arcade-cta{position:relative;z-index:1;display:inline-flex;align-items:center;gap:12px;white-space:nowrap;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.14em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:20px 30px;box-shadow:0 12px 34px color-mix(in srgb,var(--accent) 35%,transparent);transition:transform .25s ease,box-shadow .25s ease}
+.v2-arcade:hover .v2-arcade-cta{transform:translate(3px,-3px);box-shadow:0 16px 40px color-mix(in srgb,var(--accent) 45%,transparent)}
+.v2-arcade-cta b{font-weight:400;transition:transform .25s ease}
+.v2-arcade:hover .v2-arcade-cta b{transform:translateX(4px)}
+@media (max-width:760px){
+  .v2-arcade{grid-template-columns:1fr;gap:22px}
+  .v2-arcade-cta{justify-content:center;width:100%}
+}
+
 /* responsive */
 @media (max-width:860px){
   .v2-hero{grid-template-columns:1fr !important}
@@ -376,6 +388,9 @@ section[id]{scroll-margin-top:88px}
   .v2-soon-dot{animation:none}
   .v2-pixel-checker,.v2-pixel-blocks i,.v2-skel-bar::after,.v2-player{animation:none}
   .v2-tool-mark,.v2-tool-mono,.v2-tool-name{transition:none}
+  .v2-arcade{transition:none}
+  .v2-arcade:hover{transform:none;background:color-mix(in srgb,var(--surface) 55%,transparent)}
+  .v2-arcade-grid,.v2-arcade-dot,.v2-arcade-cta,.v2-arcade-cta b{animation:none;transition:none}
 }
 `;
 
@@ -1546,26 +1561,43 @@ export default function PortfolioV2() {
             </div>
           </section>
 
-          {/* ============ MINI BROWSER GAMES ============ */}
+          {/* ============ ARCADE (teaser → the /play page) ============ */}
           <section id="play" style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
             <div data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'clamp(28px,4vw,52px)' }}>
               <div style={labelStyle}>// MINI GAMES</div>
               <div style={{ fontFamily: MONO, fontSize: 11, color: 'var(--faint)' }}>INDEX 09</div>
             </div>
-            <div className="v2-play" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr)', justifyItems: 'center', gap: 'clamp(24px,4vw,44px)' }}>
-              <div data-reveal style={{ textAlign: 'center', maxWidth: '62ch' }}>
-                <h2 style={{ margin: 0, fontFamily: CAB, fontWeight: 900, fontSize: 'clamp(34px,6vw,72px)', lineHeight: 0.95, letterSpacing: '-.03em' }}>
-                  Take five. Play something.
+            <a
+              data-reveal
+              href="/play"
+              className="v2-arcade"
+              aria-label="Enter the arcade — Snake, Tic-Tac-Toe and Memory live on their own full-screen page"
+            >
+              <span className="v2-arcade-grid" aria-hidden="true" />
+              <div className="v2-arcade-body">
+                <span className="v2-arcade-badge">
+                  <span className="v2-arcade-dot" />
+                  Arcade · own page now
+                </span>
+                <h2>
+                  Take five.
+                  <br />
+                  Play something.
                 </h2>
-                <p style={{ margin: '16px auto 0', fontSize: 16, lineHeight: 1.65, color: 'var(--muted)' }}>
-                  Three tiny games living inside this page — no installs, no accounts, they just run in
-                  your browser while the coffee cools.
+                <p>
+                  Snake, Tic-Tac-Toe and Memory moved out to their own full-screen page — no installs,
+                  no accounts, they just run in your browser while the coffee cools.
                 </p>
+                <div className="v2-arcade-chips">
+                  {[['01', 'Snake'], ['02', 'Tic-Tac-Toe'], ['03', 'Memory']].map(([i, n]) => (
+                    <span key={n}>[{i}] {n}</span>
+                  ))}
+                </div>
               </div>
-              <div data-reveal style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                <MiniGames />
-              </div>
-            </div>
+              <span className="v2-arcade-cta">
+                Enter arcade <b>→</b>
+              </span>
+            </a>
           </section>
 
           {/* ============ TESTIMONIALS ============ */}
