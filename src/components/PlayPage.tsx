@@ -114,7 +114,6 @@ export default function PlayPage() {
       </main>
 
       <footer className="arcade-foot">
-        <span>runs entirely in your browser — nothing leaves this page</span>
         <a href="/">← back to oluwatosin.site</a>
       </footer>
     </div>

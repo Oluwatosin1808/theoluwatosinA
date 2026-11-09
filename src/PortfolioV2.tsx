@@ -1490,7 +1490,7 @@ export default function PortfolioV2() {
                 <h2 className="v2-soon-title">Personal projects</h2>
                 <p className="v2-soon-desc">
                   Built in my own time — tools, experiments and open source that don't fit inside client
-                  work. Publish one from the Sanity Studio and it lands right here.
+                  work.
                 </p>
                 <div className="v2-soon-slots">
                   {['Experiments', 'Tools & scripts', 'Open source'].map((t, i) => (

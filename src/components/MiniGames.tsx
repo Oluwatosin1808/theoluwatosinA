@@ -567,7 +567,6 @@ export default function MiniGames({ variant = 'card' }: { variant?: 'card' | 'pa
         {tab === 'ttt' && <TicTacToe />}
         {tab === 'memory' && <MemoryGame />}
       </div>
-      <div className="mg-foot">runs entirely in your browser — nothing leaves this page</div>
     </div>
   );
 }
