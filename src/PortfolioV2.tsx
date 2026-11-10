@@ -1181,68 +1181,6 @@ export default function PortfolioV2() {
             ))}
           </section>
 
-          {/* ============ ABOUT ============ */}
-          <section style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
-            <div data-reveal style={{ ...labelStyle, marginBottom: 24 }}>// ABOUT</div>
-            <div className="v2-about" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 340px', gap: 'clamp(28px,5vw,64px)', alignItems: 'start' }}>
-              <div data-reveal>
-                <p style={{ margin: '0 0 18px', fontFamily: CAB, fontSize: 'clamp(24px,2.8vw,38px)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-.02em' }}>
-                  I design things that make sense. Then I build them so they actually work.
-                </p>
-                <p style={{ margin: '0 0 18px', fontSize: 16, lineHeight: 1.7, color: 'var(--muted)' }}>
-                  Most days I'm translating fuzzy product ideas into clean, usable interfaces. I sit between design and engineering — prototyping in
-                  the browser, building in no-code, and sweating the details most people don't notice but everybody feels.
-                </p>
-                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7, color: 'var(--muted)' }}>
-                  4+ years, 20+ products shipped end-to-end across fintech, health and AI. Currently going deeper on motion, 3D and the craft of
-                  interaction.
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 28 }}>
-                  {skills.map((k) => (
-                    <span
-                      key={k}
-                      style={{
-                        fontFamily: MONO,
-                        fontSize: 10,
-                        letterSpacing: '.06em',
-                        textTransform: 'uppercase',
-                        color: 'var(--muted)',
-                        border: '1px solid var(--line)',
-                        padding: '6px 10px',
-                      }}
-                    >
-                      {k}
-                    </span>
-                  ))}
-                </div>
-              </div>
-              <div data-reveal>
-                <div
-                  className="v2-portrait"
-                  style={{
-                    position: 'relative',
-                    border: '1px solid var(--line)',
-                    aspectRatio: '1/1',
-                    overflow: 'hidden',
-                    background: 'var(--surface)',
-                  }}
-                >
-                  <img
-                    src={portraitImg}
-                    alt="Portrait of Oluwatosin"
-                    loading="lazy"
-                    decoding="async"
-                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%', filter: 'grayscale(1) contrast(1.03)' }}
-                  />
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 58%, rgba(0,0,0,.5) 100%)', pointerEvents: 'none' }} />
-                  <span style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: MONO, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,.82)' }}>
-                    oluwatosin.jpg
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
-
           {/* ============ FEATURED PROJECTS / CASE STUDIES ============ */}
           <section id="work" style={{ paddingBottom: 'clamp(50px,7vw,90px)' }}>
             <div data-reveal style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 'clamp(28px,4vw,52px)' }}>
@@ -1337,6 +1275,68 @@ export default function PortfolioV2() {
                 →
               </a>
               <span style={{ fontFamily: MONO, fontSize: 11, letterSpacing: '.14em', textTransform: 'uppercase', color: 'var(--faint)' }}>Let's build the next one</span>
+            </div>
+          </section>
+
+          {/* ============ ABOUT ============ */}
+          <section style={{ paddingBottom: 'clamp(60px,9vw,120px)' }}>
+            <div data-reveal style={{ ...labelStyle, marginBottom: 24 }}>// ABOUT</div>
+            <div className="v2-about" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 340px', gap: 'clamp(28px,5vw,64px)', alignItems: 'start' }}>
+              <div data-reveal>
+                <p style={{ margin: '0 0 18px', fontFamily: CAB, fontSize: 'clamp(24px,2.8vw,38px)', fontWeight: 700, lineHeight: 1.2, letterSpacing: '-.02em' }}>
+                  I design things that make sense. Then I build them so they actually work.
+                </p>
+                <p style={{ margin: '0 0 18px', fontSize: 16, lineHeight: 1.7, color: 'var(--muted)' }}>
+                  Most days I'm translating fuzzy product ideas into clean, usable interfaces. I sit between design and engineering — prototyping in
+                  the browser, building in no-code, and sweating the details most people don't notice but everybody feels.
+                </p>
+                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7, color: 'var(--muted)' }}>
+                  4+ years, 20+ products shipped end-to-end across fintech, health and AI. Currently going deeper on motion, 3D and the craft of
+                  interaction.
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 28 }}>
+                  {skills.map((k) => (
+                    <span
+                      key={k}
+                      style={{
+                        fontFamily: MONO,
+                        fontSize: 10,
+                        letterSpacing: '.06em',
+                        textTransform: 'uppercase',
+                        color: 'var(--muted)',
+                        border: '1px solid var(--line)',
+                        padding: '6px 10px',
+                      }}
+                    >
+                      {k}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div data-reveal>
+                <div
+                  className="v2-portrait"
+                  style={{
+                    position: 'relative',
+                    border: '1px solid var(--line)',
+                    aspectRatio: '1/1',
+                    overflow: 'hidden',
+                    background: 'var(--surface)',
+                  }}
+                >
+                  <img
+                    src={portraitImg}
+                    alt="Portrait of Oluwatosin"
+                    loading="lazy"
+                    decoding="async"
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 25%', filter: 'grayscale(1) contrast(1.03)' }}
+                  />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 58%, rgba(0,0,0,.5) 100%)', pointerEvents: 'none' }} />
+                  <span style={{ position: 'absolute', left: 14, bottom: 14, fontFamily: MONO, fontSize: 10, letterSpacing: '.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,.82)' }}>
+                    oluwatosin.jpg
+                  </span>
+                </div>
+              </div>
             </div>
           </section>
 
