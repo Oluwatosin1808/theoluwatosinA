@@ -894,8 +894,9 @@ export default function PortfolioV2() {
                 Oluwatosin<span style={{ color: 'var(--accent)' }}>.</span>
               </h1>
               <p data-reveal style={{ margin: '26px 0 0', maxWidth: '46ch', fontSize: 'clamp(16px,1.55vw,20px)', lineHeight: 1.6, color: 'var(--muted)' }}>
-                I design things that make sense, then build them so they actually work — scalable, user-focused digital products from concept to
-                production.
+                I work across EdTech, SaaS, and Fintech, bringing together product design, frontend
+                engineering, and emerging technologies to turn complex ideas into simple, functional,
+                and engaging digital experiences.
               </p>
               <div data-reveal style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 34 }}>
                 <a
